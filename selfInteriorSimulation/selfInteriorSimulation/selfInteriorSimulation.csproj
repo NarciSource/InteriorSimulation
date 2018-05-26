@@ -60,10 +60,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="alret.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="alret.xaml.cs">
+      <DependentUpon>alret.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -77,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Objects\Chair.cs" />
+    <Compile Include="Objects\CustomObject.cs" />
     <Compile Include="Objects\Door.cs" />
     <Compile Include="Objects\InteriorObject.cs" />
     <Compile Include="Objects\Refrigerator.cs" />
@@ -177,6 +185,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\window.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\window2.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

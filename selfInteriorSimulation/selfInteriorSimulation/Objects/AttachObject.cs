@@ -18,97 +18,7 @@ namespace selfInteriorSimulation
         bool moveMode = false;
         bool attachMode = false;
         int pp = - 50;
-        public override void setPosition(Point point)
-        {
-            if (!moveMode)
-            {
-                return;
-            }
-            if (!attachMode)
-            {
-                base.setPosition(point);
-            }
-
-            Point MainPoint = new Point();
-            MainPoint.X = point.X + Width / 2;
-            MainPoint.Y = point.Y + Height / 2;
-
-            foreach (Wall wall in BasicObject.walls)
-            {
-                for (int i = 0; i < wall.points.Count; i++)
-                {
-                    Point FirstPoint;
-                    Point SecondPoint;
-                    int dx = 0;
-                    int dy = 0;
-                    if (i != wall.points.Count - 1)
-                    {
-                        FirstPoint = wall.points[i];
-                        SecondPoint = wall.points[i+1];
-                    }
-                    else
-                    {
-                        FirstPoint = wall.points[i];
-                        SecondPoint = wall.points[0];
-                    }
-
-                    dx = (int)(FirstPoint.X - SecondPoint.X);
-                    dy = (int)(FirstPoint.Y - SecondPoint.Y);
-                    if (dx == 0)
-                    {
-                        if (Math.Abs(FirstPoint.X - MainPoint.X) < 50)
-                        {
-                            if ((!((MainPoint.X < FirstPoint.X + pp) && (MainPoint.X < SecondPoint.X + pp))) && (!(FirstPoint.X < MainPoint.X + pp && SecondPoint.X < MainPoint.X + pp)))
-                            {
-                                if ((!((MainPoint.Y < FirstPoint.Y + pp) && (MainPoint.Y < SecondPoint.Y + pp))) && (!(FirstPoint.Y < MainPoint.Y + pp && SecondPoint.Y < MainPoint.Y + pp)))
-                                {
-                                    base.setPosition(new Point(FirstPoint.X, MainPoint.Y));
-                                    outCheck(new Point(FirstPoint.X, MainPoint.Y));
-                                    return;
-                                }
-                            }
-                        }
-                        else if (Math.Abs(SecondPoint.X - MainPoint.X) < 50)
-                        {
-                            if ((!((MainPoint.X < FirstPoint.X + pp) && (MainPoint.X < SecondPoint.X + pp))) && (!(FirstPoint.X < MainPoint.X + pp && SecondPoint.X < MainPoint.X + pp)))
-                            {
-                                if ((!((MainPoint.Y < FirstPoint.Y + pp) && (MainPoint.Y < SecondPoint.Y + pp))) && (!(FirstPoint.Y < MainPoint.Y + pp && SecondPoint.Y < MainPoint.Y + pp)))
-                                {
-                                    base.setPosition(new Point(FirstPoint.X, MainPoint.Y));
-                                    outCheck(new Point(FirstPoint.X, MainPoint.Y));
-                                    return;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-
-                    if (dx == 0)
-                    {
-                        continue;
-                    }
-                    double r = (double)dy / (double)dx;
-                    double d = (int)(FirstPoint.Y - (r * FirstPoint.X));
-                    double ro = (Math.Abs(r * MainPoint.X + -1 * MainPoint.Y + d)) / (Math.Pow((Math.Pow(r, 2) + 1), 0.5));
-                    if (ro < 10)
-                    {
-                        if ((!((MainPoint.X < FirstPoint.X) && (MainPoint.X < SecondPoint.X))) && (!(FirstPoint.X < MainPoint.X&& SecondPoint.X < MainPoint.X )))
-                        {
-                            if ((!((MainPoint.Y < FirstPoint.Y + pp) && (MainPoint.Y < SecondPoint.Y + pp))) && (!(FirstPoint.Y < MainPoint.Y + pp && SecondPoint.Y < MainPoint.Y + pp)))
-                            {
-                                AttachPosition(r, d, MainPoint);
-                                attachMode = true;
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
+        
         private bool getWallToPoint(Point point)
         {
             Point MainPoint = point;
@@ -142,8 +52,7 @@ namespace selfInteriorSimulation
                             {
                                 if ((!((MainPoint.Y < FirstPoint.Y + pp) && (MainPoint.Y < SecondPoint.Y + pp))) && (!(FirstPoint.Y < MainPoint.Y + pp && SecondPoint.Y < MainPoint.Y + pp)))
                                 {
-                                    base.setPosition(new Point(FirstPoint.X, MainPoint.Y));
-                                    outCheck(new Point(FirstPoint.X, MainPoint.Y));
+                                    setAttachPosition(new Point(FirstPoint.X, MainPoint.Y));
                                     return true;
                                 }
                             }
@@ -154,8 +63,7 @@ namespace selfInteriorSimulation
                             {
                                 if ((!((MainPoint.Y < FirstPoint.Y + pp) && (MainPoint.Y < SecondPoint.Y + pp))) && (!(FirstPoint.Y < MainPoint.Y + pp && SecondPoint.Y < MainPoint.Y + pp)))
                                 {
-                                    base.setPosition(new Point(FirstPoint.X, MainPoint.Y));
-                                    outCheck(new Point(FirstPoint.X, MainPoint.Y));
+                                    setAttachPosition(new Point(FirstPoint.X, MainPoint.Y));
                                     return true;
                                 }
                             }
@@ -188,12 +96,9 @@ namespace selfInteriorSimulation
             return false;
         }
         
-        private void outCheck(Point point)
+        private void setAttachPosition(Point point)
         {
-            foreach (var each in BasicObject.walls)
-            {
-                base.setPosition(point);
-            }
+            base.setPosition(new Point(point.X - Width/2, point.Y - Height/2));
         }
 
         private void AttachPosition(double r, double d, Point point)
@@ -210,7 +115,7 @@ namespace selfInteriorSimulation
             point.X = x;
             point.Y = y;
 
-            outCheck(point);
+            setAttachPosition(point);
         }
 
     }

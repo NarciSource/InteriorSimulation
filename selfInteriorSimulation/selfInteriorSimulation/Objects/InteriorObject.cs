@@ -14,9 +14,10 @@ namespace selfInteriorSimulation
     {
         static public del notify;
 
-        Image objectImg;
+        public Image objectImg;
         private Point pointInObject;
-        public Point point;
+        private Point mpoint;
+        public Point point { get { return mpoint; } set { setPosition(value); mpoint = value; } }
 
         private int Width;
         public int width { get { return Width; } set { Width = value; objectImg.Width = value; } }
@@ -48,6 +49,7 @@ namespace selfInteriorSimulation
 
         public InteriorObject(Point point)
         {
+            Point FirstPoint = new Point();
             objectImg = new Image();
             this.point = point;
             setPosition(point);
@@ -74,7 +76,7 @@ namespace selfInteriorSimulation
                     if (!(isType == IsType.door && isType == IsType.window)) {
                         if (MainWindow.isCollesion(each.points, object_points) == true)
                         {
-                            //return; 외부 놓임 방지 해야함
+                            setPosition( FirstPoint);
                         }
                     }
                 }
@@ -92,12 +94,12 @@ namespace selfInteriorSimulation
 
         public virtual void setPosition(Point point)
         {
-            Canvas.SetTop(this, point.Y - height/2);
-            Canvas.SetLeft(this, point.X - width/2);
+            Canvas.SetTop(this, point.Y);
+            Canvas.SetLeft(this, point.X);
             Canvas.SetZIndex(this, 2);
 
-            Canvas.SetTop(NameLabel, (point.Y - height / 2 )+ 100);
-            Canvas.SetLeft(NameLabel, (point.X - width / 2 )+ Width/2);
+            Canvas.SetTop(NameLabel, point.Y - 20);
+            Canvas.SetLeft(NameLabel, point.X + Width/2);
         }
 
         public void setImg(string src)
