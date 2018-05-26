@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using static selfInteriorSimulation.BasicObject;
 
 namespace selfInteriorSimulation
 {
@@ -7,6 +8,7 @@ namespace selfInteriorSimulation
     {
         public Chair(Point point) : base(point)
         {
+            isType = IsType.Chair;
             setImg("chair.PNG");
         }
     }

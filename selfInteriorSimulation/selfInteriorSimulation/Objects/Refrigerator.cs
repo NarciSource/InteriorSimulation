@@ -7,13 +7,8 @@ namespace selfInteriorSimulation
     {
         public Refrigerator(Point point) : base(point)
         {
+            isType = IsType.Refrigeraot;
             setImg("Refrigerator.jpg");
-        }
-
-        public override void setPosition(Point point)
-        {
-            base.setPosition(point);
-
         }
     }
 }

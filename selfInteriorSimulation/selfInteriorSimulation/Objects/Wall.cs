@@ -23,6 +23,7 @@ namespace selfInteriorSimulation
 
         public Wall(PointCollection points)
         {
+            isType = IsType.Wall;
            // ImageBrush myImageBrush = new ImageBrush(
            //new BitmapImage(new Uri("pack:\\image\ground1.PNG", UriKind.Relative)));
             BitmapImage img = new BitmapImage(new Uri(@"pack://application:,,,/image/ground1.PNG"));

@@ -7,6 +7,7 @@ namespace selfInteriorSimulation
     {
         public Washer(Point point) : base(point)
         {
+            isType = IsType.Washer;
             setImg("washer.PNG");
         }
     }
