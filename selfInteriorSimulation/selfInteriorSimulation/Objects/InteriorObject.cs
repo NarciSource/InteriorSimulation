@@ -18,9 +18,9 @@ namespace selfInteriorSimulation
         private Point pointInObject;
         public Point point;
 
-        public int Width;
+        private int Width;
         public int width { get { return Width; } set { Width = value; objectImg.Width = value; } }
-        public int Height;
+        private int Height;
         public int height { get { return Height; } set { Height = value;  objectImg.Height = value; } }
 
         private double rotate;
@@ -48,10 +48,11 @@ namespace selfInteriorSimulation
 
         public InteriorObject(Point point)
         {
+            Point FirstPoint = new Point();
             objectImg = new Image();
             this.point = point;
             setPosition(point);
-            this.MouseDown += (o, e) => { notify(this); this.CaptureMouse(); pointInObject = e.GetPosition(objectImg); };
+            this.MouseDown += (o, e) => { notify(this); this.CaptureMouse(); FirstPoint = e.GetPosition(canvas); pointInObject = e.GetPosition(objectImg); };
             this.MouseMove += (o, e) => {
                 if (this.IsMouseCaptured)
                 {
@@ -72,7 +73,7 @@ namespace selfInteriorSimulation
                     if (!(isType == IsType.door && isType == IsType.window)) {
                         if (MainWindow.isCollesion(each.points, object_points) == true)
                         {
-                            //return; 외부 놓임 방지 해야함
+                            setPosition( FirstPoint);
                         }
                     }
                 }
