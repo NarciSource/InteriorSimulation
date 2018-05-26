@@ -9,6 +9,7 @@ namespace selfInteriorSimulation
 {
     class AttachObject : InteriorObject
     {
+        //
         public AttachObject(Point point) : base(point)
         {
             setImg("sofa.PNG");
