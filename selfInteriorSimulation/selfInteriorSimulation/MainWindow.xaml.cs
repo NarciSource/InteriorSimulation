@@ -45,13 +45,13 @@ namespace selfInteriorSimulation
             activeObject = (BasicObject)sender;
             SettingDock.Visibility = Visibility.Visible;
             activeObject.setColor(Colors.Red);
-            
             setting_name.Text = activeObject.Name.ToString();
 
             if (sender is Wall)
             {
                 setting_height.IsEnabled = false;
                 setting_width.IsEnabled = false;
+                setting_angle.IsEnabled = false;
                 setting_thickness.IsEnabled = true;
                 setting_thickness.Text = ((Wall)activeObject).getBorderThickness().ToString();
             }
@@ -61,6 +61,7 @@ namespace selfInteriorSimulation
 
                 setting_height.IsEnabled = true;
                 setting_width.IsEnabled = true;
+                setting_angle.IsEnabled = true;
                 setting_thickness.IsEnabled = false;
                 setting_width.Text = activeObject.ActualWidth.ToString();
                 setting_height.Text = activeObject.ActualHeight.ToString();
@@ -414,7 +415,15 @@ namespace selfInteriorSimulation
                 ((Wall)activeObject).setBorderThickness(num);
             }
         }
-
+        
+        private void setting_angle_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            double num = 0;
+            if (double.TryParse(((TextBox)sender).Text, out num))
+            {
+                ((InteriorObject)activeObject).setRotate(num);
+            }
+        }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
 
@@ -463,7 +472,5 @@ namespace selfInteriorSimulation
                 }
             }
         }
-
-        
     }
 }
