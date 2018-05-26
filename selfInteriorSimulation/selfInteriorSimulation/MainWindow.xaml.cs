@@ -13,6 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Newtonsoft.Json;
+using System.Threading;
+using System.IO;
+
 namespace selfInteriorSimulation
 {
     /// <summary>
@@ -20,6 +24,9 @@ namespace selfInteriorSimulation
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public string saveFileName;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -53,9 +60,54 @@ namespace selfInteriorSimulation
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var each in canvas.Children)
-            {
+            //// 저장 file dialog
+            //Thread threadSaveFile = new Thread(new ThreadStart(saveFile));
+            //threadSaveFile.ApartmentState = ApartmentState.STA;
+            //threadSaveFile.Start();
 
+            ////string json = JsonConvert.SerializeObject(canvas.Children);
+            //string json = "";
+            //foreach (var child in canvas.Children)
+            //{
+            //     json = JsonConvert.SerializeObject(child);
+            //}
+            //// write Json to file
+            //if (saveFileName != "")
+            //{
+            //    try
+            //    {
+            //        StreamWriter sw = new StreamWriter(saveFileName);
+            //        sw.WriteLine(json);
+            //        sw.Close();
+
+            //        // 파일 이름 초기화
+            //        // Program.fileName = "";
+
+            //        System.Windows.MessageBox.Show(saveFileName + " 저장 성공");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.WriteLine("Exception: " + ex.Message);
+            //    }
+            //}
+            //else
+            //{
+            //    // 파일을 선택해주세요
+            //}
+
+        }
+
+        private void saveFile()
+        {
+            System.Windows.Forms.SaveFileDialog saveFile = new System.Windows.Forms.SaveFileDialog();
+
+            saveFile.InitialDirectory = @"C:\\";
+            saveFile.Title = "셀프 인테리어";
+            saveFile.FileName = "마이다스 인테리어";
+            saveFile.DefaultExt = "txt";
+            if (saveFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                saveFileName = saveFile.FileName.ToString();
             }
 
         }
@@ -68,7 +120,7 @@ namespace selfInteriorSimulation
             saveFileDialog.ShowDialog();
 
             if (saveFileDialog.FileName == "")
-                saveFileDialog.FileName = "image.png";
+                saveFileDialog.FileName = "interiorImageDown.png";
 
             RenderTargetBitmap rtb = new RenderTargetBitmap(
                 (int)canvas.RenderSize.Width,
@@ -105,7 +157,7 @@ namespace selfInteriorSimulation
 
         private void About_Click(object sender, RoutedEventArgs e)
         {
-           
+
         }
 
 
@@ -147,14 +199,14 @@ namespace selfInteriorSimulation
                     break;
 
                 case Painting_Mode.Object:
-                    
+
                     break;
 
                 case Painting_Mode.Default:
 
                     return;
             }
-            
+
 
 
             try
@@ -163,7 +215,7 @@ namespace selfInteriorSimulation
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.ToString());
+                System.Windows.MessageBox.Show(exception.ToString());
 
             }
         }
@@ -195,7 +247,7 @@ namespace selfInteriorSimulation
 
                     case Painting_Mode.Object:
 
-                       
+
                         break;
 
                     case Painting_Mode.Default:
@@ -227,16 +279,16 @@ namespace selfInteriorSimulation
             painting_mode = Painting_Mode.Default;
         }
 
-        
 
 
-        
+
+
         Color front_color = Colors.Black;
         Color back_color = Colors.White;
-        
 
-        
-        
+
+
+
 
         private void Refresh_Status(Point position, int undos)
         {
