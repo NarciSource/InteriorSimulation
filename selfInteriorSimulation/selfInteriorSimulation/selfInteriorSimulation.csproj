@@ -70,6 +70,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Objects\InteriorObject.cs" />
+    <Compile Include="Objects\Refrigeraot.cs" />
     <Compile Include="Objects\Wall.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -96,6 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\ground1.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\Refrigerator.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

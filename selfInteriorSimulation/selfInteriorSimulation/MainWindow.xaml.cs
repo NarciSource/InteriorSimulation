@@ -30,6 +30,7 @@ namespace selfInteriorSimulation
             points.Add(new Point(70, 50));
             points.Add(new Point(30,150));
             new Wall(points);
+            new Refrigeraot(new Point(100,200));
         }
     }
 }

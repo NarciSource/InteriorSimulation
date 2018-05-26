@@ -8,6 +8,5 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Canvas x:Name="canvas" Background="White" HorizontalAlignment="Left" Height="419" VerticalAlignment="Top" Width="792"/>
-
     </Grid>
 </Window>

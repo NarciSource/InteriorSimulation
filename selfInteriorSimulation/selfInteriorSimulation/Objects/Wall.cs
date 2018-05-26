@@ -28,8 +28,8 @@ namespace selfInteriorSimulation
                 Points = this.points,
                 StrokeThickness = 3,
                 Stroke = new SolidColorBrush(Colors.Red),
-                //Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri(@"\ground1.PNG", UriKind.Relative))},
-                Fill = new SolidColorBrush(Colors.Brown)
+                Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri(@"image/\ground1.PNG", UriKind.Relative))},
+                //Fill = new SolidColorBrush(Colors.Brown)
             };
             canvas.Children.Add(polygon);
             foreach (Point point in points)
