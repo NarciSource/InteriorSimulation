@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -20,13 +21,11 @@ namespace selfInteriorSimulation
 
         bool moveMode = false;
 
-
         public Wall(PointCollection points)
         {
-            ImageBrush myImageBrush = new ImageBrush(
-                new BitmapImage(new Uri(@"image\ground1", UriKind.Relative)));
-
-
+           // ImageBrush myImageBrush = new ImageBrush(
+           //new BitmapImage(new Uri("pack:\\image\ground1.PNG", UriKind.Relative)));
+            BitmapImage img = new BitmapImage(new Uri(@"pack://application:,,,/image/ground1.PNG"));
             this.points = points;
             polygon = new Polygon()
             {
@@ -34,10 +33,7 @@ namespace selfInteriorSimulation
                 StrokeThickness = 3,
                 Stroke = new SolidColorBrush(Colors.Red),
 
-                //Fill = myImageBrush
-                //Fill = new ImageBrush(new BitmapImage(new Uri(@"image\ground1", UriKind.Relative))); }
-                Fill = new SolidColorBrush(Colors.Brown)// Load the image.
-        
+                Fill = new ImageBrush(img)
 
         };
             canvas.Children.Add(polygon);
