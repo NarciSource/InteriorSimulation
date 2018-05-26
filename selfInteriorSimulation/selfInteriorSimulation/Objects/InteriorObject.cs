@@ -12,16 +12,22 @@ namespace selfInteriorSimulation
     class InteriorObject : BasicObject
     {
         Image objectImg;
-        Point pointInObject;
+        private Point pointInObject;
         bool moveMode = false;
+        public Point point;
+
+        private int width;
+        public int Width { get { return width; } set { width = value; objectImg.Width = value; } }
+        private int height;
+        public int Height { get { return height; } set { height = value; objectImg.Height = value; } }
+
         public InteriorObject(Point point)
         {
             objectImg = new Image();
+            this.point = point;
             setPosition(point);
             objectImg.MouseDown += (o, e) => { moveMode = true; pointInObject = e.GetPosition(objectImg); };
             canvas.MouseMove += (o, e) => {
-                Debug.WriteLine(e.GetPosition(canvas));
-                Debug.WriteLine(e.GetPosition(objectImg));
                 if (moveMode)
                 {
                     Point clickPoint = e.GetPosition(canvas);

@@ -31,6 +31,10 @@ namespace selfInteriorSimulation
             points.Add(new Point(30,150));
             new Wall(points);
             new Refrigeraot(new Point(100,200));
+            Tv tv = new Tv(new Point(200, 200)) {
+                Height = 50,
+                Width = 100
+            };
         }
     }
 }
