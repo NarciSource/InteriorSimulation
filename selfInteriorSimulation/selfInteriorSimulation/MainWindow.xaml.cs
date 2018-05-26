@@ -22,7 +22,14 @@ namespace selfInteriorSimulation
         public MainWindow()
         {
             InitializeComponent();
-            new BasicObject(canvas) { Name = "Test"};
+            BasicObject.canvas = canvas;
+            new BasicObject() { Name = "Test"};
+            PointCollection points = new PointCollection();
+            points.Add(new Point(150, 150));
+            points.Add(new Point(150,50));
+            points.Add(new Point(70, 50));
+            points.Add(new Point(30,150));
+            new Wall(points);
         }
     }
 }

@@ -9,12 +9,13 @@ namespace selfInteriorSimulation
 {
     class BasicObject : UIElement
     {
+        public static Canvas canvas { get; set; }
         private string name = string.Empty;
         public string Name { get { return name; } set { ObjectName.Content = value; name = value; } }
         private Label ObjectName = new Label();
 
-        public BasicObject(Canvas canvas){
-            canvas.Children.Add(ObjectName);
+        public BasicObject(){
+
         }
     }
 }
