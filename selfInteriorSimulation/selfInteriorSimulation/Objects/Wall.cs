@@ -20,17 +20,26 @@ namespace selfInteriorSimulation
 
         bool moveMode = false;
 
+
         public Wall(PointCollection points)
         {
+            ImageBrush myImageBrush = new ImageBrush(
+                new BitmapImage(new Uri(@"image\ground1", UriKind.Relative)));
+
+
             this.points = points;
             polygon = new Polygon()
             {
                 Points = this.points,
                 StrokeThickness = 3,
                 Stroke = new SolidColorBrush(Colors.Red),
-                //Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri(@"\ground1.PNG", UriKind.Relative))},
-                Fill = new SolidColorBrush(Colors.Brown)
-            };
+
+                //Fill = myImageBrush
+                //Fill = new ImageBrush(new BitmapImage(new Uri(@"image\ground1", UriKind.Relative))); }
+                Fill = new SolidColorBrush(Colors.Brown)// Load the image.
+        
+
+        };
             canvas.Children.Add(polygon);
             foreach (Point point in points)
             {
@@ -45,14 +54,14 @@ namespace selfInteriorSimulation
                     moveMode = true;
                     for (int i = 0; i < points.Count; i++)
                     {
-                        if (Math.Abs(e.GetPosition(canvas).X - points[i].X) < 10 && Math.Abs(e.GetPosition(canvas).Y - points[i].Y) < 10)
+                        if (Math.Abs( e.GetPosition(canvas).X - points[i].X) < 10 && Math.Abs(e.GetPosition(canvas).Y - points[i].Y) < 10)
                         {
                             movePointNum = i;
                         }
                     }
                 };
-                pointSquare.MouseUp += (o, e) => { moveMode = false; };
-                Canvas.SetZIndex(pointSquare, 1);
+                pointSquare.MouseUp += (o, e) => { moveMode=false; };
+                Canvas.SetZIndex(pointSquare,1);
                 pointSquares.Add(pointSquare);
                 canvas.Children.Add(pointSquare);
             }
