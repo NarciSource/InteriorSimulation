@@ -28,10 +28,14 @@ namespace selfInteriorSimulation
         public override void setColor(Color color)
         {
             polygon.Stroke = new SolidColorBrush(color);
+            foreach (var each in pointSquares)
+            {
+                each.Fill = polygon.Stroke;
+            }
         }
         public override void setBorderThickness(double thickness)
         {
-            polygon.StrokeThickness = thickness*3;
+            polygon.StrokeThickness = thickness * 3;
         }
         public Wall(PointCollection points)
         {
@@ -57,7 +61,7 @@ namespace selfInteriorSimulation
                 Polygon pointSquare = new Polygon()
                 {
                     Points = getSquarePoints(point),
-                    Fill = new SolidColorBrush(Colors.Blue),
+                    Fill = new SolidColorBrush(Colors.Black),
                     StrokeThickness = 1
                 };
                 pointSquare.MouseDown += (o, e) =>
