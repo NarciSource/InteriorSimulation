@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace selfInteriorSimulation
 {
-    class BasicObject : UIElement
+    class BasicObject : Border
     {
         public static Canvas canvas { get; set; }
         private string name = string.Empty;

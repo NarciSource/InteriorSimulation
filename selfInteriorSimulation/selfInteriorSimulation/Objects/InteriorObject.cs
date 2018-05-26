@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace selfInteriorSimulation
 {
@@ -13,7 +14,6 @@ namespace selfInteriorSimulation
 
         Image objectImg;
         private Point pointInObject;
-        bool moveMode = false;
         public Point point;
 
         private int width;
@@ -26,23 +26,24 @@ namespace selfInteriorSimulation
             objectImg = new Image();
             this.point = point;
             setPosition(point);
-            objectImg.MouseDown += (o, e) => { moveMode = true; pointInObject = e.GetPosition(objectImg); };
-            canvas.MouseMove += (o, e) => {
-                if (moveMode)
+            this.MouseDown += (o, e) => { notify(this); this.CaptureMouse(); pointInObject = e.GetPosition(objectImg); };
+            this.MouseMove += (o, e) => {
+                if (this.IsMouseCaptured)
                 {
                     Point clickPoint = e.GetPosition(canvas);
                     setPosition(new Point(clickPoint.X - pointInObject.X, clickPoint.Y - pointInObject.Y));
                 }
             };
-            objectImg.MouseUp += (o, e) => { moveMode = false; };
-            canvas.Children.Add(objectImg);
+            this.MouseUp += (o, e) => { this.ReleaseMouseCapture(); };
+            this.Child = objectImg;
+            canvas.Children.Add(this);
         }
 
         public virtual void setPosition(Point point)
         {
-            Canvas.SetTop(objectImg, point.Y);
-            Canvas.SetLeft(objectImg, point.X);
-            Canvas.SetZIndex(objectImg, 2);
+            Canvas.SetTop(this, point.Y);
+            Canvas.SetLeft(this, point.X);
+            Canvas.SetZIndex(this, 2);
         }
 
         public void setImg(string src)

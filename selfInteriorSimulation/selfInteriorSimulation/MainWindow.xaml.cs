@@ -55,10 +55,18 @@ namespace selfInteriorSimulation
             
         }
 
-
+        private BasicObject activeObject = null;
         private void Active(object sender)
         {
-            MessageBox.Show(sender.ToString());
+            if (activeObject != null)
+            {
+                activeObject.BorderThickness = new Thickness(0);
+            }
+
+            activeObject = (BasicObject)sender;
+            SettingDock.Visibility = Visibility.Visible;
+            activeObject.BorderBrush = new SolidColorBrush(Colors.Red);
+            activeObject.BorderThickness = new Thickness(1);
         }
 
 
@@ -117,6 +125,10 @@ namespace selfInteriorSimulation
         private void About_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
         }
 
 
@@ -342,6 +354,11 @@ namespace selfInteriorSimulation
                     break;
             }
             
+        }
+
+        private void setting_name_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            activeObject.Name = ((TextBox)sender).Text;
         }
     }
 }
