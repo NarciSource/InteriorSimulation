@@ -47,6 +47,7 @@ namespace selfInteriorSimulation
             objectImg.RenderTransform = new RotateTransform(angle);
         }
 
+
         public InteriorObject(Point point)
         {
             Point FirstPoint = new Point();
