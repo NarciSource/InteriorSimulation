@@ -80,12 +80,12 @@ namespace selfInteriorSimulation
 
         public virtual void setPosition(Point point)
         {
-            Canvas.SetTop(this, point.Y - height/2);
-            Canvas.SetLeft(this, point.X - width/2);
+            Canvas.SetTop(this, point.Y);
+            Canvas.SetLeft(this, point.X);
             Canvas.SetZIndex(this, 2);
 
-            Canvas.SetTop(NameLabel, (point.Y - height / 2 )+ 100);
-            Canvas.SetLeft(NameLabel, (point.X - width / 2 )+ Width/2);
+            Canvas.SetTop(NameLabel, point.Y - 20);
+            Canvas.SetLeft(NameLabel, point.X + Width/2);
         }
 
         public void setImg(string src)
