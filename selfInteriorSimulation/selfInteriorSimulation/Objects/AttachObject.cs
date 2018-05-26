@@ -166,9 +166,18 @@ namespace selfInteriorSimulation
             point.X = x;
             point.Y = y;
 
+
+
+            foreach(var each in BasicObject.walls)
+                if (!MainWindow.is_inside(each.points, new Point(point.X + Width,point.Y + Height)))
+                {
+                    point.X -= Width;
+                    point.Y -= Height;
+                }
+            else
             //
-            Debug.WriteLine("x: "+point.X+" y: "+ point.Y);
-            base.setPosition( point);
+            Debug.WriteLine("x: " + point.X + " y: " + point.Y);
+            base.setPosition(point);
         }
 
     }

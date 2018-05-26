@@ -243,7 +243,7 @@ namespace selfInteriorSimulation
             }
         }
 
-        static private bool is_inside(PointCollection dst, Point point)
+        static public bool is_inside(PointCollection dst, Point point)
         {
             int crosses = 0;
             for (int i = 0; i < dst.Count; i++)
