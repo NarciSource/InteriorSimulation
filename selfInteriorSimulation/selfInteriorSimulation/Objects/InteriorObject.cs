@@ -26,15 +26,15 @@ namespace selfInteriorSimulation
             objectImg = new Image();
             this.point = point;
             setPosition(point);
-            objectImg.MouseDown += (o, e) => { notify(this); moveMode = true; pointInObject = e.GetPosition(objectImg); };
-            canvas.MouseMove += (o, e) => {
+            //objectImg.MouseDown += (o, e) => { notify(this); moveMode = true; pointInObject = e.GetPosition(objectImg); };
+          /*  canvas.MouseMove += (o, e) => {
                 if (moveMode)
                 {
                     Point clickPoint = e.GetPosition(canvas);
                     setPosition(new Point(clickPoint.X - pointInObject.X, clickPoint.Y - pointInObject.Y));
                 }
             };
-            objectImg.MouseUp += (o, e) => { moveMode = false; };
+            objectImg.MouseUp += (o, e) => { moveMode = false; };*/
             canvas.Children.Add(objectImg);
         }
 

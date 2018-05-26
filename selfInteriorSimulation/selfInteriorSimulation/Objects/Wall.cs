@@ -62,7 +62,7 @@ namespace selfInteriorSimulation
                 canvas.Children.Add(pointSquare);
             }
             canvas.MouseMove += Canvas_MouseMove; ;
-
+            BasicObject.walls.Add(this);
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
