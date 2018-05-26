@@ -71,7 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Objects\InteriorObject.cs" />
-    <Compile Include="Objects\Refrigerator.cs" />
+    <Compile Include="Objects\Refrigeratro.cs" />
     <Compile Include="Objects\Tv.cs" />
     <Compile Include="Objects\Wall.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
