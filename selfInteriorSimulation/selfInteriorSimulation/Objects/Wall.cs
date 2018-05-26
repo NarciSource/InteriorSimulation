@@ -20,17 +20,26 @@ namespace selfInteriorSimulation
 
         bool moveMode = false;
 
+
         public Wall(PointCollection points)
         {
+            ImageBrush myImageBrush = new ImageBrush(
+                new BitmapImage(new Uri(@"image\ground1", UriKind.Relative)));
+
+
             this.points = points;
             polygon = new Polygon()
             {
                 Points = this.points,
                 StrokeThickness = 3,
                 Stroke = new SolidColorBrush(Colors.Red),
-                Fill = new ImageBrush { ImageSource = new BitmapImage(new Uri(@"image/\ground1.PNG", UriKind.Relative))},
-                //Fill = new SolidColorBrush(Colors.Brown)
-            };
+
+                //Fill = myImageBrush
+                //Fill = new ImageBrush(new BitmapImage(new Uri(@"image\ground1", UriKind.Relative))); }
+                Fill = new SolidColorBrush(Colors.Brown)// Load the image.
+        
+
+        };
             canvas.Children.Add(polygon);
             foreach (Point point in points)
             {
