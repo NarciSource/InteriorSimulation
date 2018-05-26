@@ -166,7 +166,6 @@ namespace selfInteriorSimulation
             point.X = x;
             point.Y = y;
 
-            //
             Debug.WriteLine("x: "+point.X+" y: "+ point.Y);
             base.setPosition( point);
         }
