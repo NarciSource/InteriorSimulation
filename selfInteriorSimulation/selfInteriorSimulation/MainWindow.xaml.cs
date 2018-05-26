@@ -272,8 +272,8 @@ namespace selfInteriorSimulation
                     string name = JsonConvert.SerializeObject(obj.Name);
                     fileContent += name + "\n";
 
-                    int height = ((InteriorObject)obj).height;
-                    int width = ((InteriorObject)obj).width;
+                    int height = ((InteriorObject)obj).Height;
+                    int width = ((InteriorObject)obj).Width;
                     fileContent += height + "\n";
                     fileContent += width + "\n";
 
@@ -327,35 +327,35 @@ namespace selfInteriorSimulation
                     case 0: break;//Wall
                     case 1:
                         Chair ch = new Chair(pointObj);
-                        ch.Name = name; ch.height = height; ch.width = width; ch.setBorderThickness(border); ch.setRotate(rotate);
+                        ch.Name = name; ch.Height = height; ch.Width = width; ch.setBorderThickness(border); ch.setRotate(rotate);
                         break;
                     case 2:
                         Refrigerator re = new Refrigerator(pointObj);
-                        re.Name = name; re.height = height; re.width = width; re.setBorderThickness(border); re.setRotate(rotate);
+                        re.Name = name; re.Height = height; re.Width = width; re.setBorderThickness(border); re.setRotate(rotate);
                         break;
                     case 3:
                         Sofa so = new Sofa(pointObj);
-                        so.Name = name; so.height = height; so.width = width; so.setBorderThickness(border); so.setRotate(rotate);
+                        so.Name = name; so.Height = height; so.Width = width; so.setBorderThickness(border); so.setRotate(rotate);
                         break;
                     case 4:
                         Table tab = new Table(pointObj);
-                        tab.Name = name; tab.height = height; tab.width = width; tab.setBorderThickness(border); tab.setRotate(rotate);
+                        tab.Name = name; tab.Height = height; tab.Width = width; tab.setBorderThickness(border); tab.setRotate(rotate);
                         break;
                     case 5:
                         Tv tv = new Tv(pointObj);
-                        tv.Name = name; tv.height = height; tv.width = width; tv.setBorderThickness(border); tv.setRotate(rotate);
+                        tv.Name = name; tv.Height = height; tv.Width = width; tv.setBorderThickness(border); tv.setRotate(rotate);
                         break;
                     case 6:
                         Washer wa = new Washer(pointObj);
-                        wa.Name = name; wa.height = height; wa.width = width; wa.setBorderThickness(border); wa.setRotate(rotate);
+                        wa.Name = name; wa.Height = height; wa.Width = width; wa.setBorderThickness(border); wa.setRotate(rotate);
                         break;
                     case 7:
                         Door att = new Door(pointObj);
-                        att.Name = name; att.height = height; att.width = width; att.setBorderThickness(border); att.setRotate(rotate);
+                        att.Name = name; att.Height = height; att.Width = width; att.setBorderThickness(border); att.setRotate(rotate);
                         break;
                     case 8:
-                        Objects.WindowObject wi = new Objects.WindowObject(pointObj);
-                        wi.Name = name; wi.height = height; wi.width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
+                        WindowObject wi = new WindowObject(pointObj);
+                        wi.Name = name; wi.Height = height; wi.Width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
                         break;
                     default: break;
                 }
@@ -597,8 +597,8 @@ namespace selfInteriorSimulation
             alret w = new alret();
             if (w.ShowDialog() == true)
             {
-                nowObject.width = w.cWidth;
-                nowObject.height = w.cHeight;
+                nowObject.Width = w.cWidth;
+                nowObject.Height = w.cHeight;
                 nowObject.Name = w.cName;
             }
 
@@ -614,7 +614,7 @@ namespace selfInteriorSimulation
             switch (((Button)sender).Name.ToString())
             {
                 case "refre_button":
-                    nowObject = new Refrigerator(new Point(0, 0)) { Name="냉장고", Width = object_width, Height = object_height };
+                    nowObject = new Refrigerator(new Point(0, 0)) { Name="냉장고", Width = 70, Height = 130 };
                     painting_mode = Painting_Mode.Refre;
                     break;
                 case "sofa_button":
@@ -656,7 +656,7 @@ namespace selfInteriorSimulation
             int num = 0;
             if (int.TryParse(((TextBox)sender).Text, out num))
             {
-                ((InteriorObject)activeObject).width = num;
+                ((InteriorObject)activeObject).Width = num;
             }
         }
 
@@ -665,7 +665,7 @@ namespace selfInteriorSimulation
             int num = 0;
             if (int.TryParse(((TextBox)sender).Text, out num))
             {
-                ((InteriorObject)activeObject).height = num;
+                ((InteriorObject)activeObject).Height = num;
             }
         }
 
@@ -752,8 +752,8 @@ namespace selfInteriorSimulation
                                 break;
 
                         }
-                        nowObject.width = ((InteriorObject)activeObject).width;
-                        nowObject.height = ((InteriorObject)activeObject).height;
+                        nowObject.Width = ((InteriorObject)activeObject).Width;
+                        nowObject.Height = ((InteriorObject)activeObject).Height;
 
                         break;
                 }

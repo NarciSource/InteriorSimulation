@@ -19,10 +19,10 @@ namespace selfInteriorSimulation
         private Point mpoint;
         public Point point { get { return mpoint; } set { setPosition(value); mpoint = value; } }
 
-        private int Width;
-        public int width { get { return Width; } set { Width = value; objectImg.Width = value; } }
-        private int Height;
-        public int height { get { return Height; } set { Height = value;  objectImg.Height = value; } }
+        private int width;
+        public int Width { get { return width; } set { width = value; objectImg.Width = value; } }
+        private int height;
+        public int Height { get { return height; } set { height = value;  objectImg.Height = value; } }
 
         private double rotate;
         public override void setColor(Color color)
@@ -50,7 +50,7 @@ namespace selfInteriorSimulation
 
         public InteriorObject(Point point)
         {
-            this.BorderThickness = new Thickness(2);
+            //this.BorderThickness = new Thickness(2);
 
             Point FirstPoint = new Point();
             objectImg = new Image();
