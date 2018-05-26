@@ -23,7 +23,6 @@ namespace selfInteriorSimulation
         int movePointNum;
 
         bool moveMode = false;
-        public BitmapImage img;
 
         public override void setColor(Color color)
         {
@@ -37,12 +36,23 @@ namespace selfInteriorSimulation
         {
             polygon.StrokeThickness = thickness * 3;
         }
+        public double getBorderThickness()
+        {
+            return polygon.StrokeThickness / 3;
+        }
+
+        public void setImg(Uri uri)
+        {
+            BitmapImage img = new BitmapImage(uri);
+            polygon.Fill = new ImageBrush(img);
+        }
         public Wall(PointCollection points)
         {
             isType = IsType.Wall;
            // ImageBrush myImageBrush = new ImageBrush(
            //new BitmapImage(new Uri("pack:\\image\ground1.PNG", UriKind.Relative)));
-            img = new BitmapImage(new Uri(@"pack://application:,,,/image/ground1.PNG"));
+
+            BitmapImage img = new BitmapImage(new Uri(@"pack://application:,,,/image/ground1.PNG"));
             this.points = points;
             polygon = new Polygon()
             {

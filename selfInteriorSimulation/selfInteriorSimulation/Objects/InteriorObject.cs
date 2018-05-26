@@ -30,6 +30,11 @@ namespace selfInteriorSimulation
         {
             this.BorderThickness = new Thickness(thickness);
         }
+        public void setRotate(double angle)
+        {
+            objectImg.RenderTransform = new RotateTransform(angle);
+        }
+
         public InteriorObject(Point point)
         {
             objectImg = new Image();

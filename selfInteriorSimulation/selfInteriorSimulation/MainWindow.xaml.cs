@@ -28,32 +28,8 @@ namespace selfInteriorSimulation
             Wall.notify += Active;
             InteriorObject.notify += Active;
 
-            double first_width = 400;
-            double first_height = 300;
 
-            double canvas_width = 800;
-            double canvas_height = 500;
-
-            double center_x1 = canvas_width / 2 - first_width / 2;
-            double center_y1 = canvas_height / 2 - first_height / 2;
-            double center_x2 = canvas_width / 2 + first_width / 2;
-            double center_y2 = canvas_height / 2 + first_height / 2;
-
-            Point point1 = new Point(center_x1, center_y1);
-            Point point2 = new Point(center_x1, center_y2);
-            Point point3 = new Point(center_x2, center_y2);
-            Point point4 = new Point(center_x2, center_y1);
-
-
-            BasicObject.canvas = canvas;
-            PointCollection points = new PointCollection();
-            points.Add(point1);
-            points.Add(point2);
-            points.Add(point3);
-            points.Add(point4);
-            new Wall(points);
-            new Door(new Point(100, 100)) { Width = 50, Height = 50 };
-            new WindowObject(new Point(100, 100)) { Width = 50, Height = 50 };
+            New_Click(new object(), new RoutedEventArgs());
         }
 
         private BasicObject activeObject = null;
@@ -61,14 +37,38 @@ namespace selfInteriorSimulation
         {
             if (activeObject != null)
             {
-                activeObject.setBorderThickness(0);
+                if (!(activeObject is Wall))
+                    activeObject.setBorderThickness(0);
                 activeObject.setColor(Colors.Black);
             }
 
             activeObject = (BasicObject)sender;
             SettingDock.Visibility = Visibility.Visible;
             activeObject.setColor(Colors.Red);
-            activeObject.setBorderThickness(1);
+            setting_name.Text = activeObject.Name.ToString();
+
+            if (sender is Wall)
+            {
+                setting_height.IsEnabled = false;
+                setting_width.IsEnabled = false;
+                setting_angle.IsEnabled = false;
+                setting_material.IsEnabled = true;
+                setting_thickness.IsEnabled = true;
+                setting_thickness.Text = ((Wall)activeObject).getBorderThickness().ToString();
+            }
+            else
+            {
+                activeObject.setBorderThickness(1);
+
+                setting_height.IsEnabled = true;
+                setting_width.IsEnabled = true;
+                setting_angle.IsEnabled = true;
+                setting_material.IsEnabled = false;
+                setting_thickness.IsEnabled = false;
+                setting_width.Text = activeObject.ActualWidth.ToString();
+                setting_height.Text = activeObject.ActualHeight.ToString();
+            }
+
         }
 
 
@@ -109,6 +109,37 @@ namespace selfInteriorSimulation
         }
 
 
+        private void New_Click(object sender, RoutedEventArgs e)
+        {
+            canvas.Children.Clear();
+
+            double first_width = 400;
+            double first_height = 300;
+
+            double canvas_width = 800;
+            double canvas_height = 500;
+
+            double center_x1 = canvas_width / 2 - first_width / 2;
+            double center_y1 = canvas_height / 2 - first_height / 2;
+            double center_x2 = canvas_width / 2 + first_width / 2;
+            double center_y2 = canvas_height / 2 + first_height / 2;
+
+            Point point1 = new Point(center_x1, center_y1);
+            Point point2 = new Point(center_x1, center_y2);
+            Point point3 = new Point(center_x2, center_y2);
+            Point point4 = new Point(center_x2, center_y1);
+
+
+            BasicObject.canvas = canvas;
+            PointCollection points = new PointCollection();
+            points.Add(point1);
+            points.Add(point2);
+            points.Add(point3);
+            points.Add(point4);
+            new Wall(points);
+            new AttachObject(new Point(100, 100)) { Width = 50, Height = 50 };
+
+        }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
@@ -119,9 +150,20 @@ namespace selfInteriorSimulation
         {
             if (canvas.Children.Count > 0)
             {
+                redocollection.Add((BasicObject)canvas.Children[canvas.Children.Count - 1]);
                 canvas.Children.RemoveAt(canvas.Children.Count - 1);
             }
             undo_times.Content = canvas.Children.Count.ToString();
+        }
+
+        List<BasicObject> redocollection = new List<BasicObject>();
+        private void Redo_Click(object sender, RoutedEventArgs e)
+        {
+            if (redocollection.Count > 0)
+            {
+                canvas.Children.Add(redocollection[redocollection.Count - 1]);
+                redocollection.RemoveAt(redocollection.Count - 1);
+            }
         }
 
         private void About_Click(object sender, RoutedEventArgs e)
@@ -300,16 +342,6 @@ namespace selfInteriorSimulation
 
             
         }
-
-        
-
-
-        
-        Color front_color = Colors.Black;
-        Color back_color = Colors.White;
-        
-
-        
         
 
         private void Refresh_Status(Point position, int undos)
@@ -357,6 +389,111 @@ namespace selfInteriorSimulation
         private void setting_name_TextChanged(object sender, TextChangedEventArgs e)
         {
             activeObject.Name = ((TextBox)sender).Text;
+        }
+
+        private void setting_width_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int num = 0;
+            if (int.TryParse(((TextBox)sender).Text, out num))
+            {
+                ((InteriorObject)activeObject).Width = num;
+            }
+        }
+
+        private void setting_height_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int num = 0;
+            if (int.TryParse(((TextBox)sender).Text, out num))
+            {
+                ((InteriorObject)activeObject).Height = num;
+            }
+        }
+
+        private void setting_thickness_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int num = 0;
+            if (int.TryParse(((TextBox)sender).Text, out num))
+            {
+                ((Wall)activeObject).setBorderThickness(num);
+            }
+        }
+        
+        private void setting_angle_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            double num = 0;
+            if (double.TryParse(((TextBox)sender).Text, out num))
+            {
+                ((InteriorObject)activeObject).setRotate(num);
+            }
+        }
+
+        private void setting_matrial_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (activeObject is Wall)
+            {
+                switch (((ComboBox)sender).SelectedValue.ToString())
+                {
+                    case "Marble":
+                        ((Wall)activeObject).setImg(new Uri(@"pack://application:,,,/image/marble.jpg"));
+                        break;
+                    case "Wood":
+                        ((Wall)activeObject).setImg(new Uri(@"pack://application:,,,/image/wood.jpg"));
+                        break;
+                    case "Oak":
+                        ((Wall)activeObject).setImg(new Uri(@"pack://application:,,,/image/oak.jpg"));
+                        break;
+                }
+            }
+        }
+
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            const int object_width = 100;
+            const int object_height = 130;
+            if (activeObject != null)
+            {
+                switch (e.Key)
+                {
+                    case Key.Delete:
+                        canvas.Children.Remove(activeObject);
+
+                        activeObject = null;
+                        break;
+                    case Key.LeftCtrl:
+                        if (activeObject is Wall) break;
+
+                        switch (activeObject.isType)
+                        {
+                            case BasicObject.IsType.Chair:
+                                nowObject = new Chair(new Point(0, 0));
+                                painting_mode = Painting_Mode.Chair;
+                                break;
+                            case BasicObject.IsType.Sofa:
+                                nowObject = new Sofa(new Point(0, 0));
+                                painting_mode = Painting_Mode.Sofa;
+                                break;
+                            case BasicObject.IsType.Table:
+                                nowObject = new Table(new Point(0, 0));
+                                painting_mode = Painting_Mode.Table;
+                                break;
+                            case BasicObject.IsType.Tv:
+                                nowObject = new Tv(new Point(0, 0));
+                                painting_mode = Painting_Mode.TV;
+                                break;
+                            case BasicObject.IsType.Refrigeraot:
+                                nowObject = new Refrigerator(new Point(0, 0));
+                                painting_mode = Painting_Mode.Refre;
+                                break;
+
+                        }
+                        nowObject.Width = ((InteriorObject)activeObject).Width;
+                        nowObject.Height = ((InteriorObject)activeObject).Height;
+
+                        break;
+                }
+            }
         }
     }
 }

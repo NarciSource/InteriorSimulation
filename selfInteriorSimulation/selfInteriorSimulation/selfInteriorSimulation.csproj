@@ -77,7 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Objects\Chair.cs" />
-    <Compile Include="Objects\Door.cs" />
     <Compile Include="Objects\InteriorObject.cs" />
     <Compile Include="Objects\Refrigerator.cs" />
     <Compile Include="Objects\Sofa.cs" />
@@ -85,7 +84,6 @@
     <Compile Include="Objects\Tv.cs" />
     <Compile Include="Objects\Wall.cs" />
     <Compile Include="Objects\Washer.cs" />
-    <Compile Include="Objects\WindowObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -141,7 +139,11 @@
     <Resource Include="image\door.PNG" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="image\window.PNG" />
+    <Resource Include="image\marble.jpg" />
+    <Resource Include="image\wood.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\oak.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
