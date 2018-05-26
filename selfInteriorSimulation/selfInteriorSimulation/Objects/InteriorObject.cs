@@ -19,10 +19,10 @@ namespace selfInteriorSimulation
         private Point mpoint;
         public Point point { get { return mpoint; } set { setPosition(value); mpoint = value; } }
 
-        protected int width;
-        public int Width { get { return width; } set { width = value; objectImg.Width = value; } }
-        protected int height;
-        public int Height { get { return height; } set { height = value;  objectImg.Height = value; } }
+        private int Width;
+        public int width { get { return Width; } set { Width = value; objectImg.Width = value; } }
+        private int Height;
+        public int height { get { return Height; } set { Height = value;  objectImg.Height = value; } }
 
         private double rotate;
         public override void setColor(Color color)
@@ -54,7 +54,9 @@ namespace selfInteriorSimulation
             objectImg = new Image();
             this.point = point;
             setPosition(point);
-            this.MouseDown += (o, e) => { notify(this); this.CaptureMouse(); FirstPoint = e.GetPosition(canvas); pointInObject = e.GetPosition(objectImg); };
+            setBorderThickness(getBorderThicknessDbl());
+            setRotate(getBorderThicknessDbl());
+            this.MouseDown += (o, e) => { notify(this); this.CaptureMouse(); pointInObject = e.GetPosition(objectImg); };
             this.MouseMove += (o, e) => {
                 if (this.IsMouseCaptured)
                 {
