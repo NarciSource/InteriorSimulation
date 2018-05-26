@@ -91,14 +91,19 @@
                     <TextBlock Text="Rotate" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
                     <TextBlock Text="Width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
                     <TextBlock Text="Height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="Material" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Width="100">
                     <TextBox x:Name="setting_name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_name_TextChanged"/>
                     <TextBox x:Name="setting_thickness" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_thickness_TextChanged"/>
                     <TextBox x:Name="setting_angle" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_angle_TextChanged"/>
-
                     <TextBox x:Name="setting_width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_width_TextChanged"/>
                     <TextBox x:Name="setting_height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_height_TextChanged"/>
+                    <ComboBox x:Name="setting_material" SelectedValuePath="Content" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" SelectionChanged="setting_matrial_SelectionChanged">
+                        <ComboBoxItem Content="Marble"/>
+                        <ComboBoxItem Content="Wood"/>
+                        <ComboBoxItem Content="Oak"/>
+                    </ComboBox>
                 </StackPanel>
 
 

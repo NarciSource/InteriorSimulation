@@ -52,6 +52,7 @@ namespace selfInteriorSimulation
                 setting_height.IsEnabled = false;
                 setting_width.IsEnabled = false;
                 setting_angle.IsEnabled = false;
+                setting_material.IsEnabled = true;
                 setting_thickness.IsEnabled = true;
                 setting_thickness.Text = ((Wall)activeObject).getBorderThickness().ToString();
             }
@@ -62,6 +63,7 @@ namespace selfInteriorSimulation
                 setting_height.IsEnabled = true;
                 setting_width.IsEnabled = true;
                 setting_angle.IsEnabled = true;
+                setting_material.IsEnabled = false;
                 setting_thickness.IsEnabled = false;
                 setting_width.Text = activeObject.ActualWidth.ToString();
                 setting_height.Text = activeObject.ActualHeight.ToString();
@@ -424,6 +426,27 @@ namespace selfInteriorSimulation
                 ((InteriorObject)activeObject).setRotate(num);
             }
         }
+
+        private void setting_matrial_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (activeObject is Wall)
+            {
+                switch (((ComboBox)sender).SelectedValue.ToString())
+                {
+                    case "Marble":
+                        ((Wall)activeObject).setImg(new Uri(@"pack://application:,,,/image/marble.jpg"));
+                        break;
+                    case "Wood":
+                        ((Wall)activeObject).setImg(new Uri(@"pack://application:,,,/image/wood.jpg"));
+                        break;
+                    case "Oak":
+                        ((Wall)activeObject).setImg(new Uri(@"pack://application:,,,/image/oak.jpg"));
+                        break;
+                }
+            }
+        }
+
+
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
 
