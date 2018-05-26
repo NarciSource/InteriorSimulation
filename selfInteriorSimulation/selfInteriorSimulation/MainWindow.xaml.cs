@@ -135,6 +135,7 @@ namespace selfInteriorSimulation
 
             switch (painting_mode)
             {
+                case Painting_Mode.Object:
                 case Painting_Mode.Wall:
                     shape = new Rectangle()
                     {
@@ -145,11 +146,7 @@ namespace selfInteriorSimulation
                 case Painting_Mode.Bottom:
 
                     break;
-
-                case Painting_Mode.Object:
                     
-                    break;
-
                 case Painting_Mode.Default:
 
                     return;
@@ -182,6 +179,7 @@ namespace selfInteriorSimulation
                 switch (painting_mode)
                 {
                     case Painting_Mode.Wall:
+                    case Painting_Mode.Object:
                         shape.Width = Math.Abs(points[0].X - point.X);
                         shape.Height = Math.Abs(points[0].Y - point.Y);
                         shape.Margin = new Thickness(Math.Min(points[0].X, point.X),
@@ -192,12 +190,8 @@ namespace selfInteriorSimulation
                     case Painting_Mode.Bottom:
 
                         break;
-
-                    case Painting_Mode.Object:
-
+                        
                        
-                        break;
-
                     case Painting_Mode.Default:
 
                         break;
@@ -209,6 +203,8 @@ namespace selfInteriorSimulation
 
         private void Mouse_Left_Up(object sender, MouseButtonEventArgs e)
         {
+            Point point = e.GetPosition(canvas);
+
             switch (painting_mode)
             {
                 case Painting_Mode.Wall:
@@ -218,12 +214,18 @@ namespace selfInteriorSimulation
 
                     new Wall(points);
 
-                    canvas.Children.Remove(shape);
+
+                    break;
+
+                case Painting_Mode.Object:
+
+                    new Refrigerator(new Point(Math.Min(points[0].X, point.X), Math.Min(points[0].Y, point.Y)));
+
 
                     break;
             }
 
-
+            canvas.Children.Remove(shape);
             painting_mode = Painting_Mode.Default;
         }
 
@@ -247,6 +249,11 @@ namespace selfInteriorSimulation
         private void Wall_Click(object sender, RoutedEventArgs e)
         {
             painting_mode = Painting_Mode.Wall;
+        }
+
+        private void Refre_Click(object sender, RoutedEventArgs e)
+        {
+            painting_mode = Painting_Mode.Object;
         }
     }
 }

@@ -68,10 +68,10 @@
                 </TabItem>
                 <TabItem Header="Object">
                 <StackPanel Orientation="Vertical">
-                    <Button DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Wall_Click">
-                        <StackPanel Orientation="Horizontal" Height="30" Width="Auto" HorizontalAlignment="Left">
-                            <Image Source="img/save.png"/>
-                            <TextBlock Text="Room" HorizontalAlignment="Center"/>
+                    <Button DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Refre_Click">
+                        <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
+                            <Image Source="img/save.png" Height="30"/>
+                            <TextBlock Text="Refre" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <Button DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Wall_Click">

@@ -6,9 +6,9 @@ using System.Windows;
 
 namespace selfInteriorSimulation
 {
-    class Refrigeraot : InteriorObject
+    class Refrigerator : InteriorObject
     {
-        public Refrigeraot(Point point) : base(point)
+        public Refrigerator(Point point) : base(point)
         {
             setImg("Refrigerator.jpg");
         }
