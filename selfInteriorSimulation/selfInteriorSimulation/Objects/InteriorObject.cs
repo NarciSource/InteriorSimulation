@@ -23,16 +23,26 @@ namespace selfInteriorSimulation
         public int Height;
         public int height { get { return Height; } set { Height = value;  objectImg.Height = value; } }
 
+        private double rotate;
         public override void setColor(Color color)
         {
             this.BorderBrush = new SolidColorBrush(color);
+        }
+        public double getBorderThicknessDbl()
+        {
+            return Double.Parse(this.BorderThickness.ToString());
         }
         public override void setBorderThickness(double thickness)
         {
             this.BorderThickness = new Thickness(thickness);
         }
+        public double getRotate()
+        {
+            return this.rotate;
+        }
         public void setRotate(double angle)
         {
+            this.rotate = angle;
             objectImg.RenderTransform = new RotateTransform(angle);
         }
 

@@ -115,15 +115,21 @@ namespace selfInteriorSimulation
                     obj.isType == BasicObject.IsType.Table ||
                     obj.isType == BasicObject.IsType.Tv ||
                     obj.isType == BasicObject.IsType.Washer ||
-                    obj.isType == BasicObject.IsType.door)
+                    obj.isType == BasicObject.IsType.door ||
+                    obj.isType == BasicObject.IsType.window )
                 {
                     string jsonType = JsonConvert.SerializeObject(obj.isType);
                     fileContent += jsonType + "\n";
+
+                    string name = JsonConvert.SerializeObject(obj.Name);
+                    fileContent += name + "\n";
+
                     int height = ((InteriorObject)obj).height;
                     int width = ((InteriorObject)obj).width;
-
                     fileContent += height + "\n";
                     fileContent += width + "\n";
+
+                    double rotate = ((InteriorObject)obj).getRotate();
 
                     string jsonPoint = JsonConvert.SerializeObject(((InteriorObject)obj).point);
                     fileContent += jsonPoint + "\n";
@@ -282,6 +288,7 @@ namespace selfInteriorSimulation
             points.Add(point3);
             points.Add(point4);
             new Wall(points);
+            //new Window(points);
             new AttachObject(new Point(100, 100)) { Width = 50, Height = 50 };
 
         }
@@ -314,10 +321,12 @@ namespace selfInteriorSimulation
         private void About_Click(object sender, RoutedEventArgs e)
         {
 
+            MessageBox.Show("Midas Challenge Application 1 Team\r\r  금준호\r  유한결\r  정원철", "About.");
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            Application.Current.Shutdown();
         }
 
 
@@ -634,6 +643,11 @@ namespace selfInteriorSimulation
                         break;
                 }
             }
+        }
+
+        private void Window_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
