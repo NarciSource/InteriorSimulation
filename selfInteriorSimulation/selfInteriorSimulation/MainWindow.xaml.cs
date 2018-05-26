@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -54,10 +55,18 @@ namespace selfInteriorSimulation
             
         }
 
-
+        private BasicObject activeObject = null;
         private void Active(object sender)
         {
-            //MessageBox.Show(sender.ToString());
+            if (activeObject != null)
+            {
+                activeObject.BorderThickness = new Thickness(0);
+            }
+
+            activeObject = (BasicObject)sender;
+            SettingDock.Visibility = Visibility.Visible;
+            activeObject.BorderBrush = new SolidColorBrush(Colors.Red);
+            activeObject.BorderThickness = new Thickness(1);
         }
 
 
@@ -115,7 +124,11 @@ namespace selfInteriorSimulation
 
         private void About_Click(object sender, RoutedEventArgs e)
         {
-           
+
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
         }
 
 
@@ -141,28 +154,58 @@ namespace selfInteriorSimulation
 
         Shape shape = null;
         PointCollection points = new PointCollection();
+        InteriorObject nowObject = null;
 
         private void Mouse_Left_Down(object sender, MouseButtonEventArgs e)
         {
+            const int object_width = 100;
+            const int object_height = 130;
+
+            Point point = e.GetPosition(canvas);
             points = new PointCollection();
-            points.Add(e.GetPosition(canvas));
+            points.Add(point);
 
             if (painting_mode == Painting_Mode.Default) return;
 
-            shape = new Rectangle()
-            {
-                StrokeThickness = 1,
-                Stroke = new SolidColorBrush(Colors.Black),
-            };
 
-            try
+            switch (painting_mode)
             {
-                canvas.Children.Add(shape);
+                case Painting_Mode.Chair:
+                case Painting_Mode.Refre:
+                case Painting_Mode.Sofa:
+                case Painting_Mode.Table:
+                case Painting_Mode.TV:
+
+                    PointCollection object_points = new PointCollection();
+                    object_points.Add(new Point(point.X - object_width / 2, point.Y - object_height / 2));
+                    object_points.Add(new Point(point.X + object_width / 2, point.Y - object_height / 2));
+                    object_points.Add(new Point(point.X - object_width / 2, point.Y + object_height / 2));
+                    object_points.Add(new Point(point.X + object_width / 2, point.Y + object_height / 2));
+
+                    foreach (var each in BasicObject.walls)
+                        if (isCollesion(each.points, object_points) == true) return;
+                    
+                    painting_mode = Painting_Mode.Default;
+                    break;
             }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.ToString());
 
+            if (painting_mode == Painting_Mode.Wall)
+            {
+                shape = new Rectangle()
+                {
+                    StrokeThickness = 1,
+                    Stroke = new SolidColorBrush(Colors.Black),
+                };
+
+                try
+                {
+                    canvas.Children.Add(shape);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.ToString());
+
+                }
             }
         }
 
@@ -175,6 +218,17 @@ namespace selfInteriorSimulation
 
             Refresh_Status(point, canvas.Children.Count);
 
+            switch (painting_mode)
+            {
+                case Painting_Mode.Chair:
+                case Painting_Mode.Refre:
+                case Painting_Mode.Sofa:
+                case Painting_Mode.Table:
+                case Painting_Mode.TV:
+                    nowObject.setPosition(new Point(point.X - nowObject.Width / 2, point.Y - nowObject.Height / 2));
+                    return;
+            }
+
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 if (painting_mode == Painting_Mode.Default) return;
@@ -186,8 +240,41 @@ namespace selfInteriorSimulation
 
                 canvas.Children.Remove(shape);
             }
-
         }
+
+        static private bool is_inside(PointCollection dst, Point point)
+        {
+            int crosses = 0;
+            for (int i = 0; i < dst.Count; i++)
+            {
+                int j = (i + 1) % dst.Count;
+                if ((dst[i].Y > point.Y) != (dst[j].Y > point.Y))
+                {
+                    double atX = (dst[j].X - dst[i].X) * (point.Y - dst[i].Y) / (dst[j].Y - dst[i].Y) + dst[i].X;
+                    if (point.X < atX)
+                        crosses++;
+                }
+            }
+            return crosses % 2 > 0;
+        }
+
+        static public bool isCollesion(PointCollection dst,PointCollection src)
+        {
+            Collection<bool> in_chk = new Collection<bool>();
+
+            foreach (var each in src)
+            {
+                in_chk.Add(is_inside(dst, each));
+            }
+
+            if (in_chk[0] ^ in_chk[1] || in_chk[2]^in_chk[3] || in_chk[1]^in_chk[2])
+            {
+                return true;
+            }
+            return false;
+        }
+
+
 
 
         private void Mouse_Left_Up(object sender, MouseButtonEventArgs e)
@@ -197,7 +284,7 @@ namespace selfInteriorSimulation
 
 
             Point point = e.GetPosition(canvas);
-
+            
             switch (painting_mode)
             {
                 case Painting_Mode.Wall:
@@ -207,33 +294,13 @@ namespace selfInteriorSimulation
 
                     new Wall(points);
 
-                    break;
-
-                case Painting_Mode.Refre:
-
-                    new Refrigerator(new Point(point.X - object_width / 2, point.Y - object_height / 2)) { Width = object_width, Height = object_height };
-                    break;
-
-                case Painting_Mode.Chair:
-                    new Chair(new Point(point.X - object_width / 2, point.Y - object_height / 2)) { Width = object_width, Height = object_height };
-                    break;
-
-                case Painting_Mode.Sofa:
-                    new Sofa(new Point(point.X - object_width / 2, point.Y - object_height / 2)) { Width = object_width, Height = object_height };
-                    break;
-
-                case Painting_Mode.Table:
-                    new Table(new Point(point.X - object_width / 2, point.Y - object_height / 2)) { Width = object_width, Height = object_height };
-                    break;
-
-                case Painting_Mode.TV:
-                    new Tv(new Point(point.X - object_width / 2, point.Y - object_height / 2)) { Width = object_width, Height = object_height };
+                    canvas.Children.Remove(shape);
+                    painting_mode = Painting_Mode.Default;
                     break;
 
             }
 
-            canvas.Children.Remove(shape);
-            painting_mode = Painting_Mode.Default;
+            
         }
 
         
@@ -260,25 +327,38 @@ namespace selfInteriorSimulation
 
         private void Object_Click(object sender, RoutedEventArgs e)
         {
+            const int object_width = 100;
+            const int object_height = 130;
+
             switch (((Button)sender).Name.ToString())
             {
                 case "refre_button":
+                    nowObject = new Refrigerator(new Point(0, 0)) { Width = object_width, Height = object_height };
                     painting_mode = Painting_Mode.Refre;
                     break;
                 case "sofa_button":
+                    nowObject = new Sofa(new Point(0, 0)) { Width = object_width, Height = object_height };
                     painting_mode = Painting_Mode.Sofa;
                     break;
                 case "chair_button":
+                    nowObject = new Chair(new Point(0, 0)) { Width = object_width, Height = object_height };
                     painting_mode = Painting_Mode.Chair;
                     break;
                 case "table_button":
+                    nowObject = new Table(new Point(0, 0)) { Width = object_width, Height = object_height };
                     painting_mode = Painting_Mode.Table;
                     break;
                 case "tv_button":
+                    nowObject = new Tv(new Point(0, 0)) { Width = object_width, Height = object_height };
                     painting_mode = Painting_Mode.TV;
                     break;
             }
             
+        }
+
+        private void setting_name_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            activeObject.Name = ((TextBox)sender).Text;
         }
     }
 }
