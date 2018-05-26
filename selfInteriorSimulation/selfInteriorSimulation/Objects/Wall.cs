@@ -37,6 +37,10 @@ namespace selfInteriorSimulation
         {
             polygon.StrokeThickness = thickness * 3;
         }
+        public double getBorderThickness()
+        {
+            return polygon.StrokeThickness / 3;
+        }
         public Wall(PointCollection points)
         {
             isType = IsType.Wall;

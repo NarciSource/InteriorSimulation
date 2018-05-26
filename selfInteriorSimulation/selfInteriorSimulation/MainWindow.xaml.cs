@@ -28,31 +28,8 @@ namespace selfInteriorSimulation
             Wall.notify += Active;
             InteriorObject.notify += Active;
 
-            double first_width = 400;
-            double first_height = 300;
 
-            double canvas_width = 800;
-            double canvas_height = 500;
-
-            double center_x1 = canvas_width / 2 - first_width / 2;
-            double center_y1 = canvas_height / 2 - first_height / 2;
-            double center_x2 = canvas_width / 2 + first_width / 2;
-            double center_y2 = canvas_height / 2 + first_height / 2;
-
-            Point point1 = new Point(center_x1, center_y1);
-            Point point2 = new Point(center_x1, center_y2);
-            Point point3 = new Point(center_x2, center_y2);
-            Point point4 = new Point(center_x2, center_y1);
-
-
-            BasicObject.canvas = canvas;
-            PointCollection points = new PointCollection();
-            points.Add(point1);
-            points.Add(point2);
-            points.Add(point3);
-            points.Add(point4);
-            new Wall(points);
-            new AttachObject(new Point(100, 100)) { Width= 50 ,Height = 50};
+            New_Click(new object(), new RoutedEventArgs());
         }
 
         private BasicObject activeObject = null;
@@ -60,27 +37,31 @@ namespace selfInteriorSimulation
         {
             if (activeObject != null)
             {
-                activeObject.setBorderThickness(0);
+                if (!(activeObject is Wall))
+                    activeObject.setBorderThickness(0);
                 activeObject.setColor(Colors.Black);
             }
-
-            
 
             activeObject = (BasicObject)sender;
             SettingDock.Visibility = Visibility.Visible;
             activeObject.setColor(Colors.Red);
-            activeObject.setBorderThickness(1);
+            
             setting_name.Text = activeObject.Name.ToString();
 
             if (sender is Wall)
             {
                 setting_height.IsEnabled = false;
                 setting_width.IsEnabled = false;
+                setting_thickness.IsEnabled = true;
+                setting_thickness.Text = ((Wall)activeObject).getBorderThickness().ToString();
             }
             else
             {
+                activeObject.setBorderThickness(1);
+
                 setting_height.IsEnabled = true;
                 setting_width.IsEnabled = true;
+                setting_thickness.IsEnabled = false;
                 setting_width.Text = activeObject.ActualWidth.ToString();
                 setting_height.Text = activeObject.ActualHeight.ToString();
             }
@@ -125,6 +106,37 @@ namespace selfInteriorSimulation
         }
 
 
+        private void New_Click(object sender, RoutedEventArgs e)
+        {
+            canvas.Children.Clear();
+
+            double first_width = 400;
+            double first_height = 300;
+
+            double canvas_width = 800;
+            double canvas_height = 500;
+
+            double center_x1 = canvas_width / 2 - first_width / 2;
+            double center_y1 = canvas_height / 2 - first_height / 2;
+            double center_x2 = canvas_width / 2 + first_width / 2;
+            double center_y2 = canvas_height / 2 + first_height / 2;
+
+            Point point1 = new Point(center_x1, center_y1);
+            Point point2 = new Point(center_x1, center_y2);
+            Point point3 = new Point(center_x2, center_y2);
+            Point point4 = new Point(center_x2, center_y1);
+
+
+            BasicObject.canvas = canvas;
+            PointCollection points = new PointCollection();
+            points.Add(point1);
+            points.Add(point2);
+            points.Add(point3);
+            points.Add(point4);
+            new Wall(points);
+            new AttachObject(new Point(100, 100)) { Width = 50, Height = 50 };
+
+        }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
@@ -404,6 +416,15 @@ namespace selfInteriorSimulation
             }
         }
 
+        private void setting_thickness_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int num = 0;
+            if (int.TryParse(((TextBox)sender).Text, out num))
+            {
+                ((Wall)activeObject).setBorderThickness(num);
+            }
+        }
+
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (activeObject != null)
@@ -415,5 +436,7 @@ namespace selfInteriorSimulation
                     activeObject = null;
                 }
         }
+
+        
     }
 }
