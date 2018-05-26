@@ -22,6 +22,7 @@ namespace selfInteriorSimulation
         public MainWindow()
         {
             InitializeComponent();
+            new BasicObject(canvas) { Name = "Test"};
         }
     }
 }
