@@ -17,9 +17,10 @@ namespace selfInteriorSimulation
     abstract class BasicObject : Border, CL
     {
         public static Canvas canvas { get; set; }
-        private string name = string.Empty;
-        public string Name { get { return name; } set { ObjectName.Content = value; name = value; } }
-        private Label ObjectName = new Label();
+        private string name = "이름";
+        public string Name { get { return name; } set {
+                NameLabel.Content = value; name = value; } }
+        public Label NameLabel = new Label();
 
         public static List<BasicObject> objects = new List<BasicObject>();
             
@@ -31,7 +32,8 @@ namespace selfInteriorSimulation
             Table,
             Tv,
             Washer,
-            AttachObject
+            door,
+            window
         };
         public IsType isType;
         public static List<Wall> walls = new List<Wall>();
