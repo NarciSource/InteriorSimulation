@@ -339,16 +339,6 @@ namespace selfInteriorSimulation
 
             
         }
-
-        
-
-
-        
-        Color front_color = Colors.Black;
-        Color back_color = Colors.White;
-        
-
-        
         
 
         private void Refresh_Status(Point position, int undos)
@@ -427,14 +417,51 @@ namespace selfInteriorSimulation
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+
+            const int object_width = 100;
+            const int object_height = 130;
             if (activeObject != null)
-                if (e.Key == Key.Delete)
+            {
+                switch (e.Key)
                 {
-                    canvas.Children.Remove(activeObject);
+                    case Key.Delete:
+                        canvas.Children.Remove(activeObject);
 
+                        activeObject = null;
+                        break;
+                    case Key.LeftCtrl:
+                        if (activeObject is Wall) break;
 
-                    activeObject = null;
+                        switch (activeObject.isType)
+                        {
+                            case BasicObject.IsType.Chair:
+                                nowObject = new Chair(new Point(0, 0));
+                                painting_mode = Painting_Mode.Chair;
+                                break;
+                            case BasicObject.IsType.Sofa:
+                                nowObject = new Sofa(new Point(0, 0));
+                                painting_mode = Painting_Mode.Sofa;
+                                break;
+                            case BasicObject.IsType.Table:
+                                nowObject = new Table(new Point(0, 0));
+                                painting_mode = Painting_Mode.Table;
+                                break;
+                            case BasicObject.IsType.Tv:
+                                nowObject = new Tv(new Point(0, 0));
+                                painting_mode = Painting_Mode.TV;
+                                break;
+                            case BasicObject.IsType.Refrigeraot:
+                                nowObject = new Refrigerator(new Point(0, 0));
+                                painting_mode = Painting_Mode.Refre;
+                                break;
+
+                        }
+                        nowObject.Width = ((InteriorObject)activeObject).Width;
+                        nowObject.Height = ((InteriorObject)activeObject).Height;
+
+                        break;
                 }
+            }
         }
 
         

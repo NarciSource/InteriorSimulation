@@ -8,7 +8,13 @@ using System.Windows.Media;
 
 namespace selfInteriorSimulation
 {
-    abstract class BasicObject : Border
+    interface CL : ICloneable
+    {
+
+    }
+
+
+    abstract class BasicObject : Border, CL
     {
         public static Canvas canvas { get; set; }
         private string name = string.Empty;
@@ -34,5 +40,10 @@ namespace selfInteriorSimulation
 
         public abstract void setColor(Color color);
         public abstract void setBorderThickness(double thickness);
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }
