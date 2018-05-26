@@ -72,8 +72,8 @@
                         </Button>
                         <Button x:Name="custom_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="70" Height="Auto" Click="Custom_Click">
                             <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                                <Image Source="image/tv.png" Height="50" />
-                                <TextBlock Text="TV" HorizontalAlignment="Center"/>
+                                <Image Source="image/custom.png" Height="50" />
+                                <TextBlock Text="Custom" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>

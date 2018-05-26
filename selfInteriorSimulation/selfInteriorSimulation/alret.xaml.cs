@@ -21,22 +21,39 @@ namespace selfInteriorSimulation
         public alret()
         {
             InitializeComponent();
-
-            Topmost = true;
-            WindowStyle = WindowStyle.None;
-            //AllowsTransparency = true;
-            //Background = null;
-            InitializeComponent();
-            if (Application.Current.Properties["aaa"] != null)   // 값이 없으면 에러가 난다.
-            {
-                lbl1.Content = Application.Current.Properties["aaa"].ToString();
-            }
-            
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void btnDialogOk_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            this.DialogResult = true;
+        }
+        
+
+        public int cWidth
+        {
+            get {
+                int num = 0;
+                if (int.TryParse(custom_width.Text, out num))
+                    return num;
+                else return 0;
+            }
+        }
+        public int cHeight
+        {
+            get
+            {
+                int num = 0;
+                if (int.TryParse(custom_height.Text, out num))
+                    return num;
+                else return 0;
+            }
+        }
+        public string cName
+        {
+            get
+            {
+                return custom_name.Text;
+            }
         }
     }
 }

@@ -48,6 +48,8 @@ namespace selfInteriorSimulation
 
         public InteriorObject(Point point)
         {
+            this.BorderThickness = new Thickness(2);
+
             Point FirstPoint = new Point();
             objectImg = new Image();
             this.point = point;
