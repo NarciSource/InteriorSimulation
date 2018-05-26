@@ -14,6 +14,9 @@ namespace selfInteriorSimulation
 {
     class Wall : BasicObject
     {
+        static public del notify;
+
+
         public PointCollection points = new PointCollection();
         Polygon polygon;
         List<Polygon> pointSquares = new List<Polygon>();
@@ -21,6 +24,28 @@ namespace selfInteriorSimulation
 
         bool moveMode = false;
 
+        public override void setColor(Color color)
+        {
+            polygon.Stroke = new SolidColorBrush(color);
+            foreach (var each in pointSquares)
+            {
+                each.Fill = polygon.Stroke;
+            }
+        }
+        public override void setBorderThickness(double thickness)
+        {
+            polygon.StrokeThickness = thickness * 3;
+        }
+        public double getBorderThickness()
+        {
+            return polygon.StrokeThickness / 3;
+        }
+
+        public void setImg(Uri uri)
+        {
+            BitmapImage img = new BitmapImage(uri);
+            polygon.Fill = new ImageBrush(img);
+        }
         public Wall(PointCollection points)
         {
             isType = IsType.Wall;
@@ -33,9 +58,12 @@ namespace selfInteriorSimulation
                 Stroke = (SolidColorBrush)(new BrushConverter().ConvertFrom("#5f6975")),
 
                 Fill = new ImageBrush(img)
+            };
+            this.Child = polygon;
+
+            canvas.Children.Add(this);
 
         };
-            
             canvas.Children.Add(polygon);
             foreach (Point point in points)
             {
@@ -61,9 +89,18 @@ namespace selfInteriorSimulation
                 pointSquares.Add(pointSquare);
                 canvas.Children.Add(pointSquare);
             }
-            canvas.MouseMove += Canvas_MouseMove; ;
+            canvas.MouseMove += Canvas_MouseMove;
+
+            polygon.MouseDown += Mouse_Down;
+
             BasicObject.walls.Add(this);
         }
+
+        private void Mouse_Down(object sender, MouseEventArgs e)
+        {
+            notify(this);
+        }
+
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {

@@ -5,53 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:selfInteriorSimulation"
         mc:Ignorable="d"
-        Title="Self Interior Simulation" Height="700" Width="1080">
+        Title="Self Interior Simulation" Height="700" Width="1080" KeyDown="Window_KeyDown">
     <DockPanel>
-        <Border DockPanel.Dock="Top" Height="120">
-            <TabControl>
-                <TabItem Header="Menu">
-                    <DockPanel>
-                        <Button DockPanel.Dock="Left" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="0,0,0,0" Width="40" Height="Auto" Click="Open_File_Click">
-                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                                <Image Source="image/save.png"/>
-                                <TextBlock Text="Open File" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button DockPanel.Dock="Left" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="0,0,0,0" Width="40" Height="Auto" Click="Save_Click">
-                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                                <Image Source="image/save.png"/>
-                                <TextBlock Text="Save" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button DockPanel.Dock="Left" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="0,0,0,0" Width="40" Height="Auto" Click="Save_Image_Click">
-                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                                <Image Source="image/save.png"/>
-                                <TextBlock Text="image Save" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button DockPanel.Dock="Left" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="10,0,0,0" Width="40" Height="Auto" Click="Clear_Click">
-                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                                <Image Source="image/clear.png"/>
-                                <TextBlock Text="Clear" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button DockPanel.Dock="Left" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="10,0,0,0" Width="40" Height="Auto" Click="Undo_Click">
-                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                                <Image Source="image/undo.png"/>
-                                <TextBlock Text="Undo" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button DockPanel.Dock="Right" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="10,0,0,0" Width="40" Height="Auto" Click="About_Click">
-                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                                <Image Source="image/about.png"/>
-                                <TextBlock Text="About" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Border/>
-                    </DockPanel>
-
-                </TabItem>
-            </TabControl>
+        <Border DockPanel.Dock="Top">
+            <Menu>
+                <MenuItem Header="Menu">
+                    <MenuItem Header="New" Click="New_Click"/>
+                    <MenuItem Header="Save" Click="Save_Click"/>
+                    <MenuItem Header="Save as Image" Click="Save_Image_Click"/>
+                    <MenuItem Header="Clear" Click="Clear_Click"/>
+                    <MenuItem Header="Exit" Click="Exit_Click"/>
+                </MenuItem>
+                <MenuItem Header="Tools">
+                    <MenuItem Header="Undo" Click="Undo_Click"/>
+                    <MenuItem Header="Redo" Click="Redo_Click"/>
+                </MenuItem>
+                <MenuItem Header="Help">
+                    <MenuItem Header="About" Click="About_Click"/>
+                </MenuItem>
+            </Menu>
         </Border>
 
         <Border DockPanel.Dock="Left" Width="100" BorderThickness="1"  BorderBrush="Black">
@@ -111,26 +83,27 @@
 
         </Border>
 
-        <Border x:Name="SettingDock" DockPanel.Dock="Right" Width="200" Background="WhiteSmoke" BorderBrush="DodgerBlue" BorderThickness="1" Visibility="Visible">
+        <Border x:Name="SettingDock" DockPanel.Dock="Right" Width="200" Background="WhiteSmoke" BorderBrush="DodgerBlue" BorderThickness="1" Visibility="Hidden">
             <StackPanel Orientation="Horizontal" Margin="10,20,10,20">
                 <StackPanel Orientation="Vertical" Width="70">
                     <TextBlock Text="Name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <TextBlock Text="Color" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <TextBlock Text="Round" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <TextBlock Text="Font Size" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="Thickness" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="Rotate" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="Width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="Height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="Material" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Width="100">
-                    <TextBox x:Name="setting_name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <ComboBox x:Name="setting_color" SelectedValuePath="Content" Height="20" VerticalAlignment="Center" Margin="0,5,0,0">
-                        <ComboBoxItem Content="Alice Blue"/>
-                        <ComboBoxItem Content="Light Pink"/>
-                        <ComboBoxItem Content="Lavender"/>
-                        <ComboBoxItem Content="MintCream"/>
-                        <ComboBoxItem Content="MistyRose"/>
-                        <ComboBoxItem Content="Snow"/>
+                    <TextBox x:Name="setting_name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_name_TextChanged"/>
+                    <TextBox x:Name="setting_thickness" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_thickness_TextChanged"/>
+                    <TextBox x:Name="setting_angle" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_angle_TextChanged"/>
+                    <TextBox x:Name="setting_width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_width_TextChanged"/>
+                    <TextBox x:Name="setting_height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_height_TextChanged"/>
+                    <ComboBox x:Name="setting_material" SelectedValuePath="Content" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" SelectionChanged="setting_matrial_SelectionChanged">
+                        <ComboBoxItem Content="Marble"/>
+                        <ComboBoxItem Content="Wood"/>
+                        <ComboBoxItem Content="Oak"/>
                     </ComboBox>
-                    <CheckBox Height="20" VerticalAlignment="Center" Margin="0,5,0,0" IsEnabled="False"/>
-                    <TextBox x:Name="setting_fontsize" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
                 </StackPanel>
 
 
