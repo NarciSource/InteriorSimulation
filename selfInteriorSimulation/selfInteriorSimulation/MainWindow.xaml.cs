@@ -152,7 +152,7 @@ namespace selfInteriorSimulation
 
                 case Painting_Mode.Default:
 
-                    break;
+                    return;
             }
             
 
@@ -217,6 +217,9 @@ namespace selfInteriorSimulation
                     points.Add(new Point(points[0].X, points[0].Y + shape.Height));
 
                     new Wall(points);
+
+                    canvas.Children.Remove(shape);
+
                     break;
             }
 
