@@ -312,7 +312,7 @@ namespace selfInteriorSimulation
 
             // Wall 생성
             Wall wall = new Wall(points);
-            for (i = wallPointNum + 1; i < contentArgs.Length && contentArgs[i + 1] != null && contentArgs[i + 1] != ""; i += 7)
+            for (i = wallPointNum + 1; i < contentArgs.Length && contentArgs[i] != null && contentArgs[i] != ""; i += 7)
             {
                 int type = (int)JsonConvert.DeserializeObject<BasicObject.IsType>(contentArgs[i]);
                 string name = JsonConvert.DeserializeObject<string>(contentArgs[i + 1]);
@@ -354,7 +354,7 @@ namespace selfInteriorSimulation
                         att.Name = name; att.height = height; att.width = width; att.setBorderThickness(border); att.setRotate(rotate);
                         break;
                     case 8:
-                        Objects.WindowObject wi = new Objects.WindowObject(pointObj);
+                        WindowObject wi = new WindowObject(pointObj);
                         wi.Name = name; wi.height = height; wi.width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
                         break;
                     default: break;
