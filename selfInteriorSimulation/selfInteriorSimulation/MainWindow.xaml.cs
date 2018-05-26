@@ -57,7 +57,7 @@ namespace selfInteriorSimulation
 
         private void Active(object sender)
         {
-            MessageBox.Show(sender.ToString());
+            //MessageBox.Show(sender.ToString());
         }
 
 
