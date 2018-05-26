@@ -63,18 +63,6 @@ namespace selfInteriorSimulation
             }
             else
             {
-                activeObject.setBorderThickness(1);
-
-            BasicObject.canvas = canvas;
-            PointCollection points = new PointCollection();
-            points.Add(point1);
-            points.Add(point2);
-            points.Add(point3);
-            points.Add(point4);
-            new Wall(points);
-            //new AttachObject(new Point(100, 100)) { Width= 50 ,Height = 50};
-
-        }
                 setting_height.IsEnabled = true;
                 setting_width.IsEnabled = true;
                 setting_angle.IsEnabled = true;
@@ -83,7 +71,6 @@ namespace selfInteriorSimulation
                 setting_width.Text = activeObject.ActualWidth.ToString();
                 setting_height.Text = activeObject.ActualHeight.ToString();
             }
-
         }
 
 
@@ -128,7 +115,7 @@ namespace selfInteriorSimulation
                     obj.isType == BasicObject.IsType.Table ||
                     obj.isType == BasicObject.IsType.Tv ||
                     obj.isType == BasicObject.IsType.Washer ||
-                    obj.isType == BasicObject.IsType.AttachObject)
+                    obj.isType == BasicObject.IsType.door)
                 {
                     string jsonType = JsonConvert.SerializeObject(obj.isType);
                     fileContent += jsonType + "\n";

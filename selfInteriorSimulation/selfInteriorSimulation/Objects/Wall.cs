@@ -46,6 +46,7 @@ namespace selfInteriorSimulation
             BitmapImage img = new BitmapImage(uri);
             polygon.Fill = new ImageBrush(img);
         }
+
         public Wall(PointCollection points)
         {
             isType = IsType.Wall;
@@ -62,9 +63,7 @@ namespace selfInteriorSimulation
             this.Child = polygon;
 
             canvas.Children.Add(this);
-
-        };
-            canvas.Children.Add(polygon);
+            
             foreach (Point point in points)
             {
                 Polygon pointSquare = new Polygon()
