@@ -403,5 +403,17 @@ namespace selfInteriorSimulation
                 ((InteriorObject)activeObject).Height = num;
             }
         }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (activeObject != null)
+                if (e.Key == Key.Delete)
+                {
+                    canvas.Children.Remove(activeObject);
+
+
+                    activeObject = null;
+                }
+        }
     }
 }
