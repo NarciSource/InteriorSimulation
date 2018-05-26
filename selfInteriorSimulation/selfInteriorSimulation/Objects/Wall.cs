@@ -24,26 +24,25 @@ namespace selfInteriorSimulation
         public Wall(PointCollection points)
         {
             isType = IsType.Wall;
-           // ImageBrush myImageBrush = new ImageBrush(
-           //new BitmapImage(new Uri("pack:\\image\ground1.PNG", UriKind.Relative)));
-            BitmapImage img = new BitmapImage(new Uri(@"pack://application:,,,/image/ground1.PNG"));
+            BitmapImage img = new BitmapImage(new Uri(@"pack://application:,,,/image/tile.PNG"));
             this.points = points;
             polygon = new Polygon()
             {
                 Points = this.points,
-                StrokeThickness = 3,
-                Stroke = new SolidColorBrush(Colors.Red),
+                StrokeThickness = 4,
+                Stroke = (SolidColorBrush)(new BrushConverter().ConvertFrom("#5f6975")),
 
                 Fill = new ImageBrush(img)
 
         };
+            
             canvas.Children.Add(polygon);
             foreach (Point point in points)
             {
                 Polygon pointSquare = new Polygon()
                 {
                     Points = getSquarePoints(point),
-                    Fill = new SolidColorBrush(Colors.Blue),
+                    Fill = (SolidColorBrush)(new BrushConverter().ConvertFrom("#00b368")),
                     StrokeThickness = 1
                 };
                 pointSquare.MouseDown += (o, e) =>

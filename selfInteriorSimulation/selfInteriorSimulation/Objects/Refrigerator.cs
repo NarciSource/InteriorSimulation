@@ -8,7 +8,7 @@ namespace selfInteriorSimulation
         public Refrigerator(Point point) : base(point)
         {
             isType = IsType.Refrigeraot;
-            setImg("Refrigerator.jpg");
+            setImg("refrigerator_dan.PNG");
         }
     }
 }

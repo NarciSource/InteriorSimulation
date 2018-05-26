@@ -8,7 +8,7 @@ namespace selfInteriorSimulation
         public Tv(Point point) : base(point)
         {
             isType = IsType.Tv;
-            setImg("tv.PNG");
+            setImg("tv_dan.PNG");
         }
     }
 }

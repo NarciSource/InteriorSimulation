@@ -12,6 +12,7 @@ namespace selfInteriorSimulation
         public AttachObject(Point point) : base(point)
         {
             setImg("sofa.PNG");
+            isType = IsType.AttachObject;
         }
 
         public override void setPosition(Point point)
@@ -21,9 +22,9 @@ namespace selfInteriorSimulation
             PointCollection points = new PointCollection();
             points.Clear();
             points.Add(point);
-            points.Add(new Point(point.X, point.Y + Height));
-            points.Add(new Point(point.X + Width , point.Y + Height));
-            points.Add(new Point(point.X + Width, point.Y));
+            points.Add(new Point(point.X, point.Y + height));
+            points.Add(new Point(point.X + width , point.Y + height));
+            points.Add(new Point(point.X + width, point.Y));
 
             
             foreach (Point vertexPoint in points)

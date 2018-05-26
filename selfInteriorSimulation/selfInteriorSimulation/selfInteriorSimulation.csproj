@@ -101,18 +101,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="img\about.png" />
-    <Resource Include="img\clear.png" />
-    <Resource Include="img\save.jpg" />
-    <Resource Include="img\save.png" />
-    <Resource Include="img\undo.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\washer.PNG" />
@@ -121,7 +116,7 @@
     <Resource Include="image\ground1.PNG" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="image\Refrigerator.jpg" />
+    <Resource Include="image\refrigerator.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\tv.PNG" />
@@ -134,6 +129,39 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\sofa.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\chair2.PNG" />
+    <Resource Include="image\chair2_dan.PNG" />
+    <Resource Include="image\chair_dan.PNG" />
+    <Resource Include="image\desk.PNG" />
+    <Resource Include="image\desk_dan.PNG" />
+    <Resource Include="image\sofa_dan.PNG" />
+    <Resource Include="image\tv_dan.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\about.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\clear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\save.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\refrigerator_dan.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\tile.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\background.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

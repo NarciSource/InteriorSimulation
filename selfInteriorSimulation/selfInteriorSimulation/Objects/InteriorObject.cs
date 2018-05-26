@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -16,10 +17,10 @@ namespace selfInteriorSimulation
         bool moveMode = false;
         public Point point;
 
-        private int width;
-        public int Width { get { return width; } set { width = value; objectImg.Width = value; } }
-        private int height;
-        public int Height { get { return height; } set { height = value; objectImg.Height = value; } }
+        public int Width;
+        public int width { get { return Width; } set { Width = value; objectImg.Width = value; } }
+        public int Height;
+        public int height { get { return Height; } set { Height = value;  objectImg.Height = value; } }
 
         public InteriorObject(Point point)
         {

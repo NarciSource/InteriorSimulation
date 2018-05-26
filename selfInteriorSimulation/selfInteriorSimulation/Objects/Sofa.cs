@@ -8,7 +8,7 @@ namespace selfInteriorSimulation
         public Sofa(Point point) : base(point)
         {
             isType = IsType.Sofa;
-            setImg("sofa.PNG");
+            setImg("sofa_dan.PNG");
         }
     }
 }

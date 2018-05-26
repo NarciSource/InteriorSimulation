@@ -23,7 +23,8 @@ namespace selfInteriorSimulation
             Sofa,
             Table,
             Tv,
-            Washer
+            Washer,
+            AttachObject
         };
         public IsType isType;
         public static List<Wall> walls = new List<Wall>();
