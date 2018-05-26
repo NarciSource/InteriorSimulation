@@ -64,10 +64,27 @@ namespace selfInteriorSimulation
                 activeObject.setColor(Colors.Black);
             }
 
+            
+
             activeObject = (BasicObject)sender;
             SettingDock.Visibility = Visibility.Visible;
             activeObject.setColor(Colors.Red);
             activeObject.setBorderThickness(1);
+            setting_name.Text = activeObject.Name.ToString();
+
+            if (sender is Wall)
+            {
+                setting_height.IsEnabled = false;
+                setting_width.IsEnabled = false;
+            }
+            else
+            {
+                setting_height.IsEnabled = true;
+                setting_width.IsEnabled = true;
+                setting_width.Text = activeObject.ActualWidth.ToString();
+                setting_height.Text = activeObject.ActualHeight.ToString();
+            }
+
         }
 
 
@@ -367,6 +384,24 @@ namespace selfInteriorSimulation
         private void setting_name_TextChanged(object sender, TextChangedEventArgs e)
         {
             activeObject.Name = ((TextBox)sender).Text;
+        }
+
+        private void setting_width_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int num = 0;
+            if (int.TryParse(((TextBox)sender).Text, out num))
+            {
+                ((InteriorObject)activeObject).Width = num;
+            }
+        }
+
+        private void setting_height_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int num = 0;
+            if (int.TryParse(((TextBox)sender).Text, out num))
+            {
+                ((InteriorObject)activeObject).Height = num;
+            }
         }
     }
 }

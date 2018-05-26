@@ -88,7 +88,8 @@
                     <TextBlock Text="Name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
                     <TextBlock Text="Color" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
                     <TextBlock Text="Round" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <TextBlock Text="Font Size" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="Width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBlock Text="Height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Width="100">
                     <TextBox x:Name="setting_name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_name_TextChanged"/>
@@ -101,7 +102,8 @@
                         <ComboBoxItem Content="Snow"/>
                     </ComboBox>
                     <CheckBox Height="20" VerticalAlignment="Center" Margin="0,5,0,0" IsEnabled="False"/>
-                    <TextBox x:Name="setting_fontsize" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                    <TextBox x:Name="setting_width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_width_TextChanged"/>
+                    <TextBox x:Name="setting_height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_height_TextChanged"/>
                 </StackPanel>
 
 
