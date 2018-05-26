@@ -702,8 +702,8 @@ namespace selfInteriorSimulation
                                 break;
 
                         }
-                        nowObject.Width = ((InteriorObject)activeObject).Width;
-                        nowObject.Height = ((InteriorObject)activeObject).Height;
+                        nowObject.width = ((InteriorObject)activeObject).width;
+                        nowObject.height = ((InteriorObject)activeObject).height;
 
                         break;
                 }
