@@ -24,6 +24,8 @@ namespace selfInteriorSimulation
         {
             InitializeComponent();
 
+            InteriorObject.notify += Active;
+
             double first_width = 400;
             double first_height = 300;
 
@@ -48,6 +50,12 @@ namespace selfInteriorSimulation
             points.Add(point3);
             points.Add(point4);
             new Wall(points);
+        }
+
+
+        private void Active(object sender)
+        {
+            MessageBox.Show(sender.ToString());
         }
 
 
@@ -182,6 +190,10 @@ namespace selfInteriorSimulation
 
         private void Mouse_Left_Up(object sender, MouseButtonEventArgs e)
         {
+            const int object_width = 100;
+            const int object_height = 130;
+
+
             Point point = e.GetPosition(canvas);
 
             switch (painting_mode)
@@ -196,23 +208,24 @@ namespace selfInteriorSimulation
                     break;
 
                 case Painting_Mode.Refre:
-                    new Refrigerator(new Point(Math.Min(points[0].X, point.X), Math.Min(points[0].Y, point.Y)));
+
+                    new Refrigerator(new Point(point.X - object_width / 2, point.Y - object_height / 2)) { Width = object_width, Height = object_height };
                     break;
 
                 case Painting_Mode.Chair:
-                    new Chair(new Point(Math.Min(points[0].X, point.X), Math.Min(points[0].Y, point.Y)));
+                    new Chair(new Point(point.X - object_width / 2, point.Y - object_height / 2)) { Width = object_width, Height = object_height };
                     break;
 
                 case Painting_Mode.Sofa:
-                    new Sofa(new Point(Math.Min(points[0].X, point.X), Math.Min(points[0].Y, point.Y)));
+                    new Sofa(new Point(point.X - object_width / 2, point.Y - object_height / 2)) { Width = object_width, Height = object_height };
                     break;
 
                 case Painting_Mode.Table:
-                    new Table(new Point(Math.Min(points[0].X, point.X), Math.Min(points[0].Y, point.Y)));
+                    new Table(new Point(point.X - object_width / 2, point.Y - object_height / 2)) { Width = object_width, Height = object_height };
                     break;
 
                 case Painting_Mode.TV:
-                    new Tv(new Point(Math.Min(points[0].X, point.X), Math.Min(points[0].Y, point.Y)));
+                    new Tv(new Point(point.X - object_width / 2, point.Y - object_height / 2)) { Width = object_width, Height = object_height };
                     break;
 
             }

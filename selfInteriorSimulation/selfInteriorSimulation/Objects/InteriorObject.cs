@@ -5,8 +5,12 @@ using System.Windows.Media.Imaging;
 
 namespace selfInteriorSimulation
 {
+    public delegate void del(object sender);
+
     class InteriorObject : BasicObject
     {
+        static public del notify;
+
         Image objectImg;
         private Point pointInObject;
         bool moveMode = false;
@@ -22,7 +26,7 @@ namespace selfInteriorSimulation
             objectImg = new Image();
             this.point = point;
             setPosition(point);
-            objectImg.MouseDown += (o, e) => { moveMode = true; pointInObject = e.GetPosition(objectImg); };
+            objectImg.MouseDown += (o, e) => { notify(this); moveMode = true; pointInObject = e.GetPosition(objectImg); };
             canvas.MouseMove += (o, e) => {
                 if (moveMode)
                 {
