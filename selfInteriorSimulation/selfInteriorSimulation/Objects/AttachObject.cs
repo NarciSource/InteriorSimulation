@@ -149,11 +149,8 @@ namespace selfInteriorSimulation
                     double ro = (Math.Abs(r * MainPoint.X + -1 * MainPoint.Y + d)) / (Math.Pow((Math.Pow(r, 2) + 1), 0.5));
                     if (ro < 50)
                     {
+                        AttachPosition(r,d,MainPoint);
                         return true;
-                    }
-                    else
-                    {
-                        return false;
                     }
                 }
             }
@@ -168,6 +165,8 @@ namespace selfInteriorSimulation
             double y = r * x + d;
             point.X = x;
             point.Y = y;
+
+            //
             Debug.WriteLine("x: "+point.X+" y: "+ point.Y);
             base.setPosition( point);
         }
