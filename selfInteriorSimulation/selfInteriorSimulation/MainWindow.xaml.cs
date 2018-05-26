@@ -347,6 +347,8 @@ namespace selfInteriorSimulation
         private void Refresh_Status(Point position, int undos)
         {
             point_position.Content = position.ToString();
+            if(activeObject!=null)
+                object_type.Content = activeObject.ToString();
             undo_times.Content = undos.ToString();
         }
 

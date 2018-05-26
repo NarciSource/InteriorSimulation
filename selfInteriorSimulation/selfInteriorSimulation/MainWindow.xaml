@@ -115,12 +115,10 @@
             <StatusBar>
                 <Label Content="Point Position = "/>
                 <Label x:Name="point_position" Content="000,000"/>
-                <Label Content="Color = "/>
-                <Label x:Name="point_color" Content="0 0 0"/>
+                <Label Content="Object Type = "/>
+                <Label x:Name="object_type" Content=""/>
                 <Label Content="Undo Times = "/>
                 <Label x:Name="undo_times" Content="0"/>
-                <Label Content="Polygon Vertices = "/>
-                <Label x:Name="polygon_vertices"/>
             </StatusBar>
         </Border>
 
