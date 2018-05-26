@@ -92,50 +92,7 @@ namespace selfInteriorSimulation
                 fileName = saveFile.FileName.ToString();
             }
 
-            foreach (var obj in BasicObject.objects)
-            {
-                if (obj.isType == BasicObject.IsType.Wall)
-                {
-                    PointCollection points = ((Wall)obj).points;
-                    fileContent = fileContent + (points.Count + "\n");
-                    foreach (Point point in points)
-                    {
-                        // obj to Json
-                        string json = JsonConvert.SerializeObject(point);
-                        fileContent += (json + "\n");
-                        Point p = JsonConvert.DeserializeObject<Point>(json);
-                    }
-
-
-                    //string json = JsonConvert.SerializeObject((Wall)obj);
-                }
-                else if (obj.isType == BasicObject.IsType.Chair ||
-                    obj.isType == BasicObject.IsType.Refrigeraot ||
-                    obj.isType == BasicObject.IsType.Sofa ||
-                    obj.isType == BasicObject.IsType.Table ||
-                    obj.isType == BasicObject.IsType.Tv ||
-                    obj.isType == BasicObject.IsType.Washer ||
-                    obj.isType == BasicObject.IsType.door ||
-                    obj.isType == BasicObject.IsType.window )
-                {
-                    string jsonType = JsonConvert.SerializeObject(obj.isType);
-                    fileContent += jsonType + "\n";
-
-                    string name = JsonConvert.SerializeObject(obj.Name);
-                    fileContent += name + "\n";
-
-                    int height = ((InteriorObject)obj).height;
-                    int width = ((InteriorObject)obj).width;
-                    fileContent += height + "\n";
-                    fileContent += width + "\n";
-
-                    double rotate = ((InteriorObject)obj).getRotate();
-
-                    string jsonPoint = JsonConvert.SerializeObject(((InteriorObject)obj).point);
-                    fileContent += jsonPoint + "\n";
-
-                }
-            }
+            fileContent = saveStatusToJson();
 
 
             // 파일에 write
@@ -187,44 +144,7 @@ namespace selfInteriorSimulation
 
             if (fileContent != null && fileContent != "")
             {
-                BasicObject.objects = new List<BasicObject>();
-                canvas.Children.Clear();
-
-                string[] contentArgs = fileContent.Split('\n');
-                int wallPointNum = int.Parse(contentArgs[0]);
-                PointCollection points = new PointCollection();
-                int i;
-                for (i = 1; i <= wallPointNum; i++)
-                {
-                    if (contentArgs[i] != null && contentArgs[i] != "")
-                    {
-                        Point p = JsonConvert.DeserializeObject<Point>(contentArgs[i]);
-                        points.Add(p);
-                    }
-                }
-
-                // Wall 생성
-                Wall wall = new Wall(points);
-                for (i = wallPointNum + 1; i < contentArgs.Length && contentArgs[i + 1] != null && contentArgs[i + 1] != ""; i += 4)
-                {
-                    int type = (int)JsonConvert.DeserializeObject<BasicObject.IsType>(contentArgs[i]);
-                    int height = (int)JsonConvert.DeserializeObject<int>(contentArgs[i+1]);
-                    int width = (int)JsonConvert.DeserializeObject<int>(contentArgs[i+2]);
-                    Point pointObj = JsonConvert.DeserializeObject<Point>(contentArgs[i+3]);
-                    // interior Obj 생성
-                    switch (type)
-                    {
-                        case 0: break;//Wall
-                        case 1: Chair ch = new Chair(pointObj); ch.height = height; ch.width = width; break;
-                        case 2: Refrigerator re = new Refrigerator(pointObj); re.height = height; re.width = width; break;
-                        case 3: Sofa so = new Sofa(pointObj); so.height = height; so.width = width; break;
-                        case 4: Table tab = new Table(pointObj); tab.height = height; tab.width = width; break;
-                        case 5: Tv tv = new Tv(pointObj); tv.height = height; tv.width = width; break;
-                        case 6: Washer wa = new Washer(pointObj); wa.height = height; wa.width = width; break;
-                        case 7: AttachObject att = new AttachObject(pointObj); att.height = height; att.width = width; break;
-                        default: break;
-                    }
-                }
+                printUIfromJson(fileContent);
             }
         }
 
@@ -259,7 +179,6 @@ namespace selfInteriorSimulation
             }
         }
 
-
         private void New_Click(object sender, RoutedEventArgs e)
         {
             canvas.Children.Clear();
@@ -289,7 +208,6 @@ namespace selfInteriorSimulation
             points.Add(point4);
             new Wall(points);
             //new Window(points);
-            new AttachObject(new Point(100, 100)) { Width = 50, Height = 50 };
 
         }
 
@@ -315,6 +233,131 @@ namespace selfInteriorSimulation
             {
                 canvas.Children.Add(redocollection[redocollection.Count - 1]);
                 redocollection.RemoveAt(redocollection.Count - 1);
+            }
+        }
+
+        private string saveStatusToJson()
+        {
+            string fileContent = "";
+            foreach (var obj in BasicObject.objects)
+            {
+                if (obj.isType == BasicObject.IsType.Wall)
+                {
+                    PointCollection points = ((Wall)obj).points;
+                    fileContent = fileContent + (points.Count + "\n");
+                    foreach (Point point in points)
+                    {
+                        // obj to Json
+                        string json = JsonConvert.SerializeObject(point);
+                        fileContent += (json + "\n");
+                        Point p = JsonConvert.DeserializeObject<Point>(json);
+                    }
+
+
+                    //string json = JsonConvert.SerializeObject((Wall)obj);
+                }
+                else if (obj.isType == BasicObject.IsType.Chair ||
+                    obj.isType == BasicObject.IsType.Refrigeraot ||
+                    obj.isType == BasicObject.IsType.Sofa ||
+                    obj.isType == BasicObject.IsType.Table ||
+                    obj.isType == BasicObject.IsType.Tv ||
+                    obj.isType == BasicObject.IsType.Washer ||
+                    obj.isType == BasicObject.IsType.door ||
+                    obj.isType == BasicObject.IsType.window)
+                {
+                    string jsonType = JsonConvert.SerializeObject(obj.isType);
+                    fileContent += jsonType + "\n";
+
+                    string name = JsonConvert.SerializeObject(obj.Name);
+                    fileContent += name + "\n";
+
+                    int height = ((InteriorObject)obj).height;
+                    int width = ((InteriorObject)obj).width;
+                    fileContent += height + "\n";
+                    fileContent += width + "\n";
+
+                    double border = ((InteriorObject)obj).getBorderThicknessDbl();
+                    double rotate = ((InteriorObject)obj).getRotate();
+
+                    fileContent += border + "\n";
+                    fileContent += rotate + "\n";
+
+                    string jsonPoint = JsonConvert.SerializeObject(((InteriorObject)obj).point);
+                    fileContent += jsonPoint + "\n";
+
+                }
+            }
+
+            return fileContent;
+        }
+
+        private void printUIfromJson(string fileContent)
+        {
+            BasicObject.objects = new List<BasicObject>();
+            canvas.Children.Clear();
+
+            string[] contentArgs = fileContent.Split('\n');
+            int wallPointNum = int.Parse(contentArgs[0]);
+            PointCollection points = new PointCollection();
+            int i;
+            for (i = 1; i <= wallPointNum; i++)
+            {
+                if (contentArgs[i] != null && contentArgs[i] != "")
+                {
+                    Point p = JsonConvert.DeserializeObject<Point>(contentArgs[i]);
+                    points.Add(p);
+                }
+            }
+
+            // Wall 생성
+            Wall wall = new Wall(points);
+            for (i = wallPointNum + 1; i < contentArgs.Length && contentArgs[i + 1] != null && contentArgs[i + 1] != ""; i += 7)
+            {
+                int type = (int)JsonConvert.DeserializeObject<BasicObject.IsType>(contentArgs[i]);
+                string name = JsonConvert.DeserializeObject<string>(contentArgs[i + 1]);
+                int height = JsonConvert.DeserializeObject<int>(contentArgs[i + 2]);
+                int width = JsonConvert.DeserializeObject<int>(contentArgs[i + 3]);
+                double border = JsonConvert.DeserializeObject<double>(contentArgs[i + 4]);
+                double rotate = JsonConvert.DeserializeObject<double>(contentArgs[i + 5]);
+                Point pointObj = JsonConvert.DeserializeObject<Point>(contentArgs[i + 6]);
+                // interior Obj 생성
+                switch (type)
+                {
+                    case 0: break;//Wall
+                    case 1:
+                        Chair ch = new Chair(pointObj);
+                        ch.Name = name; ch.height = height; ch.width = width; ch.setBorderThickness(border); ch.setRotate(rotate);
+                        break;
+                    case 2:
+                        Refrigerator re = new Refrigerator(pointObj);
+                        re.Name = name; re.height = height; re.width = width; re.setBorderThickness(border); re.setRotate(rotate);
+                        break;
+                    case 3:
+                        Sofa so = new Sofa(pointObj);
+                        so.Name = name; so.height = height; so.width = width; so.setBorderThickness(border); so.setRotate(rotate);
+                        break;
+                    case 4:
+                        Table tab = new Table(pointObj);
+                        tab.Name = name; tab.height = height; tab.width = width; tab.setBorderThickness(border); tab.setRotate(rotate);
+                        break;
+                    case 5:
+                        Tv tv = new Tv(pointObj);
+                        tv.Name = name; tv.height = height; tv.width = width; tv.setBorderThickness(border); tv.setRotate(rotate);
+                        break;
+                    case 6:
+                        Washer wa = new Washer(pointObj);
+                        wa.Name = name; wa.height = height; wa.width = width; wa.setBorderThickness(border); wa.setRotate(rotate);
+                        break;
+                    case 7:
+                        Door att = new Door(pointObj);
+                        att.Name = name; att.height = height; att.width = width; att.setBorderThickness(border); att.setRotate(rotate);
+                        break;
+                    case 8:
+                        Objects.WindowObject wi = new Objects.WindowObject(pointObj);
+                        wi.Name = name; wi.height = height; wi.width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
+                        break;
+                    default: break;
+                }
             }
         }
 
@@ -512,23 +555,23 @@ namespace selfInteriorSimulation
             switch (((Button)sender).Name.ToString())
             {
                 case "refre_button":
-                    nowObject = new Refrigerator(new Point(0, 0)) { Width = object_width, Height = object_height };
+                    nowObject = new Refrigerator(new Point(0, 0)) { width = object_width, height = object_height };
                     painting_mode = Painting_Mode.Refre;
                     break;
                 case "sofa_button":
-                    nowObject = new Sofa(new Point(0, 0)) { Width = object_width, Height = object_height };
+                    nowObject = new Sofa(new Point(0, 0)) { width = object_width, height = object_height };
                     painting_mode = Painting_Mode.Sofa;
                     break;
                 case "chair_button":
-                    nowObject = new Chair(new Point(0, 0)) { Width = object_width, Height = object_height };
+                    nowObject = new Chair(new Point(0, 0)) { width = object_width, height = object_height };
                     painting_mode = Painting_Mode.Chair;
                     break;
                 case "table_button":
-                    nowObject = new Table(new Point(0, 0)) { Width = object_width, Height = object_height };
+                    nowObject = new Table(new Point(0, 0)) { width = object_width, height = object_height };
                     painting_mode = Painting_Mode.Table;
                     break;
                 case "tv_button":
-                    nowObject = new Tv(new Point(0, 0)) { Width = object_width, Height = object_height };
+                    nowObject = new Tv(new Point(0, 0)) { width = object_width, height = object_height };
                     painting_mode = Painting_Mode.TV;
                     break;
             }
@@ -545,7 +588,7 @@ namespace selfInteriorSimulation
             int num = 0;
             if (int.TryParse(((TextBox)sender).Text, out num))
             {
-                ((InteriorObject)activeObject).Width = num;
+                ((InteriorObject)activeObject).width = num;
             }
         }
 
@@ -554,7 +597,7 @@ namespace selfInteriorSimulation
             int num = 0;
             if (int.TryParse(((TextBox)sender).Text, out num))
             {
-                ((InteriorObject)activeObject).Height = num;
+                ((InteriorObject)activeObject).height = num;
             }
         }
 
@@ -637,8 +680,8 @@ namespace selfInteriorSimulation
                                 break;
 
                         }
-                        nowObject.Width = ((InteriorObject)activeObject).Width;
-                        nowObject.Height = ((InteriorObject)activeObject).Height;
+                        nowObject.width = ((InteriorObject)activeObject).width;
+                        nowObject.height = ((InteriorObject)activeObject).height;
 
                         break;
                 }

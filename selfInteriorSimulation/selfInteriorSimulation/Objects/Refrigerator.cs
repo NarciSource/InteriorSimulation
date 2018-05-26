@@ -5,6 +5,7 @@ namespace selfInteriorSimulation
 {
     class Refrigerator : InteriorObject
     {
+      
         public Refrigerator(Point point) : base(point)
         {
             isType = IsType.Refrigeraot;

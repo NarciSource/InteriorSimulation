@@ -10,7 +10,7 @@ namespace selfInteriorSimulation.Objects
     {
         public WindowObject(Point point) : base(point)
         {
-            isType = IsType.door;
+            isType = IsType.window;
             setImg("window.PNG");
         }
     }
