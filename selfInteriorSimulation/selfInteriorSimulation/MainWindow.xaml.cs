@@ -52,7 +52,8 @@ namespace selfInteriorSimulation
             points.Add(point3);
             points.Add(point4);
             new Wall(points);
-            new AttachObject(new Point(100, 100)) { Width= 50 ,Height = 50};
+            new Door(new Point(100, 100)) { Width = 50, Height = 50 };
+            new WindowObject(new Point(100, 100)) { Width = 50, Height = 50 };
         }
 
         private BasicObject activeObject = null;
