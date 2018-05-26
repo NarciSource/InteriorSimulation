@@ -12,6 +12,7 @@
             <Menu>
                 <MenuItem Header="Menu">
                     <MenuItem Header="New" Click="New_Click"/>
+                    <MenuItem Header="Open" Click="Open_File_Click"/>
                     <MenuItem Header="Save" Click="Save_Click"/>
                     <MenuItem Header="Open" Click="Open_File_Click"/>
                     <MenuItem Header="Save as Image" Click="Save_Image_Click"/>
