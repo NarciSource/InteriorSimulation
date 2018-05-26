@@ -8,6 +8,7 @@ namespace selfInteriorSimulation
 {
     class Door : AttachObject
     {
+        //??
         public Door(Point point) : base(point)
         {
             isType = IsType.door;
