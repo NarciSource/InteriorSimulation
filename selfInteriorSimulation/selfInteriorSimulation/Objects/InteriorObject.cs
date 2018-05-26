@@ -22,6 +22,14 @@ namespace selfInteriorSimulation
         private int height;
         public int Height { get { return height; } set { height = value; objectImg.Height = value; } }
 
+        public override void setColor(Color color)
+        {
+            this.BorderBrush = new SolidColorBrush(color);
+        }
+        public override void setBorderThickness(double thickness)
+        {
+            this.BorderThickness = new Thickness(thickness);
+        }
         public InteriorObject(Point point)
         {
             objectImg = new Image();

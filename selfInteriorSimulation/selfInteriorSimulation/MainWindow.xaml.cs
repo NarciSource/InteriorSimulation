@@ -25,6 +25,7 @@ namespace selfInteriorSimulation
         {
             InitializeComponent();
 
+            Wall.notify += Active;
             InteriorObject.notify += Active;
 
             double first_width = 400;
@@ -60,13 +61,13 @@ namespace selfInteriorSimulation
         {
             if (activeObject != null)
             {
-                activeObject.BorderThickness = new Thickness(0);
+                activeObject.setBorderThickness(0);
             }
 
             activeObject = (BasicObject)sender;
             SettingDock.Visibility = Visibility.Visible;
-            activeObject.BorderBrush = new SolidColorBrush(Colors.Red);
-            activeObject.BorderThickness = new Thickness(1);
+            activeObject.setColor(Colors.Red);
+            activeObject.setBorderThickness(1);
         }
 
 

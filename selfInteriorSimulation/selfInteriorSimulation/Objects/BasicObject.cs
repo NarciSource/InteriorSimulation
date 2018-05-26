@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace selfInteriorSimulation
 {
-    class BasicObject : Border
+    abstract class BasicObject : Border
     {
         public static Canvas canvas { get; set; }
         private string name = string.Empty;
@@ -30,5 +31,8 @@ namespace selfInteriorSimulation
         public BasicObject(){
             objects.Add(this);
         }
+
+        public abstract void setColor(Color color);
+        public abstract void setBorderThickness(double thickness);
     }
 }
