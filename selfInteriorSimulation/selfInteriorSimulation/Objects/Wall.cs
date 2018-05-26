@@ -18,12 +18,12 @@ namespace selfInteriorSimulation
         Polygon polygon;
         List<Polygon> pointSquares = new List<Polygon>();
         int movePointNum;
-        public IsType isType = IsType.Wall;
 
         bool moveMode = false;
 
         public Wall(PointCollection points)
         {
+            isType = IsType.Wall;
            // ImageBrush myImageBrush = new ImageBrush(
            //new BitmapImage(new Uri("pack:\\image\ground1.PNG", UriKind.Relative)));
             BitmapImage img = new BitmapImage(new Uri(@"pack://application:,,,/image/ground1.PNG"));

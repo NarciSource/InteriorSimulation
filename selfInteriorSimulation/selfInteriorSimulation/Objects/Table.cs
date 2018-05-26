@@ -5,9 +5,9 @@ namespace selfInteriorSimulation
 {
     class Table : InteriorObject
     {
-        public IsType isType = IsType.Table;
         public Table(Point point) : base(point)
         {
+            isType = IsType.Table;
             setImg("table.PNG");
         }
     }
