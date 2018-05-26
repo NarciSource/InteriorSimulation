@@ -35,7 +35,7 @@ namespace selfInteriorSimulation
                 Stroke = new SolidColorBrush(Colors.Red),
 
                 //Fill = myImageBrush
-                //Fill = new ImageBrush(new BitmapImage(new Uri(@"image\ground1", UriKind.Relative))); }
+                //Fill = new ImageBrush(new BitmapImage(new Uri(@"image\ground1", UriKind.Relative))); }ㅁㄴㅇ
                 Fill = new SolidColorBrush(Colors.Brown)// Load the image.
         
 
