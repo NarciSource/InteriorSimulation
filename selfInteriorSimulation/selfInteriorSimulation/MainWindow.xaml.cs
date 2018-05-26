@@ -288,6 +288,7 @@ namespace selfInteriorSimulation
             points.Add(point3);
             points.Add(point4);
             new Wall(points);
+            //new Window(points);
             new AttachObject(new Point(100, 100)) { Width = 50, Height = 50 };
 
         }
@@ -320,10 +321,12 @@ namespace selfInteriorSimulation
         private void About_Click(object sender, RoutedEventArgs e)
         {
 
+            MessageBox.Show("Midas Challenge Application 1 Team\r\r  금준호\r  유한결\r  정원철", "About.");
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            Application.Current.Shutdown();
         }
 
 
@@ -640,6 +643,11 @@ namespace selfInteriorSimulation
                         break;
                 }
             }
+        }
+
+        private void Window_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 
-namespace selfInteriorSimulation
+namespace selfInteriorSimulation.Objects
 {
     class WindowObject : AttachObject
     {
         public WindowObject(Point point) : base(point)
         {
-            isType = IsType.window;
+            isType = IsType.door;
             setImg("window.PNG");
         }
     }
