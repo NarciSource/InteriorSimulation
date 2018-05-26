@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -34,7 +35,20 @@ namespace selfInteriorSimulation
                     setPosition(new Point(clickPoint.X - pointInObject.X, clickPoint.Y - pointInObject.Y));
                 }
             };
-            this.MouseUp += (o, e) => { this.ReleaseMouseCapture(); };
+            this.MouseUp += (o, e) => {
+                Point p = e.GetPosition(canvas);
+                PointCollection object_points = new PointCollection();
+                object_points.Add(new Point(p.X - width / 2, p.Y - height / 2));
+                object_points.Add(new Point(p.X + width / 2, p.Y - height / 2));
+                object_points.Add(new Point(p.X - width / 2, p.Y + height / 2));
+                object_points.Add(new Point(p.X + width / 2, p.Y + height / 2));
+
+                foreach (var each in BasicObject.walls)
+                    if (MainWindow.isCollesion(each.points, object_points) == true) return;
+
+
+                this.ReleaseMouseCapture();
+            };
             this.Child = objectImg;
             canvas.Children.Add(this);
         }

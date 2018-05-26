@@ -242,7 +242,7 @@ namespace selfInteriorSimulation
             }
         }
 
-        private bool is_inside(PointCollection dst, Point point)
+        static private bool is_inside(PointCollection dst, Point point)
         {
             int crosses = 0;
             for (int i = 0; i < dst.Count; i++)
@@ -258,7 +258,7 @@ namespace selfInteriorSimulation
             return crosses % 2 > 0;
         }
 
-        private bool isCollesion(PointCollection dst,PointCollection src)
+        static public bool isCollesion(PointCollection dst,PointCollection src)
         {
             Collection<bool> in_chk = new Collection<bool>();
 
