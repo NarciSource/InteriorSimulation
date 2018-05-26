@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,6 +14,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using static selfInteriorSimulation.BasicObject;
 
 namespace selfInteriorSimulation
 {
@@ -58,8 +63,6 @@ namespace selfInteriorSimulation
             }
             else
             {
-                activeObject.setBorderThickness(1);
-
                 setting_height.IsEnabled = true;
                 setting_width.IsEnabled = true;
                 setting_angle.IsEnabled = true;
@@ -68,21 +71,163 @@ namespace selfInteriorSimulation
                 setting_width.Text = activeObject.ActualWidth.ToString();
                 setting_height.Text = activeObject.ActualHeight.ToString();
             }
-
         }
 
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var each in canvas.Children)
-            {
+            string fileContent = "";
+            string fileName = "";
 
+            SaveFileDialog saveFile = new SaveFileDialog();
+
+            //saveFile.InitialDirectory = @"C:";
+            saveFile.Title = "파일 저장";
+            saveFile.FileName = "마이다스 인테리어";
+            saveFile.DefaultExt = "txt";
+            Nullable<bool> result = saveFile.ShowDialog();
+
+            if (result == true)
+            {
+                fileName = saveFile.FileName.ToString();
             }
 
+            foreach (var obj in BasicObject.objects)
+            {
+                if (obj.isType == BasicObject.IsType.Wall)
+                {
+                    PointCollection points = ((Wall)obj).points;
+                    fileContent = fileContent + (points.Count + "\n");
+                    foreach (Point point in points)
+                    {
+                        // obj to Json
+                        string json = JsonConvert.SerializeObject(point);
+                        fileContent += (json + "\n");
+                        Point p = JsonConvert.DeserializeObject<Point>(json);
+                    }
+
+
+                    //string json = JsonConvert.SerializeObject((Wall)obj);
+                }
+                else if (obj.isType == BasicObject.IsType.Chair ||
+                    obj.isType == BasicObject.IsType.Refrigeraot ||
+                    obj.isType == BasicObject.IsType.Sofa ||
+                    obj.isType == BasicObject.IsType.Table ||
+                    obj.isType == BasicObject.IsType.Tv ||
+                    obj.isType == BasicObject.IsType.Washer ||
+                    obj.isType == BasicObject.IsType.door)
+                {
+                    string jsonType = JsonConvert.SerializeObject(obj.isType);
+                    fileContent += jsonType + "\n";
+                    int height = ((InteriorObject)obj).height;
+                    int width = ((InteriorObject)obj).width;
+
+                    fileContent += height + "\n";
+                    fileContent += width + "\n";
+
+                    string jsonPoint = JsonConvert.SerializeObject(((InteriorObject)obj).point);
+                    fileContent += jsonPoint + "\n";
+
+                }
+            }
+
+
+            // 파일에 write
+            try
+            {
+                StreamWriter sw = new StreamWriter(fileName);
+                sw.WriteLine(fileContent);
+                sw.Close();
+            }
+            catch (Exception ez)
+            {
+                Console.WriteLine("Exception: " + ez.Message);
+            }
+
+            //canvas.Children.Clear();
+
+            //Open_File_Click();
+        }
+
+
+        private void Open_File_Click(object sender, RoutedEventArgs e)
+        {
+            String fileContent = "";
+            String fileName = "";
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = @"C:\\";
+            openFileDialog.Title = "파일 선택";
+            Nullable<bool> result = openFileDialog.ShowDialog();
+
+            if (result == true)
+            {
+                fileName = openFileDialog.FileName.ToString();
+            }
+
+            if (fileName != null | fileName != "")
+            {
+                try
+                {
+                    StreamReader sr = new StreamReader(fileName);
+                    fileContent = sr.ReadToEnd();
+                    sr.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("파일을 열 수 없습니다. " + ex.Message);
+                }
+            }
+
+            if (fileContent != null && fileContent != "")
+            {
+                BasicObject.objects = new List<BasicObject>();
+                canvas.Children.Clear();
+
+                string[] contentArgs = fileContent.Split('\n');
+                int wallPointNum = int.Parse(contentArgs[0]);
+                PointCollection points = new PointCollection();
+                int i;
+                for (i = 1; i <= wallPointNum; i++)
+                {
+                    if (contentArgs[i] != null && contentArgs[i] != "")
+                    {
+                        Point p = JsonConvert.DeserializeObject<Point>(contentArgs[i]);
+                        points.Add(p);
+                    }
+                }
+
+                // Wall 생성
+                Wall wall = new Wall(points);
+                for (i = wallPointNum + 1; i < contentArgs.Length && contentArgs[i + 1] != null && contentArgs[i + 1] != ""; i += 4)
+                {
+                    int type = (int)JsonConvert.DeserializeObject<BasicObject.IsType>(contentArgs[i]);
+                    int height = (int)JsonConvert.DeserializeObject<int>(contentArgs[i+1]);
+                    int width = (int)JsonConvert.DeserializeObject<int>(contentArgs[i+2]);
+                    Point pointObj = JsonConvert.DeserializeObject<Point>(contentArgs[i+3]);
+                    // interior Obj 생성
+                    switch (type)
+                    {
+                        case 0: break;//Wall
+                        case 1: Chair ch = new Chair(pointObj); ch.height = height; ch.width = width; break;
+                        case 2: Refrigerator re = new Refrigerator(pointObj); re.height = height; re.width = width; break;
+                        case 3: Sofa so = new Sofa(pointObj); so.height = height; so.width = width; break;
+                        case 4: Table tab = new Table(pointObj); tab.height = height; tab.width = width; break;
+                        case 5: Tv tv = new Tv(pointObj); tv.height = height; tv.width = width; break;
+                        case 6: Washer wa = new Washer(pointObj); wa.height = height; wa.width = width; break;
+                        case 7: AttachObject att = new AttachObject(pointObj); att.height = height; att.width = width; break;
+                        default: break;
+                    }
+                }
+            }
         }
 
         private void Save_Image_Click(object sender, RoutedEventArgs e)
         {
+            canvas.Children.Add(BasicObject.objects[0]);
+            canvas.Children.Add(BasicObject.objects[1]);
+            canvas.Children.Add(BasicObject.objects[2]);
+            canvas.Children.Add(BasicObject.objects[3]);
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Png Image|*.png";
             saveFileDialog.Title = "Save an Image File";
@@ -177,9 +322,6 @@ namespace selfInteriorSimulation
 
 
 
-
-
-
         enum Painting_Mode
         {
             Default,
@@ -192,8 +334,6 @@ namespace selfInteriorSimulation
             Chair
         };
         Painting_Mode painting_mode = Painting_Mode.Default;
-
-
 
 
         Shape shape = null;
@@ -252,8 +392,6 @@ namespace selfInteriorSimulation
                 }
             }
         }
-
-
 
 
         private void Mouse_Move(object sender, MouseEventArgs e)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -17,10 +18,10 @@ namespace selfInteriorSimulation
         private Point pointInObject;
         public Point point;
 
-        private int width;
-        public int Width { get { return width; } set { width = value; objectImg.Width = value; } }
-        private int height;
-        public int Height { get { return height; } set { height = value; objectImg.Height = value; } }
+        public int Width;
+        public int width { get { return Width; } set { Width = value; objectImg.Width = value; } }
+        public int Height;
+        public int height { get { return Height; } set { Height = value;  objectImg.Height = value; } }
 
         public override void setColor(Color color)
         {
@@ -57,20 +58,34 @@ namespace selfInteriorSimulation
                 object_points.Add(new Point(p.X + width / 2, p.Y + height / 2));
 
                 foreach (var each in BasicObject.walls)
-                    if (MainWindow.isCollesion(each.points, object_points) == true) return;
-
+                {
+                    if (!(isType == IsType.door && isType == IsType.window)) {
+                        if (MainWindow.isCollesion(each.points, object_points) == true)
+                        {
+                            //return; 외부 놓임 방지 해야함
+                        }
+                    }
+                }
 
                 this.ReleaseMouseCapture();
             };
             this.Child = objectImg;
             canvas.Children.Add(this);
+
+            Canvas.SetTop(NameLabel,point.Y - 10);
+            Canvas.SetLeft(NameLabel, point.X + width/2);
+            Canvas.SetZIndex(NameLabel, 3);
+            canvas.Children.Add(NameLabel);
         }
 
         public virtual void setPosition(Point point)
         {
-            Canvas.SetTop(this, point.Y);
-            Canvas.SetLeft(this, point.X);
+            Canvas.SetTop(this, point.Y - height/2);
+            Canvas.SetLeft(this, point.X - width/2);
             Canvas.SetZIndex(this, 2);
+
+            Canvas.SetTop(NameLabel, (point.Y - height / 2 )+ 100);
+            Canvas.SetLeft(NameLabel, (point.X - width / 2 )+ Width/2);
         }
 
         public void setImg(string src)

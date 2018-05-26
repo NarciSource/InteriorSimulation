@@ -10,14 +10,20 @@ namespace selfInteriorSimulation
     {
         public AttachObject(Point point) : base(point)
         {
-            setImg("door.PNG");
-            canvas.MouseMove += (o, e)  => { attachMode = getWallToPoint(e.GetPosition(canvas));  };
+            this.MouseDown += (o, e) => {
+                moveMode = true; };
+            canvas.MouseMove += (o, e)  => { if (moveMode) { attachMode = getWallToPoint(e.GetPosition(canvas)); }  };
+            canvas.MouseUp += (o, e) => { if (moveMode) { moveMode = false; if (!attachMode) { MessageBox.Show(Name+"은 벽 위에 두세요."); } } };
         }
-
+        bool moveMode = false;
         bool attachMode = false;
-
+        int pp = - 50;
         public override void setPosition(Point point)
         {
+            if (!moveMode)
+            {
+                return;
+            }
             if (!attachMode)
             {
                 base.setPosition(point);
@@ -31,64 +37,73 @@ namespace selfInteriorSimulation
             {
                 for (int i = 0; i < wall.points.Count; i++)
                 {
+                    Point FirstPoint;
+                    Point SecondPoint;
                     int dx = 0;
                     int dy = 0;
                     if (i != wall.points.Count - 1)
                     {
-                        dx = (int)(wall.points[i].X - wall.points[i + 1].X);
-                        dy = (int)(wall.points[i].Y - wall.points[i + 1].Y);
+                        FirstPoint = wall.points[i];
+                        SecondPoint = wall.points[i+1];
                     }
                     else
                     {
-                        dx = (int)(wall.points[i].X - wall.points[0].X);
-                        dy = (int)(wall.points[i].Y - wall.points[0].Y);
+                        FirstPoint = wall.points[i];
+                        SecondPoint = wall.points[0];
                     }
 
+                    dx = (int)(FirstPoint.X - SecondPoint.X);
+                    dy = (int)(FirstPoint.Y - SecondPoint.Y);
                     if (dx == 0)
                     {
-                        if (Math.Abs(wall.points[i].X - MainPoint.X) < 10)
+                        if (Math.Abs(FirstPoint.X - MainPoint.X) < 50)
                         {
-                            setImg("sofa.PNG");
-                            return;
-                        }
-                        else if (i != wall.points.Count - 1)
-                        {
-                            if (Math.Abs(wall.points[i + 1].X - MainPoint.X) < 10)
+                            if ((!((MainPoint.X < FirstPoint.X + pp) && (MainPoint.X < SecondPoint.X + pp))) && (!(FirstPoint.X < MainPoint.X + pp && SecondPoint.X < MainPoint.X + pp)))
                             {
-                                setImg("sofa.PNG");
-                                return;
+                                if ((!((MainPoint.Y < FirstPoint.Y + pp) && (MainPoint.Y < SecondPoint.Y + pp))) && (!(FirstPoint.Y < MainPoint.Y + pp && SecondPoint.Y < MainPoint.Y + pp)))
+                                {
+                                    base.setPosition(new Point(FirstPoint.X, MainPoint.Y));
+                                    outCheck(new Point(FirstPoint.X, MainPoint.Y));
+                                    return;
+                                }
+                            }
+                        }
+                        else if (Math.Abs(SecondPoint.X - MainPoint.X) < 50)
+                        {
+                            if ((!((MainPoint.X < FirstPoint.X + pp) && (MainPoint.X < SecondPoint.X + pp))) && (!(FirstPoint.X < MainPoint.X + pp && SecondPoint.X < MainPoint.X + pp)))
+                            {
+                                if ((!((MainPoint.Y < FirstPoint.Y + pp) && (MainPoint.Y < SecondPoint.Y + pp))) && (!(FirstPoint.Y < MainPoint.Y + pp && SecondPoint.Y < MainPoint.Y + pp)))
+                                {
+                                    base.setPosition(new Point(FirstPoint.X, MainPoint.Y));
+                                    outCheck(new Point(FirstPoint.X, MainPoint.Y));
+                                    return;
+                                }
                             }
                         }
                         else
                         {
-                            if (Math.Abs(wall.points[0].X - MainPoint.X) < 10)
-                            {
-                                setImg("sofa.PNG");
-                                return;
-                            }
-                            else
-                            {
-                                return;
-                            }
+                            continue;
                         }
                     }
+
                     if (dx == 0)
                     {
                         continue;
                     }
                     double r = (double)dy / (double)dx;
-                    double d = (int)(wall.points[i].Y - (r * wall.points[i].X));
+                    double d = (int)(FirstPoint.Y - (r * FirstPoint.X));
                     double ro = (Math.Abs(r * MainPoint.X + -1 * MainPoint.Y + d)) / (Math.Pow((Math.Pow(r, 2) + 1), 0.5));
                     if (ro < 10)
                     {
-                        AttachPosition(r, d, MainPoint);
-                        attachMode = true;
-                        return;
-                    }
-                    else
-                    {
-                        setImg("door.PNG");
-                        attachMode = false;
+                        if ((!((MainPoint.X < FirstPoint.X) && (MainPoint.X < SecondPoint.X))) && (!(FirstPoint.X < MainPoint.X&& SecondPoint.X < MainPoint.X )))
+                        {
+                            if ((!((MainPoint.Y < FirstPoint.Y + pp) && (MainPoint.Y < SecondPoint.Y + pp))) && (!(FirstPoint.Y < MainPoint.Y + pp && SecondPoint.Y < MainPoint.Y + pp)))
+                            {
+                                AttachPosition(r, d, MainPoint);
+                                attachMode = true;
+                                return;
+                            }
+                        }
                     }
                 }
             }
@@ -97,47 +112,57 @@ namespace selfInteriorSimulation
         private bool getWallToPoint(Point point)
         {
             Point MainPoint = point;
-
             foreach (Wall wall in BasicObject.walls)
             {
                 for (int i = 0; i < wall.points.Count; i++)
                 {
+                    Point FirstPoint;
+                    Point SecondPoint;
                     int dx = 0;
                     int dy = 0;
+
                     if (i != wall.points.Count - 1)
                     {
-                        dx = (int)(wall.points[i].X - wall.points[i + 1].X);
-                        dy = (int)(wall.points[i].Y - wall.points[i + 1].Y);
+                        FirstPoint = wall.points[i];
+                        SecondPoint = wall.points[i+1];
                     }
                     else
                     {
-                        dx = (int)(wall.points[i].X - wall.points[0].X);
-                        dy = (int)(wall.points[i].Y - wall.points[0].Y);
+                        FirstPoint = wall.points[i];
+                        SecondPoint = wall.points[0];
                     }
 
+                    dx = (int)(FirstPoint.X - SecondPoint.X);
+                    dy = (int)(FirstPoint.Y - SecondPoint.Y);
                     if (dx == 0)
                     {
-                        if (Math.Abs(wall.points[i].X - MainPoint.X) < 10)
+                        if (Math.Abs(FirstPoint.X - MainPoint.X) < 50)
                         {
-                            return true;
-                        }
-                        else if (i != wall.points.Count - 1)
-                        {
-                            if (Math.Abs(wall.points[i + 1].X - MainPoint.X) < 10)
+                            if ((!((MainPoint.X < FirstPoint.X + pp) && (MainPoint.X < SecondPoint.X + pp))) && (!(FirstPoint.X < MainPoint.X + pp && SecondPoint.X < MainPoint.X + pp)))
                             {
-                                return true;
+                                if ((!((MainPoint.Y < FirstPoint.Y + pp) && (MainPoint.Y < SecondPoint.Y + pp))) && (!(FirstPoint.Y < MainPoint.Y + pp && SecondPoint.Y < MainPoint.Y + pp)))
+                                {
+                                    base.setPosition(new Point(FirstPoint.X, MainPoint.Y));
+                                    outCheck(new Point(FirstPoint.X, MainPoint.Y));
+                                    return true;
+                                }
+                            }
+                        }
+                        else if (Math.Abs(SecondPoint.X - MainPoint.X) < 50)
+                        {
+                            if ((!((MainPoint.X < FirstPoint.X + pp) && (MainPoint.X < SecondPoint.X + pp))) && (!(FirstPoint.X < MainPoint.X + pp && SecondPoint.X < MainPoint.X + pp)))
+                            {
+                                if ((!((MainPoint.Y < FirstPoint.Y + pp) && (MainPoint.Y < SecondPoint.Y + pp))) && (!(FirstPoint.Y < MainPoint.Y + pp && SecondPoint.Y < MainPoint.Y + pp)))
+                                {
+                                    base.setPosition(new Point(FirstPoint.X, MainPoint.Y));
+                                    outCheck(new Point(FirstPoint.X, MainPoint.Y));
+                                    return true;
+                                }
                             }
                         }
                         else
                         {
-                            if (Math.Abs(wall.points[0].X - MainPoint.X) < 10)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
+                            continue;
                         }
                     }
                     if (dx == 0)
@@ -145,39 +170,47 @@ namespace selfInteriorSimulation
                         continue;
                     }
                     double r = (double)dy / (double)dx;
-                    double d = (int)(wall.points[i].Y - (r * wall.points[i].X));
+                    double d = (int)(FirstPoint.Y - (r * FirstPoint.X));
                     double ro = (Math.Abs(r * MainPoint.X + -1 * MainPoint.Y + d)) / (Math.Pow((Math.Pow(r, 2) + 1), 0.5));
                     if (ro < 50)
                     {
-                        AttachPosition(r,d,MainPoint);
-                        return true;
+                        if ((!((MainPoint.X < FirstPoint.X + pp) && (MainPoint.X < SecondPoint.X + pp))) && (!(FirstPoint.X < MainPoint.X + pp && SecondPoint.X < MainPoint.X + pp)))
+                        {
+                            if ((!((MainPoint.Y < FirstPoint.Y + pp) && (MainPoint.Y < SecondPoint.Y + pp))) && (!(FirstPoint.Y < MainPoint.Y + pp && SecondPoint.Y < MainPoint.Y + pp)))
+                            {
+                                AttachPosition(r, d, MainPoint);
+                                return true;
+                            }
+                        }
                     }
                 }
             }
             return false;
         }
         
+        private void outCheck(Point point)
+        {
+            foreach (var each in BasicObject.walls)
+            {
+                base.setPosition(point);
+            }
+        }
+
         private void AttachPosition(double r, double d, Point point)
         {
             double r1 = -1 / r;
             double d1 = point.Y - r1 * point.X;
             double x = -1 * ((d - d1) / (r - r1));
             double y = r * x + d;
+            if (r == 0)
+            {
+                x = point.X;
+                y = d;
+            }
             point.X = x;
             point.Y = y;
 
-
-
-            foreach(var each in BasicObject.walls)
-                if (!MainWindow.is_inside(each.points, new Point(point.X + Width,point.Y + Height)))
-                {
-                    point.X -= Width;
-                    point.Y -= Height;
-                }
-            else
-            //
-            Debug.WriteLine("x: " + point.X + " y: " + point.Y);
-            base.setPosition(point);
+            outCheck(point);
         }
 
     }

@@ -32,55 +32,55 @@
                     <StackPanel Orientation="Vertical">
                         <Button DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Wall_Click">
                             <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                                <Image Source="img/save.png" Height="30" />
+                                <Image Source="image/save.png" Height="30" />
                                 <TextBlock Text="Room" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                         <Button DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Wall_Click">
                             <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                                <Image Source="img/save.png" Height="30" />
+                                <Image Source="image/save.png" Height="30" />
                                 <TextBlock Text="Bottom" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Object">
-                <StackPanel Orientation="Vertical">
-                    <Button x:Name="refre_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Object_Click">
-                        <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                            <Image Source="img/save.png" Height="30"/>
-                            <TextBlock Text="Refre" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="chair_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Object_Click">
-                        <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                            <Image Source="img/save.png" Height="30" />
-                            <TextBlock Text="Chair" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="table_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Object_Click">
-                        <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                            <Image Source="img/save.png" Height="30" />
-                            <TextBlock Text="Table" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="sofa_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Object_Click">
-                        <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                            <Image Source="img/save.png" Height="30" />
-                            <TextBlock Text="Sofa" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="tv_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Object_Click">
-                        <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
-                            <Image Source="img/save.png" Height="30" />
-                            <TextBlock Text="TV" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
+                    <StackPanel Orientation="Vertical">
+                        <Button x:Name="refre_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Object_Click">
+                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
+                                <Image Source="image/refrigerator.jpg" Height="30"/>
+                                <TextBlock Text="Refre" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="chair_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Object_Click">
+                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
+                                <Image Source="image/chair2.png" Height="30" />
+                                <TextBlock Text="Chair" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="table_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Object_Click">
+                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
+                                <Image Source="image/desk.PNG" Height="30" />
+                                <TextBlock Text="Table" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="sofa_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Object_Click">
+                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
+                                <Image Source="image/sofa.PNG" Height="30" />
+                                <TextBlock Text="Sofa" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="tv_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="40" Height="Auto" Click="Object_Click">
+                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
+                                <Image Source="image/tv.png" Height="30" />
+                                <TextBlock Text="TV" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </TabItem>
             </TabControl>
-            
-            
+
+
         </Border>
 
         <Border x:Name="SettingDock" DockPanel.Dock="Right" Width="200" Background="WhiteSmoke" BorderBrush="DodgerBlue" BorderThickness="1" Visibility="Hidden">
@@ -110,7 +110,7 @@
             </StackPanel>
         </Border>
 
-        
+
         <Border DockPanel.Dock="Bottom">
             <StatusBar>
                 <Label Content="Point Position = "/>
@@ -122,12 +122,14 @@
             </StatusBar>
         </Border>
 
-        
+
         <Border DockPanel.Dock="Top">
 
             <Canvas x:Name="canvas" MouseLeftButtonDown="Mouse_Left_Down" MouseLeftButtonUp="Mouse_Left_Up" MouseMove="Mouse_Move">
                 <Canvas.Background>
                     <SolidColorBrush Color="White" Opacity="0"/>
+
+                    <!--<ImageBrush ImageSource="url(#uid6)" Stretch="UniformToFill"/>-->
                 </Canvas.Background>
             </Canvas>
         </Border>
