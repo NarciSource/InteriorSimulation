@@ -33,7 +33,8 @@ namespace selfInteriorSimulation
             Wall.notify += Active;
             InteriorObject.notify += Active;
 
-
+            Window w = new alret();
+            w.Show();
             New_Click(new object(), new RoutedEventArgs());
         }
 
