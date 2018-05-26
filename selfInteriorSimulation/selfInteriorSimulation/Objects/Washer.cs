@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace selfInteriorSimulation.Objects
+namespace selfInteriorSimulation
 {
     class Washer : InteriorObject
     {
