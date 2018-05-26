@@ -71,9 +71,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Objects\InteriorObject.cs" />
-    <Compile Include="Objects\Refrigeraot.cs" />
+    <Compile Include="Objects\Refrigerator.cs" />
+    <Compile Include="Objects\Table.cs" />
     <Compile Include="Objects\Tv.cs" />
     <Compile Include="Objects\Wall.cs" />
+    <Compile Include="Objects\Washer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -104,7 +106,9 @@
     <Resource Include="img\save.png" />
     <Resource Include="img\undo.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="image\washer.PNG" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="image\ground1.PNG" />
   </ItemGroup>
@@ -113,6 +117,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\tv.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\table.PNG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

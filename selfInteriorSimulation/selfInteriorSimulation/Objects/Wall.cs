@@ -13,7 +13,7 @@ namespace selfInteriorSimulation
 {
     class Wall : BasicObject
     {
-        private PointCollection points = new PointCollection();
+        public PointCollection points = new PointCollection();
         Polygon polygon;
         List<Polygon> pointSquares = new List<Polygon>();
         int movePointNum;
