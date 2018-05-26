@@ -118,7 +118,11 @@ namespace selfInteriorSimulation
             Default,
             Wall,
             Bottom,
-            Object
+            Refre,
+            TV,
+            Table,
+            Sofa,
+            Chair
         };
         Painting_Mode painting_mode = Painting_Mode.Default;
 
@@ -133,26 +137,13 @@ namespace selfInteriorSimulation
             points = new PointCollection();
             points.Add(e.GetPosition(canvas));
 
-            switch (painting_mode)
+            if (painting_mode == Painting_Mode.Default) return;
+
+            shape = new Rectangle()
             {
-                case Painting_Mode.Object:
-                case Painting_Mode.Wall:
-                    shape = new Rectangle()
-                    {
-                        StrokeThickness = 1,
-                        Stroke = new SolidColorBrush(Colors.Black),
-                    };
-                    break;
-                case Painting_Mode.Bottom:
-
-                    break;
-                    
-                case Painting_Mode.Default:
-
-                    return;
-            }
-            
-
+                StrokeThickness = 1,
+                Stroke = new SolidColorBrush(Colors.Black),
+            };
 
             try
             {
@@ -176,26 +167,14 @@ namespace selfInteriorSimulation
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                switch (painting_mode)
-                {
-                    case Painting_Mode.Wall:
-                    case Painting_Mode.Object:
-                        shape.Width = Math.Abs(points[0].X - point.X);
-                        shape.Height = Math.Abs(points[0].Y - point.Y);
-                        shape.Margin = new Thickness(Math.Min(points[0].X, point.X),
-                                                    Math.Min(points[0].Y, point.Y), 0, 0);
+                if (painting_mode == Painting_Mode.Default) return;
 
-                        canvas.Children.Remove(shape);
-                        break;
-                    case Painting_Mode.Bottom:
+                shape.Width = Math.Abs(points[0].X - point.X);
+                shape.Height = Math.Abs(points[0].Y - point.Y);
+                shape.Margin = new Thickness(Math.Min(points[0].X, point.X),
+                                            Math.Min(points[0].Y, point.Y), 0, 0);
 
-                        break;
-                        
-                       
-                    case Painting_Mode.Default:
-
-                        break;
-                }
+                canvas.Children.Remove(shape);
             }
 
         }
@@ -214,15 +193,28 @@ namespace selfInteriorSimulation
 
                     new Wall(points);
 
-
                     break;
 
-                case Painting_Mode.Object:
-
+                case Painting_Mode.Refre:
                     new Refrigerator(new Point(Math.Min(points[0].X, point.X), Math.Min(points[0].Y, point.Y)));
-
-
                     break;
+
+                case Painting_Mode.Chair:
+                    new Chair(new Point(Math.Min(points[0].X, point.X), Math.Min(points[0].Y, point.Y)));
+                    break;
+
+                case Painting_Mode.Sofa:
+                    new Sofa(new Point(Math.Min(points[0].X, point.X), Math.Min(points[0].Y, point.Y)));
+                    break;
+
+                case Painting_Mode.Table:
+                    new Table(new Point(Math.Min(points[0].X, point.X), Math.Min(points[0].Y, point.Y)));
+                    break;
+
+                case Painting_Mode.TV:
+                    new Tv(new Point(Math.Min(points[0].X, point.X), Math.Min(points[0].Y, point.Y)));
+                    break;
+
             }
 
             canvas.Children.Remove(shape);
@@ -251,9 +243,27 @@ namespace selfInteriorSimulation
             painting_mode = Painting_Mode.Wall;
         }
 
-        private void Refre_Click(object sender, RoutedEventArgs e)
+        private void Object_Click(object sender, RoutedEventArgs e)
         {
-            painting_mode = Painting_Mode.Object;
+            switch (((Button)sender).Name.ToString())
+            {
+                case "refre_button":
+                    painting_mode = Painting_Mode.Refre;
+                    break;
+                case "sofa_button":
+                    painting_mode = Painting_Mode.Sofa;
+                    break;
+                case "chair_button":
+                    painting_mode = Painting_Mode.Chair;
+                    break;
+                case "table_button":
+                    painting_mode = Painting_Mode.Table;
+                    break;
+                case "tv_button":
+                    painting_mode = Painting_Mode.TV;
+                    break;
+            }
+            
         }
     }
 }
