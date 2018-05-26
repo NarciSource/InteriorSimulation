@@ -14,7 +14,7 @@ namespace selfInteriorSimulation
     {
         static public del notify;
 
-        Image objectImg;
+        public Image objectImg;
         private Point pointInObject;
         public Point point;
 

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:selfInteriorSimulation"
         mc:Ignorable="d"
+        WindowState="Maximized"
         Title="Self Interior Simulation" Height="700" Width="1080" KeyDown="Window_KeyDown">
     <DockPanel>
         <Border DockPanel.Dock="Top">
@@ -12,6 +13,7 @@
                 <MenuItem Header="Menu">
                     <MenuItem Header="New" Click="New_Click"/>
                     <MenuItem Header="Save" Click="Save_Click"/>
+                    <MenuItem Header="Open" Click="Open_File_Click"/>
                     <MenuItem Header="Save as Image" Click="Save_Image_Click"/>
                     <MenuItem Header="Clear" Click="Clear_Click"/>
                     <Separator/>
@@ -62,6 +64,12 @@
                             </StackPanel>
                         </Button>
                         <Button x:Name="tv_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="70" Height="Auto" Click="Object_Click">
+                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
+                                <Image Source="image/tv.png" Height="50" />
+                                <TextBlock Text="TV" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="custom_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="70" Height="Auto" Click="Custom_Click">
                             <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
                                 <Image Source="image/tv.png" Height="50" />
                                 <TextBlock Text="TV" HorizontalAlignment="Center"/>
