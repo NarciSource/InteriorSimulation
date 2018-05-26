@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows;
 
-namespace selfInteriorSimulation.Objects
+namespace selfInteriorSimulation
 {
     class Table : InteriorObject
     {
-        private Table(Point point) : base(point)
+        public Table(Point point) : base(point)
         {
             setImg("table.PNG");
         }

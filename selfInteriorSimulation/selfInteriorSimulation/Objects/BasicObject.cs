@@ -14,6 +14,7 @@ namespace selfInteriorSimulation
         public string Name { get { return name; } set { ObjectName.Content = value; name = value; } }
         private Label ObjectName = new Label();
 
+        public static List<Wall> walls = new List<Wall>();
         public BasicObject(){
 
         }

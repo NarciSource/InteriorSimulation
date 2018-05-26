@@ -34,7 +34,7 @@ namespace selfInteriorSimulation
             canvas.Children.Add(objectImg);
         }
 
-        private void setPosition(Point point)
+        public virtual void setPosition(Point point)
         {
             Canvas.SetTop(objectImg, point.Y);
             Canvas.SetLeft(objectImg, point.X);

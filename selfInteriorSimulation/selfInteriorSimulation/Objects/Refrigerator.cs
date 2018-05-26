@@ -5,9 +5,15 @@ namespace selfInteriorSimulation
 {
     class Refrigerator : InteriorObject
     {
-        private Refrigerator(Point point) : base(point)
+        public Refrigerator(Point point) : base(point)
         {
             setImg("Refrigerator.jpg");
+        }
+
+        public override void setPosition(Point point)
+        {
+            base.setPosition(point);
+
         }
     }
 }

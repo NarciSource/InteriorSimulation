@@ -5,7 +5,7 @@ namespace selfInteriorSimulation
 {
     class Tv : InteriorObject
     {
-        private Tv(Point point) : base(point)
+        public Tv(Point point) : base(point)
         {
             setImg("tv.PNG");
         }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows;
 
-namespace selfInteriorSimulation.Objects
+namespace selfInteriorSimulation
 {
     class Chair : InteriorObject
     {
-        private Chair(Point point) : base(point)
+        public Chair(Point point) : base(point)
         {
             setImg("chair.PNG");
         }
