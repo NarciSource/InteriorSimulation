@@ -53,7 +53,6 @@ namespace selfInteriorSimulation
             points.Add(point4);
             new Wall(points);
             new AttachObject(new Point(100, 100)) { Width= 50 ,Height = 50};
-            
         }
 
         private BasicObject activeObject = null;
@@ -62,6 +61,7 @@ namespace selfInteriorSimulation
             if (activeObject != null)
             {
                 activeObject.setBorderThickness(0);
+                activeObject.setColor(Colors.Black);
             }
 
             activeObject = (BasicObject)sender;
@@ -243,7 +243,7 @@ namespace selfInteriorSimulation
             }
         }
 
-        static private bool is_inside(PointCollection dst, Point point)
+        static public bool is_inside(PointCollection dst, Point point)
         {
             int crosses = 0;
             for (int i = 0; i < dst.Count; i++)
@@ -280,10 +280,6 @@ namespace selfInteriorSimulation
 
         private void Mouse_Left_Up(object sender, MouseButtonEventArgs e)
         {
-            const int object_width = 100;
-            const int object_height = 130;
-
-
             Point point = e.GetPosition(canvas);
             
             switch (painting_mode)
