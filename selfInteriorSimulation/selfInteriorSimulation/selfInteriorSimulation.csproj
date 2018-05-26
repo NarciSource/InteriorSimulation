@@ -173,5 +173,8 @@
   <ItemGroup>
     <Resource Include="image\oak.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\window.PNG" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
