@@ -118,9 +118,20 @@ namespace selfInteriorSimulation
         {
             if (canvas.Children.Count > 0)
             {
+                redocollection.Add((BasicObject)canvas.Children[canvas.Children.Count - 1]);
                 canvas.Children.RemoveAt(canvas.Children.Count - 1);
             }
             undo_times.Content = canvas.Children.Count.ToString();
+        }
+
+        List<BasicObject> redocollection = new List<BasicObject>();
+        private void Redo_Click(object sender, RoutedEventArgs e)
+        {
+            if (redocollection.Count > 0)
+            {
+                canvas.Children.Add(redocollection[redocollection.Count - 1]);
+                redocollection.RemoveAt(redocollection.Count - 1);
+            }
         }
 
         private void About_Click(object sender, RoutedEventArgs e)

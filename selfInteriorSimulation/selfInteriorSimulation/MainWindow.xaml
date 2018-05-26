@@ -17,6 +17,7 @@
                 </MenuItem>
                 <MenuItem Header="Tools">
                     <MenuItem Header="Undo" Click="Undo_Click"/>
+                    <MenuItem Header="Redo" Click="Redo_Click"/>
                 </MenuItem>
                 <MenuItem Header="Help">
                     <MenuItem Header="About" Click="About_Click"/>
