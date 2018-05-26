@@ -18,6 +18,7 @@ namespace selfInteriorSimulation
         Polygon polygon;
         List<Polygon> pointSquares = new List<Polygon>();
         int movePointNum;
+        public IsType isType = IsType.Wall;
 
         bool moveMode = false;
 
@@ -62,7 +63,7 @@ namespace selfInteriorSimulation
                 canvas.Children.Add(pointSquare);
             }
             canvas.MouseMove += Canvas_MouseMove; ;
-
+            BasicObject.walls.Add(this);
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
