@@ -265,11 +265,11 @@ namespace selfInteriorSimulation
         {
             canvas.Children.Clear();
 
-            double first_width = 400;
-            double first_height = 300;
+            const double first_width = 700;
+            const double first_height = 500;
 
-            double canvas_width = 800;
-            double canvas_height = 500;
+            const double canvas_width = 1000;
+            const double canvas_height = 700;
 
             double center_x1 = canvas_width / 2 - first_width / 2;
             double center_y1 = canvas_height / 2 - first_height / 2;
@@ -288,9 +288,8 @@ namespace selfInteriorSimulation
             points.Add(point2);
             points.Add(point3);
             points.Add(point4);
-            new Wall(points);
-            //new Window(points);
-            new AttachObject(new Point(100, 100)) { Width = 50, Height = 50 };
+            new Wall(points) { Name = "Wall" };
+            new Door(point3) { Name = "Door" };
 
         }
 
@@ -341,7 +340,9 @@ namespace selfInteriorSimulation
             TV,
             Table,
             Sofa,
-            Chair
+            Chair,
+            Window,
+            Custom
         };
         Painting_Mode painting_mode = Painting_Mode.Default;
 
@@ -369,6 +370,7 @@ namespace selfInteriorSimulation
                 case Painting_Mode.Sofa:
                 case Painting_Mode.Table:
                 case Painting_Mode.TV:
+                case Painting_Mode.Custom:
 
                     PointCollection object_points = new PointCollection();
                     object_points.Add(new Point(point.X - object_width / 2, point.Y - object_height / 2));
@@ -404,6 +406,8 @@ namespace selfInteriorSimulation
         }
 
 
+
+
         private void Mouse_Move(object sender, MouseEventArgs e)
         {
             Point point = e.GetPosition(canvas);
@@ -417,6 +421,7 @@ namespace selfInteriorSimulation
                 case Painting_Mode.Sofa:
                 case Painting_Mode.Table:
                 case Painting_Mode.TV:
+                case Painting_Mode.Custom:
                     nowObject.setPosition(new Point(point.X - nowObject.Width / 2, point.Y - nowObject.Height / 2));
                     return;
             }
@@ -505,6 +510,52 @@ namespace selfInteriorSimulation
             painting_mode = Painting_Mode.Wall;
         }
 
+        private void Custom_Click(object sender, RoutedEventArgs e)
+        {
+
+            const int object_width = 100;
+            const int object_height = 130;
+
+
+            nowObject = new CustomObject(new Point(0, 0))
+            {
+                Width = object_width,
+                Height = object_height,
+
+            };
+
+
+            String fileContent = "";
+            Uri uri;
+            BitmapImage bitmap;
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Png Image|*.png";
+            openFileDialog.Title = "Open an Image File";
+            
+            Nullable<bool> result = openFileDialog.ShowDialog();
+
+            if (result == true)
+            {
+                uri = new Uri(openFileDialog.FileName);
+            
+                try
+                {
+                    bitmap = new BitmapImage(uri);
+
+                    ((InteriorObject)nowObject).objectImg.Source = bitmap;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("파일을 열 수 없습니다. " + ex.Message);
+                }
+            }
+
+            
+            painting_mode = Painting_Mode.Custom;
+
+        }
+
         private void Object_Click(object sender, RoutedEventArgs e)
         {
             const int object_width = 100;
@@ -534,6 +585,15 @@ namespace selfInteriorSimulation
                     break;
             }
             
+        }
+
+        private void Window_Click(object sender, RoutedEventArgs e)
+        {
+            new WindowObject(new Point(50, 50))
+            {
+                width=100,height=100,
+                Name="Window"
+            };
         }
 
         private void setting_name_TextChanged(object sender, TextChangedEventArgs e)
@@ -636,6 +696,10 @@ namespace selfInteriorSimulation
                                 nowObject = new Refrigerator(new Point(0, 0));
                                 painting_mode = Painting_Mode.Refre;
                                 break;
+                            case BasicObject.IsType.Custom:
+                                nowObject = new CustomObject(new Point(0, 0));
+                                painting_mode = Painting_Mode.Custom;
+                                break;
 
                         }
                         nowObject.Width = ((InteriorObject)activeObject).Width;
@@ -644,11 +708,6 @@ namespace selfInteriorSimulation
                         break;
                 }
             }
-        }
-
-        private void Window_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

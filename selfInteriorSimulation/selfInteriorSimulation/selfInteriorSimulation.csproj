@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Objects\Chair.cs" />
+    <Compile Include="Objects\CustomObject.cs" />
     <Compile Include="Objects\Door.cs" />
     <Compile Include="Objects\InteriorObject.cs" />
     <Compile Include="Objects\Refrigerator.cs" />
@@ -184,6 +185,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\window.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\window2.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

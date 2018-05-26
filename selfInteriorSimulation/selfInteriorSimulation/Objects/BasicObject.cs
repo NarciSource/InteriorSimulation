@@ -33,7 +33,8 @@ namespace selfInteriorSimulation
             Tv,
             Washer,
             door,
-            window
+            window,
+            Custom
         };
         public IsType isType;
         public static List<Wall> walls = new List<Wall>();
