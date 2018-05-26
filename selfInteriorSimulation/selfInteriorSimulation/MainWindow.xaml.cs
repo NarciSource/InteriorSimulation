@@ -115,15 +115,21 @@ namespace selfInteriorSimulation
                     obj.isType == BasicObject.IsType.Table ||
                     obj.isType == BasicObject.IsType.Tv ||
                     obj.isType == BasicObject.IsType.Washer ||
-                    obj.isType == BasicObject.IsType.door)
+                    obj.isType == BasicObject.IsType.door ||
+                    obj.isType == BasicObject.IsType.window )
                 {
                     string jsonType = JsonConvert.SerializeObject(obj.isType);
                     fileContent += jsonType + "\n";
+
+                    string name = JsonConvert.SerializeObject(obj.Name);
+                    fileContent += name + "\n";
+
                     int height = ((InteriorObject)obj).height;
                     int width = ((InteriorObject)obj).width;
-
                     fileContent += height + "\n";
                     fileContent += width + "\n";
+
+                    double rotate = ((InteriorObject)obj).getRotate();
 
                     string jsonPoint = JsonConvert.SerializeObject(((InteriorObject)obj).point);
                     fileContent += jsonPoint + "\n";
