@@ -98,7 +98,7 @@ namespace selfInteriorSimulation
         
         private void setAttachPosition(Point point)
         {
-            base.setPosition(new Point(point.X - width/2, point.Y - height/2));
+            base.setPosition(new Point(point.X - Width/2, point.Y - Height/2));
         }
 
         private void AttachPosition(double r, double d, Point point)

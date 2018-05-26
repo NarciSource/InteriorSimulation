@@ -125,8 +125,8 @@ namespace selfInteriorSimulation
                     string name = JsonConvert.SerializeObject(obj.Name);
                     fileContent += name + "\n";
 
-                    int height = ((InteriorObject)obj).height;
-                    int width = ((InteriorObject)obj).width;
+                    int height = ((InteriorObject)obj).Height;
+                    int width = ((InteriorObject)obj).Width;
                     fileContent += height + "\n";
                     fileContent += width + "\n";
 
@@ -216,13 +216,13 @@ namespace selfInteriorSimulation
                     switch (type)
                     {
                         case 0: break;//Wall
-                        case 1: Chair ch = new Chair(pointObj); ch.height = height; ch.width = width; break;
-                        case 2: Refrigerator re = new Refrigerator(pointObj); re.height = height; re.width = width; break;
-                        case 3: Sofa so = new Sofa(pointObj); so.height = height; so.width = width; break;
-                        case 4: Table tab = new Table(pointObj); tab.height = height; tab.width = width; break;
-                        case 5: Tv tv = new Tv(pointObj); tv.height = height; tv.width = width; break;
-                        case 6: Washer wa = new Washer(pointObj); wa.height = height; wa.width = width; break;
-                        case 7: AttachObject att = new AttachObject(pointObj); att.height = height; att.width = width; break;
+                        case 1: Chair ch = new Chair(pointObj); ch.Height = height; ch.Width = width; break;
+                        case 2: Refrigerator re = new Refrigerator(pointObj); re.Height = height; re.Width = width; break;
+                        case 3: Sofa so = new Sofa(pointObj); so.Height = height; so.Width = width; break;
+                        case 4: Table tab = new Table(pointObj); tab.Height = height; tab.Width = width; break;
+                        case 5: Tv tv = new Tv(pointObj); tv.Height = height; tv.Width = width; break;
+                        case 6: Washer wa = new Washer(pointObj); wa.Height = height; wa.Width = width; break;
+                        case 7: AttachObject att = new AttachObject(pointObj); att.Height = height; att.Width = width; break;
                         default: break;
                     }
                 }
@@ -289,7 +289,7 @@ namespace selfInteriorSimulation
             points.Add(point3);
             points.Add(point4);
             new Wall(points) { Name = "Wall" };
-            new Door(point3) { Name = "Door" };
+            new Door(point3) { Name = "Door",Width = 100,Height = 100 };
 
         }
 
@@ -591,7 +591,7 @@ namespace selfInteriorSimulation
         {
             new WindowObject(new Point(50, 50))
             {
-                width=100,height=100,
+                Width=100,Height=100,
                 Name="Window"
             };
         }
@@ -702,8 +702,8 @@ namespace selfInteriorSimulation
                                 break;
 
                         }
-                        nowObject.width = ((InteriorObject)activeObject).width;
-                        nowObject.height = ((InteriorObject)activeObject).height;
+                        nowObject.Width = ((InteriorObject)activeObject).Width;
+                        nowObject.Height = ((InteriorObject)activeObject).Height;
 
                         break;
                 }

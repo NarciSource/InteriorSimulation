@@ -16,12 +16,13 @@ namespace selfInteriorSimulation
 
         public Image objectImg;
         private Point pointInObject;
-        public Point point;
+        private Point mpoint;
+        public Point point { get { return mpoint; } set { setPosition(value); mpoint = value; } }
 
-        private int Width;
-        public int width { get { return Width; } set { Width = value; objectImg.Width = value; } }
-        private int Height;
-        public int height { get { return Height; } set { Height = value;  objectImg.Height = value; } }
+        protected int width;
+        public int Width { get { return width; } set { width = value; objectImg.Width = value; } }
+        protected int height;
+        public int Height { get { return height; } set { height = value;  objectImg.Height = value; } }
 
         private double rotate;
         public override void setColor(Color color)
