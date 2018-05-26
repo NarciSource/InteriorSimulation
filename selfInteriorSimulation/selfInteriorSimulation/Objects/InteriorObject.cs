@@ -16,7 +16,8 @@ namespace selfInteriorSimulation
 
         public Image objectImg;
         private Point pointInObject;
-        public Point point;
+        private Point mpoint;
+        public Point point { get { return mpoint; } set { setPosition(value); mpoint = value; } }
 
         private int Width;
         public int width { get { return Width; } set { Width = value; objectImg.Width = value; } }
@@ -46,6 +47,7 @@ namespace selfInteriorSimulation
             objectImg.RenderTransform = new RotateTransform(angle);
         }
 
+
         public InteriorObject(Point point)
         {
             this.BorderThickness = new Thickness(2);
@@ -54,7 +56,9 @@ namespace selfInteriorSimulation
             objectImg = new Image();
             this.point = point;
             setPosition(point);
-            this.MouseDown += (o, e) => { notify(this); this.CaptureMouse(); FirstPoint = e.GetPosition(canvas); pointInObject = e.GetPosition(objectImg); };
+            setBorderThickness(getBorderThicknessDbl());
+            setRotate(getBorderThicknessDbl());
+            this.MouseDown += (o, e) => { notify(this); this.CaptureMouse(); pointInObject = e.GetPosition(objectImg); };
             this.MouseMove += (o, e) => {
                 if (this.IsMouseCaptured)
                 {

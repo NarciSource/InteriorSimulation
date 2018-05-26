@@ -10,8 +10,7 @@ namespace selfInteriorSimulation
     {
         public AttachObject(Point point) : base(point)
         {
-            this.MouseDown += (o, e) => {
-                moveMode = true; };
+            this.MouseDown += (o, e) => {moveMode = true; };
             canvas.MouseMove += (o, e)  => { if (moveMode) { attachMode = getWallToPoint(e.GetPosition(canvas)); }  };
             canvas.MouseUp += (o, e) => { if (moveMode) { moveMode = false; if (!attachMode) { MessageBox.Show(Name+"은 벽 위에 두세요."); } } };
         }
@@ -98,7 +97,7 @@ namespace selfInteriorSimulation
         
         private void setAttachPosition(Point point)
         {
-            base.setPosition(new Point(point.X - width/2, point.Y - height/2));
+            base.setPosition(new Point(point.X - Width/2, point.Y - Height/2));
         }
 
         private void AttachPosition(double r, double d, Point point)
