@@ -26,6 +26,8 @@ namespace selfInteriorSimulation
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static MainWindow mv;
+        public List<string> Jsons= new List<string>();
         public MainWindow()
         {
             InitializeComponent();
@@ -35,6 +37,8 @@ namespace selfInteriorSimulation
 
             
             New_Click(new object(), new RoutedEventArgs());
+            mv = this;
+            canvas.MouseUp += (o, e) => { Jsons.Add(saveStatusToJson()); };
         }
 
         private BasicObject activeObject = null;
@@ -217,28 +221,43 @@ namespace selfInteriorSimulation
             canvas.Children.Clear();
         }
 
+        int jsonStay = 0;
         private void Undo_Click(object sender, RoutedEventArgs e)
         {
+            /*
             if (canvas.Children.Count > 0)
             {
                 redocollection.Add((BasicObject)canvas.Children[canvas.Children.Count - 1]);
                 canvas.Children.RemoveAt(canvas.Children.Count - 1);
             }
             undo_times.Content = canvas.Children.Count.ToString();
+            */
+            if (0 < jsonStay-1) {
+                printUIfromJson(Jsons[jsonStay - 1]);
+                jsonStay--;
+            }
         }
 
         List<BasicObject> redocollection = new List<BasicObject>();
         private void Redo_Click(object sender, RoutedEventArgs e)
         {
+            /*
             if (redocollection.Count > 0)
             {
                 canvas.Children.Add(redocollection[redocollection.Count - 1]);
                 redocollection.RemoveAt(redocollection.Count - 1);
             }
+            */
+            if (jsonStay < Jsons.Count && 0<jsonStay)
+            {
+                printUIfromJson(Jsons[jsonStay]);
+                jsonStay++;
+            }
         }
 
         private string saveStatusToJson()
         {
+            jsonStay++;
             string fileContent = "";
             foreach (var obj in BasicObject.objects)
             {
@@ -312,7 +331,7 @@ namespace selfInteriorSimulation
 
             // Wall 생성
             Wall wall = new Wall(points);
-            for (i = wallPointNum + 1; i < contentArgs.Length && contentArgs[i + 1] != null && contentArgs[i + 1] != ""; i += 7)
+            for (i = wallPointNum + 1; i < contentArgs.Length && contentArgs[i] != null && contentArgs[i] != ""; i += 7)
             {
                 int type = (int)JsonConvert.DeserializeObject<BasicObject.IsType>(contentArgs[i]);
                 string name = JsonConvert.DeserializeObject<string>(contentArgs[i + 1]);
@@ -355,7 +374,7 @@ namespace selfInteriorSimulation
                         break;
                     case 8:
                         WindowObject wi = new WindowObject(pointObj);
-                        wi.Name = name; wi.Height = height; wi.Width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
+                        wi.Name = name; wi.height = height; wi.width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
                         break;
                     default: break;
                 }
@@ -634,6 +653,7 @@ namespace selfInteriorSimulation
                     painting_mode = Painting_Mode.TV;
                     break;
             }
+            Jsons.Add(saveStatusToJson());
             
         }
 
