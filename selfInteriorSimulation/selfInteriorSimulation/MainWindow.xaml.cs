@@ -26,6 +26,8 @@ namespace selfInteriorSimulation
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static MainWindow mv;
+        public List<string> Jsons= new List<string>();
         public MainWindow()
         {
             InitializeComponent();
@@ -35,6 +37,8 @@ namespace selfInteriorSimulation
 
             
             New_Click(new object(), new RoutedEventArgs());
+            mv = this;
+            canvas.MouseUp += (o, e) => { Jsons.Add(saveStatusToJson()); };
         }
 
         private BasicObject activeObject = null;
@@ -151,10 +155,6 @@ namespace selfInteriorSimulation
 
         private void Save_Image_Click(object sender, RoutedEventArgs e)
         {
-            canvas.Children.Add(BasicObject.objects[0]);
-            canvas.Children.Add(BasicObject.objects[1]);
-            canvas.Children.Add(BasicObject.objects[2]);
-            canvas.Children.Add(BasicObject.objects[3]);
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Png Image|*.png";
             saveFileDialog.Title = "Save an Image File";
@@ -217,28 +217,43 @@ namespace selfInteriorSimulation
             canvas.Children.Clear();
         }
 
+        int jsonStay = 0;
         private void Undo_Click(object sender, RoutedEventArgs e)
         {
+            /*
             if (canvas.Children.Count > 0)
             {
                 redocollection.Add((BasicObject)canvas.Children[canvas.Children.Count - 1]);
                 canvas.Children.RemoveAt(canvas.Children.Count - 1);
             }
             undo_times.Content = canvas.Children.Count.ToString();
+            */
+            if (0 < jsonStay-1) {
+                printUIfromJson(Jsons[jsonStay - 1]);
+                jsonStay--;
+            }
         }
 
         List<BasicObject> redocollection = new List<BasicObject>();
         private void Redo_Click(object sender, RoutedEventArgs e)
         {
+            /*
             if (redocollection.Count > 0)
             {
                 canvas.Children.Add(redocollection[redocollection.Count - 1]);
                 redocollection.RemoveAt(redocollection.Count - 1);
             }
+            */
+            if (jsonStay < Jsons.Count && 0<jsonStay)
+            {
+                printUIfromJson(Jsons[jsonStay]);
+                jsonStay++;
+            }
         }
 
         private string saveStatusToJson()
         {
+            jsonStay++;
             string fileContent = "";
             foreach (var obj in BasicObject.objects)
             {
@@ -614,26 +629,27 @@ namespace selfInteriorSimulation
             switch (((Button)sender).Name.ToString())
             {
                 case "refre_button":
-                    nowObject = new Refrigerator(new Point(0, 0)) { Name="냉장고", Width = 70, Height = 130 };
+                    nowObject = new Refrigerator(new Point(0, 0)) { Name="냉장고", Width = 90, Height = 90 };
                     painting_mode = Painting_Mode.Refre;
                     break;
                 case "sofa_button":
-                    nowObject = new Sofa(new Point(0, 0)) { Name = "소파", Width = object_width, Height = object_height };
+                    nowObject = new Sofa(new Point(0, 0)) { Name = "소파", Width = 170, Height = 100 };
                     painting_mode = Painting_Mode.Sofa;
                     break;
                 case "chair_button":
-                    nowObject = new Chair(new Point(0, 0)) { Name = "의자", Width = object_width, Height = object_height };
+                    nowObject = new Chair(new Point(0, 0)) { Name = "의자", Width = 70, Height = 70 };
                     painting_mode = Painting_Mode.Chair;
                     break;
                 case "table_button":
-                    nowObject = new Table(new Point(0, 0)) { Name = "책상", Width = object_width, Height = object_height };
+                    nowObject = new Table(new Point(0, 0)) { Name = "책상", Width = 140, Height = 100 };
                     painting_mode = Painting_Mode.Table;
                     break;
                 case "tv_button":
-                    nowObject = new Tv(new Point(0, 0)) { Name = "TV", Width = object_width, Height = object_height };
+                    nowObject = new Tv(new Point(0, 0)) { Name = "TV", Width = 200, Height = 50 };
                     painting_mode = Painting_Mode.TV;
                     break;
             }
+            Jsons.Add(saveStatusToJson());
             
         }
 
