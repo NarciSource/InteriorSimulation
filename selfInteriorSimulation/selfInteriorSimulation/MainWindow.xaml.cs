@@ -633,23 +633,23 @@ namespace selfInteriorSimulation
             switch (((Button)sender).Name.ToString())
             {
                 case "refre_button":
-                    nowObject = new Refrigerator(new Point(0, 0)) { Name="냉장고", Width = 70, Height = 130 };
+                    nowObject = new Refrigerator(new Point(0, 0)) { Name="냉장고", Width = 90, Height = 90 };
                     painting_mode = Painting_Mode.Refre;
                     break;
                 case "sofa_button":
-                    nowObject = new Sofa(new Point(0, 0)) { Name = "소파", Width = object_width, Height = object_height };
+                    nowObject = new Sofa(new Point(0, 0)) { Name = "소파", Width = 170, Height = 100 };
                     painting_mode = Painting_Mode.Sofa;
                     break;
                 case "chair_button":
-                    nowObject = new Chair(new Point(0, 0)) { Name = "의자", Width = object_width, Height = object_height };
+                    nowObject = new Chair(new Point(0, 0)) { Name = "의자", Width = 70, Height = 70 };
                     painting_mode = Painting_Mode.Chair;
                     break;
                 case "table_button":
-                    nowObject = new Table(new Point(0, 0)) { Name = "책상", Width = object_width, Height = object_height };
+                    nowObject = new Table(new Point(0, 0)) { Name = "책상", Width = 140, Height = 100 };
                     painting_mode = Painting_Mode.Table;
                     break;
                 case "tv_button":
-                    nowObject = new Tv(new Point(0, 0)) { Name = "TV", Width = object_width, Height = object_height };
+                    nowObject = new Tv(new Point(0, 0)) { Name = "TV", Width = 200, Height = 50 };
                     painting_mode = Painting_Mode.TV;
                     break;
             }
