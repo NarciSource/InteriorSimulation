@@ -155,10 +155,6 @@ namespace selfInteriorSimulation
 
         private void Save_Image_Click(object sender, RoutedEventArgs e)
         {
-            canvas.Children.Add(BasicObject.objects[0]);
-            canvas.Children.Add(BasicObject.objects[1]);
-            canvas.Children.Add(BasicObject.objects[2]);
-            canvas.Children.Add(BasicObject.objects[3]);
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Png Image|*.png";
             saveFileDialog.Title = "Save an Image File";
@@ -374,7 +370,7 @@ namespace selfInteriorSimulation
                         break;
                     case 8:
                         WindowObject wi = new WindowObject(pointObj);
-                        wi.Name = name; wi.height = height; wi.width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
+                        wi.Name = name; wi.Height = height; wi.Width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
                         break;
                     default: break;
                 }
