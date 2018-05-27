@@ -374,7 +374,7 @@ namespace selfInteriorSimulation
                         break;
                     case 8:
                         WindowObject wi = new WindowObject(pointObj);
-                        wi.Name = name; wi.height = height; wi.width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
+                        wi.Name = name; wi.Height = height; wi.Width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
                         break;
                     default: break;
                 }
