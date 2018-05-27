@@ -95,7 +95,7 @@ namespace selfInteriorSimulation
             canvas.Children.Add(NameLabel);
         }
 
-        public virtual void setPosition(Point point)
+        private void setPosition(Point point)
         {
             Canvas.SetTop(this, point.Y);
             Canvas.SetLeft(this, point.X);
@@ -104,6 +104,8 @@ namespace selfInteriorSimulation
             Canvas.SetTop(NameLabel, point.Y - 20);
             Canvas.SetLeft(NameLabel, point.X + Width/2);
         }
+
+       
 
         public void setImg(string src)
         {

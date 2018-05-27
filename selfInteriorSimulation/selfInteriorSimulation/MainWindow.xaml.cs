@@ -245,12 +245,12 @@ namespace selfInteriorSimulation
                 if (obj.isType == BasicObject.IsType.Wall)
                 {
                     PointCollection points = ((Wall)obj).points;
-                    fileContent = fileContent + (points.Count + "\n");
+                    fileContent = fileContent + (points.Count + "\t");
                     foreach (Point point in points)
                     {
                         // obj to Json
                         string json = JsonConvert.SerializeObject(point);
-                        fileContent += (json + "\n");
+                        fileContent += (json + "\t");
                         Point p = JsonConvert.DeserializeObject<Point>(json);
                     }
 
@@ -267,24 +267,24 @@ namespace selfInteriorSimulation
                     obj.isType == BasicObject.IsType.window)
                 {
                     string jsonType = JsonConvert.SerializeObject(obj.isType);
-                    fileContent += jsonType + "\n";
+                    fileContent += jsonType + "\t";
 
                     string name = JsonConvert.SerializeObject(obj.Name);
-                    fileContent += name + "\n";
+                    fileContent += name + "\t";
 
                     int height = ((InteriorObject)obj).Height;
                     int width = ((InteriorObject)obj).Width;
-                    fileContent += height + "\n";
-                    fileContent += width + "\n";
+                    fileContent += height + "\t";
+                    fileContent += width + "\t";
 
                     double border = ((InteriorObject)obj).getBorderThicknessDbl();
                     double rotate = ((InteriorObject)obj).getRotate();
 
-                    fileContent += border + "\n";
-                    fileContent += rotate + "\n";
+                    fileContent += border + "\t";
+                    fileContent += rotate + "\t";
 
                     string jsonPoint = JsonConvert.SerializeObject(((InteriorObject)obj).point);
-                    fileContent += jsonPoint + "\n";
+                    fileContent += jsonPoint + "\t";
 
                 }
             }
@@ -297,7 +297,7 @@ namespace selfInteriorSimulation
             BasicObject.objects = new List<BasicObject>();
             canvas.Children.Clear();
 
-            string[] contentArgs = fileContent.Split('\n');
+            string[] contentArgs = fileContent.Split('\t');
             int wallPointNum = int.Parse(contentArgs[0]);
             PointCollection points = new PointCollection();
             int i;
@@ -355,7 +355,7 @@ namespace selfInteriorSimulation
                         break;
                     case 8:
                         WindowObject wi = new WindowObject(pointObj);
-                        wi.Name = name; wi.height = height; wi.width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
+                        wi.Name = name; wi.Height = height; wi.Width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
                         break;
                     default: break;
                 }
@@ -466,7 +466,7 @@ namespace selfInteriorSimulation
                 case Painting_Mode.Table:
                 case Painting_Mode.TV:
                 case Painting_Mode.Custom:
-                    nowObject.setPosition(new Point(point.X - nowObject.Width / 2, point.Y - nowObject.Height / 2));
+                    nowObject.point = (new Point(point.X - nowObject.Width / 2, point.Y - nowObject.Height / 2));
                     return;
             }
 
