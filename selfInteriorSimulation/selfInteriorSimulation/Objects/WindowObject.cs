@@ -8,10 +8,11 @@ namespace selfInteriorSimulation
 {
     class WindowObject : AttachObject
     {
-        public WindowObject(Point point) : base(point)
+        public WindowObject() : base()
         {
             isType = IsType.window;
             setImg("window2.jpg");
+            
         }
     }
 }

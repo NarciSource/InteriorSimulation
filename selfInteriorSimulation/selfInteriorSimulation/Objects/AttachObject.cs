@@ -8,7 +8,7 @@ namespace selfInteriorSimulation
 {
     class AttachObject : InteriorObject
     {
-        public AttachObject(Point point) : base(point)
+        public AttachObject() : base()
         {
             this.MouseDown += (o, e) => {moveMode = true; };
             canvas.MouseMove += (o, e)  => { if (moveMode) { attachMode = getWallToPoint(e.GetPosition(canvas)); }  };
@@ -21,7 +21,7 @@ namespace selfInteriorSimulation
         private bool getWallToPoint(Point point)
         {
             Point MainPoint = point;
-            foreach (Wall wall in BasicObject.walls)
+            foreach (Room wall in BasicObject.rooms)
             {
                 for (int i = 0; i < wall.points.Count; i++)
                 {
@@ -97,7 +97,7 @@ namespace selfInteriorSimulation
         
         private void setAttachPosition(Point point)
         {
-            base.point = (new Point(point.X - Width/2, point.Y - Height/2));
+            base.Point = (new Point(point.X - Width/2, point.Y - Height/2));
         }
 
         private void AttachPosition(double r, double d, Point point)

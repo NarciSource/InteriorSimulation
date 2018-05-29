@@ -26,44 +26,49 @@ namespace selfInteriorSimulation
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static MainWindow mv;
-        public List<string> Jsons= new List<string>();
+
         public MainWindow()
         {
             InitializeComponent();
 
-            Wall.notify += Active;
-            InteriorObject.notify += Active;
+            BasicObject.active_notify += Active;
+            BasicObject.change_notify += Changed;
 
-            
             New_Click(new object(), new RoutedEventArgs());
-            mv = this;
-            canvas.MouseUp += (o, e) => { Jsons.Add(saveStatusToJson()); };
         }
+
+        
 
         private BasicObject activeObject = null;
         private void Active(object sender)
         {
             if (activeObject != null)
             {
-                if (!(activeObject is Wall))
-                    activeObject.setBorderThickness(0);
-                activeObject.setColor(Colors.Black);
+                if (!(activeObject is Room))
+                {
+                    activeObject.BorderThickness = new Thickness(0);
+                    activeObject.BorderBrush = new SolidColorBrush(Colors.Black);
+                }
+                else
+                {
+                    ((Room)activeObject).BorderBrush = new SolidColorBrush(Colors.Black);
+                }
             }
             
             activeObject = (BasicObject)sender;
             SettingDock.Visibility = Visibility.Visible;
-            activeObject.setColor(Colors.Red);
+            activeObject.BorderBrush = new SolidColorBrush(Colors.Red);
             setting_name.Text = activeObject.Name.ToString();
 
-            if (sender is Wall)
+            if (sender is Room)
             {
                 setting_height.IsEnabled = false;
                 setting_width.IsEnabled = false;
                 setting_angle.IsEnabled = false;
                 setting_material.IsEnabled = true;
                 setting_thickness.IsEnabled = true;
-                setting_thickness.Text = ((Wall)activeObject).getBorderThickness().ToString();
+                setting_thickness.Text = ((Room)activeObject).BorderThickness.Left.ToString();
+                ((Room)activeObject).BorderBrush = new SolidColorBrush(Colors.Red);
             }
             else
             {
@@ -74,326 +79,18 @@ namespace selfInteriorSimulation
                 setting_thickness.IsEnabled = false;
                 setting_width.Text = activeObject.ActualWidth.ToString();
                 setting_height.Text = activeObject.ActualHeight.ToString();
-                activeObject.setBorderThickness(3);
+                activeObject.BorderThickness = new Thickness(3);
             }
         }
 
 
-        private void Save_Click(object sender, RoutedEventArgs e)
-        {
-            string fileContent = "";
-            string fileName = "";
-
-            SaveFileDialog saveFile = new SaveFileDialog();
-
-            //saveFile.InitialDirectory = @"C:";
-            saveFile.Title = "파일 저장";
-            saveFile.FileName = "마이다스 인테리어";
-            saveFile.DefaultExt = "txt";
-            Nullable<bool> result = saveFile.ShowDialog();
-
-            if (result == true)
-            {
-                fileName = saveFile.FileName.ToString();
-            }
-
-            fileContent = saveStatusToJson();
-
-
-            // 파일에 write
-            try
-            {
-                StreamWriter sw = new StreamWriter(fileName);
-                sw.WriteLine(fileContent);
-                sw.Close();
-            }
-            catch (Exception ez)
-            {
-                Console.WriteLine("Exception: " + ez.Message);
-            }
-
-            //canvas.Children.Clear();
-
-            //Open_File_Click();
-        }
-
-
-        private void Open_File_Click(object sender, RoutedEventArgs e)
-        {
-            String fileContent = "";
-            String fileName = "";
-
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            //openFileDialog.InitialDirectory = @"C:\\";
-            openFileDialog.Title = "파일 선택";
-            Nullable<bool> result = openFileDialog.ShowDialog();
-
-            if (result == true)
-            {
-                fileName = openFileDialog.FileName.ToString();
-            }
-
-            if (fileName != null | fileName != "")
-            {
-                try
-                {
-                    StreamReader sr = new StreamReader(fileName);
-                    fileContent = sr.ReadToEnd();
-                    sr.Close();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("파일을 열 수 없습니다. " + ex.Message);
-                }
-            }
-
-            if (fileContent != null && fileContent != "")
-            {
-                printUIfromJson(fileContent);
-            }
-        }
-
-        private void Save_Image_Click(object sender, RoutedEventArgs e)
-        {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Png Image|*.png";
-            saveFileDialog.Title = "Save an Image File";
-            saveFileDialog.ShowDialog();
-
-            if (saveFileDialog.FileName == "")
-                saveFileDialog.FileName = "image.png";
-
-            RenderTargetBitmap rtb = new RenderTargetBitmap(
-                (int)canvas.RenderSize.Width,
-                (int)canvas.RenderSize.Height,
-                96d, 96d, System.Windows.Media.PixelFormats.Default);
-
-            rtb.Render(canvas);
-
-            BitmapEncoder pngEncoder = new PngBitmapEncoder();
-            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
-
-
-            using (var fs = System.IO.File.OpenWrite(saveFileDialog.FileName))
-            {
-                pngEncoder.Save(fs);
-            }
-        }
-
-        private void New_Click(object sender, RoutedEventArgs e)
-        {
-            canvas.Children.Clear();
-
-            const double first_width = 700;
-            const double first_height = 500;
-
-            const double canvas_width = 1000;
-            const double canvas_height = 700;
-
-            double center_x1 = canvas_width / 2 - first_width / 2;
-            double center_y1 = canvas_height / 2 - first_height / 2;
-            double center_x2 = canvas_width / 2 + first_width / 2;
-            double center_y2 = canvas_height / 2 + first_height / 2;
-
-            Point point1 = new Point(center_x1, center_y1);
-            Point point2 = new Point(center_x1, center_y2);
-            Point point3 = new Point(center_x2, center_y2);
-            Point point4 = new Point(center_x2, center_y1);
-
-
-            BasicObject.canvas = canvas;
-            PointCollection points = new PointCollection();
-            points.Add(point1);
-            points.Add(point2);
-            points.Add(point3);
-            points.Add(point4);
-            new Wall(points) { Name = "Wall" };
-            new Door(point3) { Name = "Door",Width = 100,Height = 100 };
-
-        }
-
-        private void Clear_Click(object sender, RoutedEventArgs e)
-        {
-            canvas.Children.Clear();
-        }
-
-        int jsonStay = 0;
-        private void Undo_Click(object sender, RoutedEventArgs e)
-        {
-            /*
-            if (canvas.Children.Count > 0)
-            {
-                redocollection.Add((BasicObject)canvas.Children[canvas.Children.Count - 1]);
-                canvas.Children.RemoveAt(canvas.Children.Count - 1);
-            }
-            undo_times.Content = canvas.Children.Count.ToString();
-            */
-            if (0 < jsonStay-1) {
-                printUIfromJson(Jsons[jsonStay - 1]);
-                jsonStay--;
-            }
-        }
-
-        List<BasicObject> redocollection = new List<BasicObject>();
-        private void Redo_Click(object sender, RoutedEventArgs e)
-        {
-            /*
-            if (redocollection.Count > 0)
-            {
-                canvas.Children.Add(redocollection[redocollection.Count - 1]);
-                redocollection.RemoveAt(redocollection.Count - 1);
-            }
-            */
-            if (jsonStay < Jsons.Count && 0<jsonStay)
-            {
-                printUIfromJson(Jsons[jsonStay]);
-                jsonStay++;
-            }
-        }
-
-        private string saveStatusToJson()
-        {
-            jsonStay++;
-            string fileContent = "";
-            foreach (var obj in BasicObject.objects)
-            {
-                if (obj.isType == BasicObject.IsType.Wall)
-                {
-                    PointCollection points = ((Wall)obj).points;
-                    fileContent = fileContent + (points.Count + "\t");
-                    foreach (Point point in points)
-                    {
-                        // obj to Json
-                        string json = JsonConvert.SerializeObject(point);
-                        fileContent += (json + "\t");
-                        Point p = JsonConvert.DeserializeObject<Point>(json);
-                    }
-
-
-                    //string json = JsonConvert.SerializeObject((Wall)obj);
-                }
-                else if (obj.isType == BasicObject.IsType.Chair ||
-                    obj.isType == BasicObject.IsType.Refrigeraot ||
-                    obj.isType == BasicObject.IsType.Sofa ||
-                    obj.isType == BasicObject.IsType.Table ||
-                    obj.isType == BasicObject.IsType.Tv ||
-                    obj.isType == BasicObject.IsType.Washer ||
-                    obj.isType == BasicObject.IsType.door ||
-                    obj.isType == BasicObject.IsType.window)
-                {
-                    string jsonType = JsonConvert.SerializeObject(obj.isType);
-                    fileContent += jsonType + "\t";
-
-                    string name = JsonConvert.SerializeObject(obj.Name);
-                    fileContent += name + "\t";
-
-                    int height = ((InteriorObject)obj).Height;
-                    int width = ((InteriorObject)obj).Width;
-                    fileContent += height + "\t";
-                    fileContent += width + "\t";
-
-                    double border = ((InteriorObject)obj).getBorderThicknessDbl();
-                    double rotate = ((InteriorObject)obj).getRotate();
-
-                    fileContent += border + "\t";
-                    fileContent += rotate + "\t";
-
-                    string jsonPoint = JsonConvert.SerializeObject(((InteriorObject)obj).point);
-                    fileContent += jsonPoint + "\t";
-
-                }
-            }
-
-            return fileContent;
-        }
-
-        private void printUIfromJson(string fileContent)
-        {
-            BasicObject.objects = new List<BasicObject>();
-            canvas.Children.Clear();
-
-            string[] contentArgs = fileContent.Split('\t');
-            int wallPointNum = int.Parse(contentArgs[0]);
-            PointCollection points = new PointCollection();
-            int i;
-            for (i = 1; i <= wallPointNum; i++)
-            {
-                if (contentArgs[i] != null && contentArgs[i] != "")
-                {
-                    Point p = JsonConvert.DeserializeObject<Point>(contentArgs[i]);
-                    points.Add(p);
-                }
-            }
-
-            // Wall 생성
-            Wall wall = new Wall(points);
-            for (i = wallPointNum + 1; i < contentArgs.Length && contentArgs[i] != null && contentArgs[i] != ""; i += 7)
-            {
-                int type = (int)JsonConvert.DeserializeObject<BasicObject.IsType>(contentArgs[i]);
-                string name = JsonConvert.DeserializeObject<string>(contentArgs[i + 1]);
-                int height = JsonConvert.DeserializeObject<int>(contentArgs[i + 2]);
-                int width = JsonConvert.DeserializeObject<int>(contentArgs[i + 3]);
-                double border = JsonConvert.DeserializeObject<double>(contentArgs[i + 4]);
-                double rotate = JsonConvert.DeserializeObject<double>(contentArgs[i + 5]);
-                Point pointObj = JsonConvert.DeserializeObject<Point>(contentArgs[i + 6]);
-                // interior Obj 생성
-                switch (type)
-                {
-                    case 0: break;//Wall
-                    case 1:
-                        Chair ch = new Chair(pointObj);
-                        ch.Name = name; ch.Height = height; ch.Width = width; ch.setBorderThickness(border); ch.setRotate(rotate);
-                        break;
-                    case 2:
-                        Refrigerator re = new Refrigerator(pointObj);
-                        re.Name = name; re.Height = height; re.Width = width; re.setBorderThickness(border); re.setRotate(rotate);
-                        break;
-                    case 3:
-                        Sofa so = new Sofa(pointObj);
-                        so.Name = name; so.Height = height; so.Width = width; so.setBorderThickness(border); so.setRotate(rotate);
-                        break;
-                    case 4:
-                        Table tab = new Table(pointObj);
-                        tab.Name = name; tab.Height = height; tab.Width = width; tab.setBorderThickness(border); tab.setRotate(rotate);
-                        break;
-                    case 5:
-                        Tv tv = new Tv(pointObj);
-                        tv.Name = name; tv.Height = height; tv.Width = width; tv.setBorderThickness(border); tv.setRotate(rotate);
-                        break;
-                    case 6:
-                        Washer wa = new Washer(pointObj);
-                        wa.Name = name; wa.Height = height; wa.Width = width; wa.setBorderThickness(border); wa.setRotate(rotate);
-                        break;
-                    case 7:
-                        Door att = new Door(pointObj);
-                        att.Name = name; att.Height = height; att.Width = width; att.setBorderThickness(border); att.setRotate(rotate);
-                        break;
-                    case 8:
-                        WindowObject wi = new WindowObject(pointObj);
-                        wi.Name = name; wi.Height = height; wi.Width = width; wi.setBorderThickness(border); wi.setRotate(rotate);
-                        break;
-                    default: break;
-                }
-            }
-        }
-
-        private void About_Click(object sender, RoutedEventArgs e)
-        {
-
-            MessageBox.Show("Midas Challenge Application 1 Team\r\r  금준호\r  유한결\r  정원철", "About.");
-        }
-
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
 
 
 
         enum Painting_Mode
         {
             Default,
-            Wall,
+            Room,
             Bottom,
             Refre,
             TV,
@@ -408,67 +105,16 @@ namespace selfInteriorSimulation
 
         Shape shape = null;
         PointCollection points = new PointCollection();
-        InteriorObject nowObject = null;
+        BasicObject selectedObject = null;
 
-        private void Mouse_Left_Down(object sender, MouseButtonEventArgs e)
-        {
-            const int object_width = 100;
-            const int object_height = 130;
-
-            Point point = e.GetPosition(canvas);
-            points = new PointCollection();
-            points.Add(point);
-
-            if (painting_mode == Painting_Mode.Default) return;
-
-
-            switch (painting_mode)
-            {
-                case Painting_Mode.Chair:
-                case Painting_Mode.Refre:
-                case Painting_Mode.Sofa:
-                case Painting_Mode.Table:
-                case Painting_Mode.TV:
-                case Painting_Mode.Custom:
-
-                    PointCollection object_points = new PointCollection();
-                    object_points.Add(new Point(point.X - object_width / 2, point.Y - object_height / 2));
-                    object_points.Add(new Point(point.X + object_width / 2, point.Y - object_height / 2));
-                    object_points.Add(new Point(point.X - object_width / 2, point.Y + object_height / 2));
-                    object_points.Add(new Point(point.X + object_width / 2, point.Y + object_height / 2));
-
-                    foreach (var each in BasicObject.walls)
-                        if (isCollesion(each.points, object_points) == true) return;
-                    
-                    painting_mode = Painting_Mode.Default;
-                    break;
-            }
-
-            if (painting_mode == Painting_Mode.Wall)
-            {
-                shape = new Rectangle()
-                {
-                    StrokeThickness = 1,
-                    Stroke = new SolidColorBrush(Colors.Black),
-                };
-
-                try
-                {
-                    canvas.Children.Add(shape);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.ToString());
-
-                }
-            }
-        }
-
+ 
 
 
 
         private void Mouse_Move(object sender, MouseEventArgs e)
         {
+            if (selectedObject == null) return;
+
             Point point = e.GetPosition(canvas);
 
             Refresh_Status(point, canvas.Children.Count);
@@ -481,22 +127,236 @@ namespace selfInteriorSimulation
                 case Painting_Mode.Table:
                 case Painting_Mode.TV:
                 case Painting_Mode.Custom:
-                    nowObject.point = (new Point(point.X - nowObject.Width / 2, point.Y - nowObject.Height / 2));
+                    ((InteriorObject)selectedObject).Point = new Point(point.X, point.Y);
                     return;
             }
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if (painting_mode == Painting_Mode.Default) return;
-
-                shape.Width = Math.Abs(points[0].X - point.X);
-                shape.Height = Math.Abs(points[0].Y - point.Y);
-                shape.Margin = new Thickness(Math.Min(points[0].X, point.X),
-                                            Math.Min(points[0].Y, point.Y), 0, 0);
-
-                canvas.Children.Remove(shape);
+                if (painting_mode == Painting_Mode.Room)
+                {
+                    shape.Width = Math.Abs(points[0].X - point.X);
+                    shape.Height = Math.Abs(points[0].Y - point.Y);
+                    shape.Margin = new Thickness(Math.Min(points[0].X, point.X),
+                                                Math.Min(points[0].Y, point.Y), 0, 0);
+                }
             }
         }
+
+        private void Mouse_Left_Down(object sender, MouseButtonEventArgs e)
+        {
+            if (selectedObject == null) return;
+
+            const int object_width = 100;
+            const int object_height = 130;
+
+            Point point = e.GetPosition(canvas);
+            points = new PointCollection();
+            points.Add(point);
+
+
+            switch (selectedObject.isType)
+            {
+                case BasicObject.IsType.Chair:
+                case BasicObject.IsType.Refrigerator:
+                case BasicObject.IsType.Sofa:
+                case BasicObject.IsType.Table:
+                case BasicObject.IsType.Tv:
+                case BasicObject.IsType.Custom:
+
+                    PointCollection object_points = new PointCollection();
+                    object_points.Add(new Point(point.X - object_width / 2, point.Y - object_height / 2));
+                    object_points.Add(new Point(point.X + object_width / 2, point.Y - object_height / 2));
+                    object_points.Add(new Point(point.X - object_width / 2, point.Y + object_height / 2));
+                    object_points.Add(new Point(point.X + object_width / 2, point.Y + object_height / 2));
+
+                    foreach (var each in BasicObject.rooms)
+                        if (isCollesion(each.points, object_points) == true)
+                        {
+                            canvas.Children.Remove(activeObject);
+                            selectedObject = null;
+                            return;
+                        }
+
+                    change_notify("New", selectedObject.Name);
+                    selectedObject = null;
+                    break;
+
+
+                case BasicObject.IsType.Room:
+                    shape = new Rectangle()
+                    {
+                        StrokeThickness = 1,
+                        Stroke = new SolidColorBrush(Colors.Red),
+                    };
+                    
+                    canvas.Children.Add(shape);
+                    break;
+            }
+        }
+    
+        private void Mouse_Left_Up(object sender, MouseButtonEventArgs e)
+        {
+            Point point = e.GetPosition(canvas);
+            if(selectedObject==null) return;
+
+            switch (selectedObject.isType)
+            {
+                case BasicObject.IsType.Room:
+                    points.Add(new Point(points[0].X, point.Y));
+                    points.Add(new Point(point.X, point.Y));
+                    points.Add(new Point(point.X, points[0].Y));
+
+                    new Room(points);
+
+                    canvas.Children.Remove(shape);
+                    Changed("New", "Room");
+                    selectedObject = null;
+                    break;
+
+            }
+
+            
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (activeObject != null)
+            {
+                switch (e.Key)
+                {
+                    case Key.Delete:
+                        canvas.Children.Remove(activeObject);
+
+                        activeObject = null;
+                        break;
+                    case Key.LeftCtrl:
+                        if (activeObject is Room) break;
+
+                        switch (activeObject.isType)
+                        {
+                            case BasicObject.IsType.Chair:
+                                selectedObject = new Chair();
+                                painting_mode = Painting_Mode.Chair;
+                                break;
+                            case BasicObject.IsType.Sofa:
+                                selectedObject = new Sofa();
+                                painting_mode = Painting_Mode.Sofa;
+                                break;
+                            case BasicObject.IsType.Table:
+                                selectedObject = new Table();
+                                painting_mode = Painting_Mode.Table;
+                                break;
+                            case BasicObject.IsType.Tv:
+                                selectedObject = new Tv();
+                                painting_mode = Painting_Mode.TV;
+                                break;
+                            case BasicObject.IsType.Refrigerator:
+                                selectedObject = new Refrigerator();
+                                painting_mode = Painting_Mode.Refre;
+                                break;
+                            case BasicObject.IsType.Custom:
+                                selectedObject = new CustomObject();
+                                painting_mode = Painting_Mode.Custom;
+                                break;
+
+                        }
+                        selectedObject.Width = ((InteriorObject)activeObject).Width;
+                        selectedObject.Height = ((InteriorObject)activeObject).Height;
+
+                        break;
+                }
+            }
+        }
+
+        private void Refresh_Status(Point position, int undos)
+        {
+            point_position.Content = position.ToString();
+            if(activeObject!=null)
+                object_type.Content = activeObject.ToString();
+            undo_times.Content = undos.ToString();
+        }
+
+
+
+
+
+
+        private void Wall_Click(object sender, RoutedEventArgs e)
+        {
+            selectedObject = new Room();
+            painting_mode = Painting_Mode.Room;
+        }
+
+        private void Window_Click(object sender, RoutedEventArgs e)
+        {
+            new WindowObject()
+            {
+                Width = 100,
+                Height = 100,
+                Name = "Window"
+            };
+        }
+
+        private void Custom_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Png Image|*.png";
+            openFileDialog.Title = "Open an Image File";
+            
+            Nullable<bool> result = openFileDialog.ShowDialog();
+
+            try
+            {
+                Uri uri = new Uri(openFileDialog.FileName);
+                alret w = new alret();
+                if (w.ShowDialog() == true)
+                {
+                    selectedObject = new CustomObject()
+                    {
+                        Width = w.cWidth,
+                        Height = w.cHeight,
+                        Name = w.cName,
+                        Image = new Image() { Source = new BitmapImage(uri) }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("파일을 열 수 없습니다. " + ex.Message);
+            }
+            painting_mode = Painting_Mode.Custom;
+        }
+
+        private void Object_Click(object sender, RoutedEventArgs e)
+        {
+            switch (((Button)sender).Name.ToString())
+            {
+                case "refre_button":
+                    selectedObject = new Refrigerator() { Name="냉장고", Width = 90, Height = 90 };
+                    painting_mode = Painting_Mode.Refre;
+                    break;
+                case "sofa_button":
+                    selectedObject = new Sofa() { Name = "소파", Width = 170, Height = 100 };
+                    painting_mode = Painting_Mode.Sofa;
+                    break;
+                case "chair_button":
+                    selectedObject = new Chair() { Name = "의자", Width = 70, Height = 70 };
+                    painting_mode = Painting_Mode.Chair;
+                    break;
+                case "table_button":
+                    selectedObject = new Table() { Name = "책상", Width = 140, Height = 100 };
+                    painting_mode = Painting_Mode.Table;
+                    break;
+                case "tv_button":
+                    selectedObject = new Tv() { Name = "TV", Width = 200, Height = 50 };
+                    painting_mode = Painting_Mode.TV;
+                    break;
+            }
+        }
+
+
+
 
         static public bool is_inside(PointCollection dst, Point point)
         {
@@ -514,7 +374,7 @@ namespace selfInteriorSimulation
             return crosses % 2 > 0;
         }
 
-        static public bool isCollesion(PointCollection dst,PointCollection src)
+        static public bool isCollesion(PointCollection dst, PointCollection src)
         {
             Collection<bool> in_chk = new Collection<bool>();
 
@@ -523,257 +383,19 @@ namespace selfInteriorSimulation
                 in_chk.Add(is_inside(dst, each));
             }
 
-            if (in_chk[0] ^ in_chk[1] || in_chk[2]^in_chk[3] || in_chk[1]^in_chk[2])
+            if (in_chk[0] ^ in_chk[1] || in_chk[2] ^ in_chk[3] || in_chk[1] ^ in_chk[2])
             {
                 return true;
             }
             return false;
         }
 
-
-
-
-        private void Mouse_Left_Up(object sender, MouseButtonEventArgs e)
+        private void history_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Point point = e.GetPosition(canvas);
-            
-            switch (painting_mode)
-            {
-                case Painting_Mode.Wall:
-                    points.Add(new Point(points[0].X + shape.Width, points[0].Y));
-                    points.Add(new Point(points[0].X + shape.Width, points[0].Y + shape.Height));
-                    points.Add(new Point(points[0].X, points[0].Y + shape.Height));
-
-                    new Wall(points);
-
-                    canvas.Children.Remove(shape);
-                    painting_mode = Painting_Mode.Default;
-                    break;
-
-            }
-
-            
+            jsonStay = history.SelectedIndex+1;
+            Undo_Click(null, e);
         }
+
         
-
-        private void Refresh_Status(Point position, int undos)
-        {
-            point_position.Content = position.ToString();
-            if(activeObject!=null)
-                object_type.Content = activeObject.ToString();
-            undo_times.Content = undos.ToString();
-        }
-
-        private void Wall_Click(object sender, RoutedEventArgs e)
-        {
-            painting_mode = Painting_Mode.Wall;
-        }
-
-        private void Custom_Click(object sender, RoutedEventArgs e)
-        {
-
-            const int object_width = 100;
-            const int object_height = 130;
-
-
-            nowObject = new CustomObject(new Point(0, 0))
-            {
-                Width = object_width,
-                Height = object_height,
-
-            };
-
-
-            String fileContent = "";
-            Uri uri;
-            BitmapImage bitmap;
-
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Png Image|*.png";
-            openFileDialog.Title = "Open an Image File";
-            
-            Nullable<bool> result = openFileDialog.ShowDialog();
-
-            if (result == true)
-            {
-                uri = new Uri(openFileDialog.FileName);
-            
-                try
-                {
-                    bitmap = new BitmapImage(uri);
-
-                    ((InteriorObject)nowObject).objectImg.Source = bitmap;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("파일을 열 수 없습니다. " + ex.Message);
-                }
-            }
-            alret w = new alret();
-            if (w.ShowDialog() == true)
-            {
-                nowObject.Width = w.cWidth;
-                nowObject.Height = w.cHeight;
-                nowObject.Name = w.cName;
-            }
-
-            painting_mode = Painting_Mode.Custom;
-
-        }
-
-        private void Object_Click(object sender, RoutedEventArgs e)
-        {
-            const int object_width = 100;
-            const int object_height = 130;
-
-            switch (((Button)sender).Name.ToString())
-            {
-                case "refre_button":
-                    nowObject = new Refrigerator(new Point(0, 0)) { Name="냉장고", Width = 90, Height = 90 };
-                    painting_mode = Painting_Mode.Refre;
-                    break;
-                case "sofa_button":
-                    nowObject = new Sofa(new Point(0, 0)) { Name = "소파", Width = 170, Height = 100 };
-                    painting_mode = Painting_Mode.Sofa;
-                    break;
-                case "chair_button":
-                    nowObject = new Chair(new Point(0, 0)) { Name = "의자", Width = 70, Height = 70 };
-                    painting_mode = Painting_Mode.Chair;
-                    break;
-                case "table_button":
-                    nowObject = new Table(new Point(0, 0)) { Name = "책상", Width = 140, Height = 100 };
-                    painting_mode = Painting_Mode.Table;
-                    break;
-                case "tv_button":
-                    nowObject = new Tv(new Point(0, 0)) { Name = "TV", Width = 200, Height = 50 };
-                    painting_mode = Painting_Mode.TV;
-                    break;
-            }
-            Jsons.Add(saveStatusToJson());
-            
-        }
-
-        private void Window_Click(object sender, RoutedEventArgs e)
-        {
-            new WindowObject(new Point(50, 50))
-            {
-                Width=100,Height=100,
-                Name="Window"
-            };
-        }
-
-        private void setting_name_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            activeObject.Name = ((TextBox)sender).Text;
-        }
-
-        private void setting_width_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            int num = 0;
-            if (int.TryParse(((TextBox)sender).Text, out num))
-            {
-                ((InteriorObject)activeObject).Width = num;
-            }
-        }
-
-        private void setting_height_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            int num = 0;
-            if (int.TryParse(((TextBox)sender).Text, out num))
-            {
-                ((InteriorObject)activeObject).Height = num;
-            }
-        }
-
-        private void setting_thickness_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            int num = 0;
-            if (int.TryParse(((TextBox)sender).Text, out num))
-            {
-                ((Wall)activeObject).setBorderThickness(num);
-            }
-        }
-        
-        private void setting_angle_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            double num = 0;
-            if (double.TryParse(((TextBox)sender).Text, out num))
-            {
-                ((InteriorObject)activeObject).setRotate(num);
-            }
-        }
-
-        private void setting_matrial_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (activeObject is Wall)
-            {
-                switch (((ComboBox)sender).SelectedValue.ToString())
-                {
-                    case "Marble":
-                        ((Wall)activeObject).setImg(new Uri(@"pack://application:,,,/image/marble.jpg"));
-                        break;
-                    case "Wood":
-                        ((Wall)activeObject).setImg(new Uri(@"pack://application:,,,/image/wood.jpg"));
-                        break;
-                    case "Oak":
-                        ((Wall)activeObject).setImg(new Uri(@"pack://application:,,,/image/oak.jpg"));
-                        break;
-                }
-            }
-        }
-
-
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-
-            const int object_width = 100;
-            const int object_height = 130;
-            if (activeObject != null)
-            {
-                switch (e.Key)
-                {
-                    case Key.Delete:
-                        canvas.Children.Remove(activeObject);
-
-                        activeObject = null;
-                        break;
-                    case Key.LeftCtrl:
-                        if (activeObject is Wall) break;
-
-                        switch (activeObject.isType)
-                        {
-                            case BasicObject.IsType.Chair:
-                                nowObject = new Chair(new Point(0, 0));
-                                painting_mode = Painting_Mode.Chair;
-                                break;
-                            case BasicObject.IsType.Sofa:
-                                nowObject = new Sofa(new Point(0, 0));
-                                painting_mode = Painting_Mode.Sofa;
-                                break;
-                            case BasicObject.IsType.Table:
-                                nowObject = new Table(new Point(0, 0));
-                                painting_mode = Painting_Mode.Table;
-                                break;
-                            case BasicObject.IsType.Tv:
-                                nowObject = new Tv(new Point(0, 0));
-                                painting_mode = Painting_Mode.TV;
-                                break;
-                            case BasicObject.IsType.Refrigeraot:
-                                nowObject = new Refrigerator(new Point(0, 0));
-                                painting_mode = Painting_Mode.Refre;
-                                break;
-                            case BasicObject.IsType.Custom:
-                                nowObject = new CustomObject(new Point(0, 0));
-                                painting_mode = Painting_Mode.Custom;
-                                break;
-
-                        }
-                        nowObject.Width = ((InteriorObject)activeObject).Width;
-                        nowObject.Height = ((InteriorObject)activeObject).Height;
-
-                        break;
-                }
-            }
-        }
     }
 }

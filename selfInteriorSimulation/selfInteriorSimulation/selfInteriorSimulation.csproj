@@ -75,6 +75,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataManagement.cs" />
+    <Compile Include="Gui.cs" />
     <Compile Include="Objects\AttachObject.cs" />
     <Compile Include="Objects\BasicObject.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -91,7 +93,7 @@
     <Compile Include="Objects\Sofa.cs" />
     <Compile Include="Objects\Table.cs" />
     <Compile Include="Objects\Tv.cs" />
-    <Compile Include="Objects\Wall.cs" />
+    <Compile Include="Objects\Room.cs" />
     <Compile Include="Objects\Washer.cs" />
     <Compile Include="Objects\WindowObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

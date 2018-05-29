@@ -2,114 +2,85 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace selfInteriorSimulation
 {
-    public delegate void del(object sender);
+    
 
     class InteriorObject : BasicObject
     {
-        static public del notify;
-
-        public Image objectImg;
-        private Point pointInObject;
+        public Image objectImg = new Image();
         private Point mpoint;
-        public Point point { get { return mpoint; } set { setPosition(value); mpoint = value; } }
 
-        private int width;
-        public int Width { get { return width; } set { width = value; objectImg.Width = value; } }
-        private int height;
-        public int Height { get { return height; } set { height = value;  objectImg.Height = value; } }
+        public Point Point { get { return mpoint; } set { setPosition(value); mpoint = value; } }
+        public Image Image { get { return objectImg; } set { objectImg = value; } }
+        public double rotate {
+            get { var rotate = this.objectImg.RenderTransform as RotateTransform; return rotate.Angle; }
+            set { objectImg.RenderTransform = new RotateTransform(value); }
+        }
+        
 
-        private double rotate;
-        public override void setColor(Color color)
+        public InteriorObject()
         {
-            this.BorderBrush = new SolidColorBrush(color);
-        }
-        public double getBorderThicknessDbl()
-        {
-            return Double.Parse(this.BorderThickness.ToString());
-        }
-        public override void setBorderThickness(double thickness)
-        {
-            this.BorderThickness = new Thickness(thickness);
-        }
-        public double getRotate()
-        {
-            return this.rotate;
-        }
-        public void setRotate(double angle)
-        {
-            this.rotate = angle;
-            objectImg.RenderTransform = new RotateTransform(angle);
-        }
-
-
-        public InteriorObject(Point point)
-        {
-            //this.BorderThickness = new Thickness(2);
-
-            Point FirstPoint = new Point();
-            objectImg = new Image();
-            this.point = point;
-            setPosition(point);
-            setBorderThickness(getBorderThicknessDbl());
-            setRotate(getBorderThicknessDbl());
-            this.MouseDown += (o, e) => { notify(this); this.CaptureMouse(); pointInObject = e.GetPosition(objectImg); };
+            rotate = 0;
+            this.MouseDown += (o, e) => { active_notify(this); this.CaptureMouse();};
             this.MouseMove += (o, e) => {
                 if (this.IsMouseCaptured)
                 {
                     Point clickPoint = e.GetPosition(canvas);
-                    setPosition(new Point(clickPoint.X - pointInObject.X, clickPoint.Y - pointInObject.Y));
+                    setPosition(new Point(clickPoint.X , clickPoint.Y));
                 }
             };
-            this.MouseUp += (o, e) => {
-                Point p = e.GetPosition(canvas);
-                PointCollection object_points = new PointCollection();
-                object_points.Add(new Point(p.X - width / 2, p.Y - height / 2));
-                object_points.Add(new Point(p.X + width / 2, p.Y - height / 2));
-                object_points.Add(new Point(p.X - width / 2, p.Y + height / 2));
-                object_points.Add(new Point(p.X + width / 2, p.Y + height / 2));
+            this.MouseUp += Mouse_Up;
 
-                foreach (var each in BasicObject.walls)
-                {
-                    if (!(isType == IsType.door && isType == IsType.window)) {
-                        if (MainWindow.isCollesion(each.points, object_points) == true)
-                        {
-                            setPosition( FirstPoint);
-                        }
-                    }
-                }
-
-                this.ReleaseMouseCapture();
-            };
-            this.Child = objectImg;
-            canvas.Children.Add(this);
-
-            Canvas.SetTop(NameLabel,point.Y - 10);
-            Canvas.SetLeft(NameLabel, point.X + width/2);
-            Canvas.SetZIndex(NameLabel, 3);
-            canvas.Children.Add(NameLabel);
+            Canvas.SetZIndex(this, 2);
+            border.Child = objectImg;
         }
 
         private void setPosition(Point point)
         {
-            Canvas.SetTop(this, point.Y);
-            Canvas.SetLeft(this, point.X);
-            Canvas.SetZIndex(this, 2);
-
-            Canvas.SetTop(NameLabel, point.Y - 20);
-            Canvas.SetLeft(NameLabel, point.X + Width/2);
+            mpoint = point;
+            Canvas.SetTop(this, point.Y - this.Height / 2);
+            Canvas.SetLeft(this, point.X - this.Width / 2);
         }
-
-       
 
         public void setImg(string src)
         {
             objectImg.Source = new BitmapImage(new Uri(@"image\"+ src, UriKind.Relative));
+        }
+
+
+
+
+        public void Mouse_Up(object sender, MouseButtonEventArgs e)
+        {
+            if (this.IsMouseCaptured)
+            {
+                Point p = e.GetPosition(null);
+                PointCollection object_points = new PointCollection();
+                object_points.Add(new Point(p.X - Width / 2, p.Y - Height / 2));
+                object_points.Add(new Point(p.X + Width / 2, p.Y - Height / 2));
+                object_points.Add(new Point(p.X - Width / 2, p.Y + Height / 2));
+                object_points.Add(new Point(p.X + Width / 2, p.Y + Height / 2));
+
+                foreach (var each in BasicObject.rooms)
+                {
+                    if (!(isType == IsType.door && isType == IsType.window))
+                    {
+                        if (MainWindow.isCollesion(each.points, object_points) == true)
+                        {
+                            return;
+                        }
+                    }
+                }
+                change_notify("Moved", this.Name);
+                this.ReleaseMouseCapture();
+            }
         }
     }
 }

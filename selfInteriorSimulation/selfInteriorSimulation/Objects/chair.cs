@@ -6,10 +6,11 @@ namespace selfInteriorSimulation
 {
     class Chair : InteriorObject
     {
-        public Chair(Point point) : base(point)
+        public Chair() : base()
         {
             isType = IsType.Chair;
             setImg("chair2_dan.PNG");
+            
         }
     }
 }

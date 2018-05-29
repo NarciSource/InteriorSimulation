@@ -8,38 +8,48 @@
         WindowState="Maximized"
         Title="Self Interior Simulation" Height="700" Width="1080" KeyDown="Window_KeyDown">
     <DockPanel>
-        <Border DockPanel.Dock="Top">
-            <Menu>
-                <MenuItem Header="Menu">
-                    <MenuItem Header="New" Click="New_Click"/>
-                    <MenuItem Header="Open" Click="Open_File_Click"/>
-                    <MenuItem Header="Save" Click="Save_Click"/>
-                    <MenuItem Header="Open" Click="Open_File_Click"/>
-                    <MenuItem Header="Save as Image" Click="Save_Image_Click"/>
-                    <MenuItem Header="Clear" Click="Clear_Click"/>
-                    <Separator/>
-                    <MenuItem Header="Exit" Click="Exit_Click"/>
-                </MenuItem>
-                <MenuItem Header="Tools">
-                    <MenuItem Header="Undo" Click="Undo_Click"/>
-                    <MenuItem Header="Redo" Click="Redo_Click"/>
-                </MenuItem>
-                <MenuItem Header="Help">
-                    <MenuItem Header="About" Click="About_Click"/>
-                </MenuItem>
-            </Menu>
-        </Border>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Menu">
+                <MenuItem Header="New" Click="New_Click"/>
+                <MenuItem Header="Save" Click="Save_Click"/>
+                <MenuItem Header="Open" Click="Open_Click"/>
+                <Separator/>
+                <MenuItem Header="Save as Image" Click="Save_Image_Click"/>
+                <MenuItem Header="Clear" Click="Clear_Click"/>
+                <Separator/>
+                <MenuItem Header="Exit" Click="Exit_Click"/>
+            </MenuItem>
+            <MenuItem Header="Tools">
+                <MenuItem Header="Undo" Click="Undo_Click"/>
+                <MenuItem Header="Redo" Click="Redo_Click"/>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" Click="About_Click"/>
+            </MenuItem>
+        </Menu>
 
         <Border DockPanel.Dock="Left" Width="100" BorderThickness="1"  BorderBrush="Black">
             <TabControl>
-                <TabItem Header="Object">
+                <TabItem Header="Room">
                     <StackPanel Orientation="Vertical">
+                        <Button x:Name="wall_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="70" Height="Auto" Click="Wall_Click">
+                            <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
+                                <Image Source="image/ground1.PNG" Height="50"/>
+                                <TextBlock Text="Room" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
                         <Button x:Name="window_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="70" Height="Auto" Click="Window_Click">
                             <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
                                 <Image Source="image/window.PNG" Height="50"/>
                                 <TextBlock Text="Window" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Button>
+                        
+                        
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Object">
+                    <StackPanel Orientation="Vertical">
                         <Button x:Name="refre_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="70" Height="Auto" Click="Object_Click">
                             <StackPanel Orientation="Vertical" Width="Auto" HorizontalAlignment="Left">
                                 <Image Source="image/refrigerator.jpg" Height="50"/>
@@ -83,30 +93,42 @@
 
         </Border>
 
-        <Border x:Name="SettingDock" DockPanel.Dock="Right" Width="200" Background="WhiteSmoke" BorderBrush="DodgerBlue" BorderThickness="1" Visibility="Hidden">
-            <StackPanel Orientation="Horizontal" Margin="10,20,10,20">
-                <StackPanel Orientation="Vertical" Width="70">
-                    <TextBlock Text="Name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <TextBlock Text="Thickness" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <TextBlock Text="Rotate" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <TextBlock Text="Width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <TextBlock Text="Height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <TextBlock Text="Material" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+        <Border x:Name="SettingDock" DockPanel.Dock="Right" Width="200" Background="WhiteSmoke" BorderBrush="DodgerBlue" BorderThickness="1" Visibility="Visible">
+            <StackPanel Orientation="Vertical" Margin="10,20,10,20">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Vertical" Width="70">
+                        <TextBlock Text="Name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                        <TextBlock Text="Thickness" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                        <TextBlock Text="Rotate" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                        <TextBlock Text="Width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                        <TextBlock Text="Height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                        <TextBlock Text="Material" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Width="100">
+                        <TextBox x:Name="setting_name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_name_TextChanged"/>
+                        <TextBox x:Name="setting_thickness" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_thickness_TextChanged"/>
+                        <TextBox x:Name="setting_angle" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_angle_TextChanged"/>
+                        <TextBox x:Name="setting_width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_width_TextChanged"/>
+                        <TextBox x:Name="setting_height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_height_TextChanged"/>
+                        <ComboBox x:Name="setting_material" SelectedValuePath="Content" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" SelectionChanged="setting_matrial_SelectionChanged">
+                            <ComboBoxItem Content="Marble"/>
+                            <ComboBoxItem Content="Wood"/>
+                            <ComboBoxItem Content="Oak"/>
+                        </ComboBox>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" Width="100">
-                    <TextBox x:Name="setting_name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_name_TextChanged"/>
-                    <TextBox x:Name="setting_thickness" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_thickness_TextChanged"/>
-                    <TextBox x:Name="setting_angle" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_angle_TextChanged"/>
-                    <TextBox x:Name="setting_width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_width_TextChanged"/>
-                    <TextBox x:Name="setting_height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_height_TextChanged"/>
-                    <ComboBox x:Name="setting_material" SelectedValuePath="Content" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" SelectionChanged="setting_matrial_SelectionChanged">
-                        <ComboBoxItem Content="Marble"/>
-                        <ComboBoxItem Content="Wood"/>
-                        <ComboBoxItem Content="Oak"/>
-                    </ComboBox>
+                <Button Content="Save" HorizontalAlignment="Right" Width="50" Margin="0,10,10,0" Click="setting_Button_Click"/>
+                <StackPanel Orientation="Vertical" Margin="0,30,0,0">
+                    <TextBlock Text="History"/>
+                    <ListView x:Name="history" SelectionChanged="history_SelectionChanged">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="True">
+                                <GridViewColumn Header="Command" Width="100" DisplayMemberBinding="{Binding Command}"/>
+                                <GridViewColumn Header="Name" Width="70" DisplayMemberBinding="{Binding Name}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </StackPanel>
-
-
             </StackPanel>
         </Border>
 

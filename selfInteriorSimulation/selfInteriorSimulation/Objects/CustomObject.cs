@@ -8,10 +8,10 @@ namespace selfInteriorSimulation
 {
     class CustomObject : InteriorObject
     {
-        public CustomObject(Point point) : base(point)
+        public CustomObject() : base()
         {
             isType = IsType.Custom;
-
+            
         }
     }
 }

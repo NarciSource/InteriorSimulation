@@ -8,26 +8,41 @@ using System.Windows.Media;
 
 namespace selfInteriorSimulation
 {
-    interface CL : ICloneable
+    public delegate void del(object sender);
+    public delegate void del2(string command, string name);
+    abstract class BasicObject : DockPanel
     {
+        static public del active_notify;
+        static public del2 change_notify;
 
-    }
+        protected Border border = new Border();
+        protected TextBlock name = new TextBlock()
+        {
+            Height = 15,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
 
-
-    abstract class BasicObject : Border, CL
-    {
         public static Canvas canvas { get; set; }
-        private string name = "이름";
-        public string Name { get { return name; } set {
-                NameLabel.Content = value; name = value; } }
-        public Label NameLabel = new Label();
 
-        public static List<BasicObject> objects = new List<BasicObject>();
+        public new string Name {
+            get { return name.Text; }
+            set { name.Text = value;}
+        }
+        public Thickness BorderThickness
+        {
+            get { return border.BorderThickness; }
+            set { border.BorderThickness = value; }
+        }
+        public Brush BorderBrush
+        {
+            get { return border.BorderBrush; }
+            set { border.BorderBrush = value; }
+        }
             
         public enum IsType {
-            Wall,
+            Room,
             Chair,
-            Refrigeraot,
+            Refrigerator,
             Sofa,
             Table,
             Tv,
@@ -37,17 +52,20 @@ namespace selfInteriorSimulation
             Custom
         };
         public IsType isType;
-        public static List<Wall> walls = new List<Wall>();
+        public static List<Room> rooms = new List<Room>();
+
+        public new double Height {
+            get { return border.Height; }
+            set { border.Height = value; } }
+        
         public BasicObject(){
-            objects.Add(this);
-        }
+            DockPanel.SetDock(border, Dock.Top);
+            this.Children.Add(border);
 
-        public abstract void setColor(Color color);
-        public abstract void setBorderThickness(double thickness);
+            DockPanel.SetDock(name, Dock.Bottom);
+            this.Children.Add(name);
 
-        public object Clone()
-        {
-            return this.MemberwiseClone();
+            canvas.Children.Add(this);
         }
     }
 }

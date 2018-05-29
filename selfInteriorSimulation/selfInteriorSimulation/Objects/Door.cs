@@ -8,10 +8,11 @@ namespace selfInteriorSimulation
 {
     class Door : AttachObject
     {
-        public Door(Point point) : base(point)
+        public Door() : base()
         {
             isType = IsType.door;
             setImg("door.PNG");
+            
         }
     }
 }

@@ -5,10 +5,11 @@ namespace selfInteriorSimulation
 {
     class Tv : InteriorObject
     {
-        public Tv(Point point) : base(point)
+        public Tv() : base()
         {
             isType = IsType.Tv;
             setImg("tv_dan.PNG");
+            
         }
     }
 }

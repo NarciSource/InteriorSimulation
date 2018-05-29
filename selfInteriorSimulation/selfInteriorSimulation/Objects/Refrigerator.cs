@@ -6,10 +6,11 @@ namespace selfInteriorSimulation
     class Refrigerator : InteriorObject
     {
       
-        public Refrigerator(Point point) : base(point)
+        public Refrigerator() : base()
         {
-            isType = IsType.Refrigeraot;
+            isType = IsType.Refrigerator;
             setImg("refrigerator_dan.PNG");
+            
         }
     }
 }

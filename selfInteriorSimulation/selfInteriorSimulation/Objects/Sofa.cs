@@ -5,10 +5,11 @@ namespace selfInteriorSimulation
 {
     class Sofa : InteriorObject
     {
-        public Sofa(Point point) : base(point)
+        public Sofa() : base()
         {
             isType = IsType.Sofa;
             setImg("sofa_dan.PNG");
+            
         }
     }
 }

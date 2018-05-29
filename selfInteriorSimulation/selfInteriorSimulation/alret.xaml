@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:selfInteriorSimulation"
         mc:Ignorable="d"
-        Title="alret" Height="150" Width="180">
+        Title="alret" Height="150" Width="160">
     <Grid Margin="7">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -25,7 +25,7 @@
         <Label Content="Height" Grid.Column="0" Grid.Row="2"/>
         <TextBox x:Name="custom_height" Grid.Column="1" Grid.Row="2"/>
         
-        <WrapPanel Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,25,0,0">
+        <WrapPanel Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,5,0,0">
             <Button IsDefault="True" Click="btnDialogOk_Click" MinWidth="60" Margin="0,0,10,0">_Ok</Button>
             <Button IsCancel="True" MinWidth="60">_Cancel</Button>
         </WrapPanel>
