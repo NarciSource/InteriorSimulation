@@ -1,23 +1,16 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using static selfInteriorSimulation.BasicObject;
+using static selfInteriorSimulation.BaseObject;
 
 namespace selfInteriorSimulation
 {
@@ -31,192 +24,92 @@ namespace selfInteriorSimulation
         {
             InitializeComponent();
 
-            BasicObject.active_notify += Active;
-            BasicObject.change_notify += Changed;
+            BaseObject.active_notify += Active;
+            BaseObject.change_notify += Changed;
+            BaseObject.canvas = canvas;
 
-            New_Click(new object(), new RoutedEventArgs());
+            Changed("New", "");
+            
+            notice_timer.Tick += new EventHandler(Timer_elapsed);
+            notice_timer.Start();
         }
+
+        Shape shape = null;
+        Point dragonpoint;
+        BaseObject paintingObject = new NullBasicObject();
 
         
 
-        private BasicObject activeObject = null;
-        private void Active(object sender)
+        private void Mouse_Left_Down(object sender, MouseButtonEventArgs e)
         {
-            if (activeObject != null)
+            if (paintingObject is RoomCheckObject)
             {
-                if (!(activeObject is Room))
+                dragonpoint = e.GetPosition(canvas);
+                shape = new Rectangle()
                 {
-                    activeObject.BorderThickness = new Thickness(0);
-                    activeObject.BorderBrush = new SolidColorBrush(Colors.Black);
-                }
-                else
-                {
-                    ((Room)activeObject).BorderBrush = new SolidColorBrush(Colors.Black);
-                }
-            }
-            
-            activeObject = (BasicObject)sender;
-            SettingDock.Visibility = Visibility.Visible;
-            activeObject.BorderBrush = new SolidColorBrush(Colors.Red);
-            setting_name.Text = activeObject.Name.ToString();
-
-            if (sender is Room)
-            {
-                setting_height.IsEnabled = false;
-                setting_width.IsEnabled = false;
-                setting_angle.IsEnabled = false;
-                setting_material.IsEnabled = true;
-                setting_thickness.IsEnabled = true;
-                setting_thickness.Text = ((Room)activeObject).BorderThickness.Left.ToString();
-                ((Room)activeObject).BorderBrush = new SolidColorBrush(Colors.Red);
-            }
-            else
-            {
-                setting_height.IsEnabled = true;
-                setting_width.IsEnabled = true;
-                setting_angle.IsEnabled = true;
-                setting_material.IsEnabled = false;
-                setting_thickness.IsEnabled = false;
-                setting_width.Text = activeObject.ActualWidth.ToString();
-                setting_height.Text = activeObject.ActualHeight.ToString();
-                activeObject.BorderThickness = new Thickness(3);
+                    StrokeThickness = 1,
+                    Stroke = new SolidColorBrush(Colors.Red),
+                };
+                canvas.Children.Add(shape);
             }
         }
-
-
-
-
-
-        enum Painting_Mode
-        {
-            Default,
-            Room,
-            Bottom,
-            Refre,
-            TV,
-            Table,
-            Sofa,
-            Chair,
-            Window,
-            Custom
-        };
-        Painting_Mode painting_mode = Painting_Mode.Default;
-
-
-        Shape shape = null;
-        PointCollection points = new PointCollection();
-        BasicObject selectedObject = null;
-
- 
-
-
 
         private void Mouse_Move(object sender, MouseEventArgs e)
         {
-            if (selectedObject == null) return;
-
             Point point = e.GetPosition(canvas);
+            Refresh_Status(point);
+            point = Algorithm.Adjust_to_fit_std(point);
 
-            Refresh_Status(point, canvas.Children.Count);
-
-            switch (painting_mode)
+            if (paintingObject is InteriorObject)
             {
-                case Painting_Mode.Chair:
-                case Painting_Mode.Refre:
-                case Painting_Mode.Sofa:
-                case Painting_Mode.Table:
-                case Painting_Mode.TV:
-                case Painting_Mode.Custom:
-                    ((InteriorObject)selectedObject).Point = new Point(point.X, point.Y);
-                    return;
+                ((InteriorObject)paintingObject).Center = point;
             }
 
-            if (e.LeftButton == MouseButtonState.Pressed)
+            else if (paintingObject is RoomCheckObject) 
             {
-                if (painting_mode == Painting_Mode.Room)
+                if (e.LeftButton == MouseButtonState.Pressed)
                 {
-                    shape.Width = Math.Abs(points[0].X - point.X);
-                    shape.Height = Math.Abs(points[0].Y - point.Y);
-                    shape.Margin = new Thickness(Math.Min(points[0].X, point.X),
-                                                Math.Min(points[0].Y, point.Y), 0, 0);
+                    shape.Width = Math.Abs(dragonpoint.X - point.X);
+                    shape.Height = Math.Abs(dragonpoint.Y - point.Y);
+                    shape.Margin = new Thickness(Math.Min(dragonpoint.X, point.X),
+                                                Math.Min(dragonpoint.Y, point.Y), 0, 0);
                 }
-            }
-        }
-
-        private void Mouse_Left_Down(object sender, MouseButtonEventArgs e)
-        {
-            if (selectedObject == null) return;
-
-            const int object_width = 100;
-            const int object_height = 130;
-
-            Point point = e.GetPosition(canvas);
-            points = new PointCollection();
-            points.Add(point);
-
-
-            switch (selectedObject.isType)
-            {
-                case BasicObject.IsType.Chair:
-                case BasicObject.IsType.Refrigerator:
-                case BasicObject.IsType.Sofa:
-                case BasicObject.IsType.Table:
-                case BasicObject.IsType.Tv:
-                case BasicObject.IsType.Custom:
-
-                    PointCollection object_points = new PointCollection();
-                    object_points.Add(new Point(point.X - object_width / 2, point.Y - object_height / 2));
-                    object_points.Add(new Point(point.X + object_width / 2, point.Y - object_height / 2));
-                    object_points.Add(new Point(point.X - object_width / 2, point.Y + object_height / 2));
-                    object_points.Add(new Point(point.X + object_width / 2, point.Y + object_height / 2));
-
-                    foreach (var each in BasicObject.rooms)
-                        if (isCollesion(each.points, object_points) == true)
-                        {
-                            canvas.Children.Remove(activeObject);
-                            selectedObject = null;
-                            return;
-                        }
-
-                    change_notify("New", selectedObject.Name);
-                    selectedObject = null;
-                    break;
-
-
-                case BasicObject.IsType.Room:
-                    shape = new Rectangle()
-                    {
-                        StrokeThickness = 1,
-                        Stroke = new SolidColorBrush(Colors.Red),
-                    };
-                    
-                    canvas.Children.Add(shape);
-                    break;
             }
         }
     
         private void Mouse_Left_Up(object sender, MouseButtonEventArgs e)
         {
-            Point point = e.GetPosition(canvas);
-            if(selectedObject==null) return;
-
-            switch (selectedObject.isType)
+            if (paintingObject is InteriorObject)
             {
-                case BasicObject.IsType.Room:
-                    points.Add(new Point(points[0].X, point.Y));
-                    points.Add(new Point(point.X, point.Y));
-                    points.Add(new Point(point.X, points[0].Y));
+                foreach (var room in BaseObject.rooms)
+                    if (Algorithm.Is_collesion(room, (InteriorObject)paintingObject) == true)
+                    {
+                        canvas.Children.Remove(paintingObject);
+                        paintingObject = null;
+                        return;
+                    }
 
-                    new Room(points);
+                ((InteriorObject)paintingObject).Build();
 
-                    canvas.Children.Remove(shape);
-                    Changed("New", "Room");
-                    selectedObject = null;
-                    break;
-
+                change_notify("Made", paintingObject.Name);
+                paintingObject = null;
             }
 
-            
+            else if (paintingObject is RoomCheckObject)
+            {
+                Point point = e.GetPosition(canvas);
+                PointCollection points = new PointCollection();
+                points.Add(new Point(dragonpoint.X, dragonpoint.Y));
+                points.Add(new Point(dragonpoint.X, point.Y));
+                points.Add(new Point(point.X, point.Y));
+                points.Add(new Point(point.X, dragonpoint.Y));
+
+                Room room = new Room(points);
+                canvas.Children.Add(room);
+                canvas.Children.Remove(shape);
+
+                Changed("Made", "Room");
+            }            
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -227,76 +120,31 @@ namespace selfInteriorSimulation
                 {
                     case Key.Delete:
                         canvas.Children.Remove(activeObject);
-
+                        Changed("Delete", activeObject.Name);
                         activeObject = null;
                         break;
-                    case Key.LeftCtrl:
+
+                    case Key.LeftCtrl: // Copy
                         if (activeObject is Room) break;
 
-                        switch (activeObject.isType)
-                        {
-                            case BasicObject.IsType.Chair:
-                                selectedObject = new Chair();
-                                painting_mode = Painting_Mode.Chair;
-                                break;
-                            case BasicObject.IsType.Sofa:
-                                selectedObject = new Sofa();
-                                painting_mode = Painting_Mode.Sofa;
-                                break;
-                            case BasicObject.IsType.Table:
-                                selectedObject = new Table();
-                                painting_mode = Painting_Mode.Table;
-                                break;
-                            case BasicObject.IsType.Tv:
-                                selectedObject = new Tv();
-                                painting_mode = Painting_Mode.TV;
-                                break;
-                            case BasicObject.IsType.Refrigerator:
-                                selectedObject = new Refrigerator();
-                                painting_mode = Painting_Mode.Refre;
-                                break;
-                            case BasicObject.IsType.Custom:
-                                selectedObject = new CustomObject();
-                                painting_mode = Painting_Mode.Custom;
-                                break;
+                        Type type = activeObject.GetType();
+                        paintingObject = Activator.CreateInstance(type) as BaseObject;
 
-                        }
-                        selectedObject.Width = ((InteriorObject)activeObject).Width;
-                        selectedObject.Height = ((InteriorObject)activeObject).Height;
+                        paintingObject.Name = ((InteriorObject)activeObject).Name;
+                        paintingObject.Width = ((InteriorObject)activeObject).Width;
+                        paintingObject.Height = ((InteriorObject)activeObject).Height;
+                        ((InteriorObject)paintingObject).Build();
 
+                        canvas.Children.Add(paintingObject);
+
+                        Changed("Copy", activeObject.Name);
                         break;
                 }
             }
         }
-
-        private void Refresh_Status(Point position, int undos)
-        {
-            point_position.Content = position.ToString();
-            if(activeObject!=null)
-                object_type.Content = activeObject.ToString();
-            undo_times.Content = undos.ToString();
-        }
+        
 
 
-
-
-
-
-        private void Wall_Click(object sender, RoutedEventArgs e)
-        {
-            selectedObject = new Room();
-            painting_mode = Painting_Mode.Room;
-        }
-
-        private void Window_Click(object sender, RoutedEventArgs e)
-        {
-            new WindowObject()
-            {
-                Width = 100,
-                Height = 100,
-                Name = "Window"
-            };
-        }
 
         private void Custom_Click(object sender, RoutedEventArgs e)
         {
@@ -309,23 +157,23 @@ namespace selfInteriorSimulation
             try
             {
                 Uri uri = new Uri(openFileDialog.FileName);
-                alret w = new alret();
-                if (w.ShowDialog() == true)
+                Alret alret = new Alret();
+                if (alret.ShowDialog() == true)
                 {
-                    selectedObject = new CustomObject()
+                    paintingObject = new CustomObject()
                     {
-                        Width = w.cWidth,
-                        Height = w.cHeight,
-                        Name = w.cName,
+                        Name = alret.cName,
+                        Width = alret.cWidth,
+                        Height = alret.cHeight,
                         Image = new Image() { Source = new BitmapImage(uri) }
                     };
+                    canvas.Children.Add(paintingObject);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("파일을 열 수 없습니다. " + ex.Message);
             }
-            painting_mode = Painting_Mode.Custom;
         }
 
         private void Object_Click(object sender, RoutedEventArgs e)
@@ -333,67 +181,108 @@ namespace selfInteriorSimulation
             switch (((Button)sender).Name.ToString())
             {
                 case "refre_button":
-                    selectedObject = new Refrigerator() { Name="냉장고", Width = 90, Height = 90 };
-                    painting_mode = Painting_Mode.Refre;
+                    paintingObject = new Refrigerator() { Name="냉장고", Width = 96, Height = 64 };
                     break;
                 case "sofa_button":
-                    selectedObject = new Sofa() { Name = "소파", Width = 170, Height = 100 };
-                    painting_mode = Painting_Mode.Sofa;
+                    paintingObject = new Sofa() { Name = "소파", Width = 160, Height = 64 };
                     break;
                 case "chair_button":
-                    selectedObject = new Chair() { Name = "의자", Width = 70, Height = 70 };
-                    painting_mode = Painting_Mode.Chair;
+                    paintingObject = new Chair() { Name = "의자", Width = 48, Height = 48 };
                     break;
                 case "table_button":
-                    selectedObject = new Table() { Name = "책상", Width = 140, Height = 100 };
-                    painting_mode = Painting_Mode.Table;
+                    paintingObject = new Table() { Name = "책상", Width = 128, Height = 64 };
                     break;
                 case "tv_button":
-                    selectedObject = new Tv() { Name = "TV", Width = 200, Height = 50 };
-                    painting_mode = Painting_Mode.TV;
+                    paintingObject = new Tv() { Name = "TV", Width = 192, Height = 32 };
+                    break;
+
+
+                case "room_button":
+                    paintingObject = new RoomCheckObject();
+                    return;
+
+
+                case "door_button":
+                    paintingObject = ((Room)activeObject).AddDoor();
+                    break;
+                case "window_button":
+                    paintingObject = ((Room)activeObject).AddWindow();
                     break;
             }
+
+
+            canvas.Children.Add(paintingObject);
         }
 
 
 
 
-        static public bool is_inside(PointCollection dst, Point point)
+
+
+        private BaseObject activeObject = null;
+        private void Active(object sender)
         {
-            int crosses = 0;
-            for (int i = 0; i < dst.Count; i++)
+
+            if (activeObject != null) // Previous active object cleanup.
             {
-                int j = (i + 1) % dst.Count;
-                if ((dst[i].Y > point.Y) != (dst[j].Y > point.Y))
+                if (!(activeObject is Room))
                 {
-                    double atX = (dst[j].X - dst[i].X) * (point.Y - dst[i].Y) / (dst[j].Y - dst[i].Y) + dst[i].X;
-                    if (point.X < atX)
-                        crosses++;
+                    activeObject.BorderThickness = new Thickness(0);
+                    activeObject.BorderBrush = new SolidColorBrush(Colors.Black);
+                }
+                else
+                {
+                    ((Room)activeObject).BorderBrush = new SolidColorBrush(Colors.Black);
                 }
             }
-            return crosses % 2 > 0;
-        }
 
-        static public bool isCollesion(PointCollection dst, PointCollection src)
-        {
-            Collection<bool> in_chk = new Collection<bool>();
+            activeObject = (BaseObject)sender;
 
-            foreach (var each in src)
+            if (sender is Room)
             {
-                in_chk.Add(is_inside(dst, each));
+                door_button.IsEnabled = true;
+                window_button.IsEnabled = true;
+                setting_height.IsEnabled = false;
+                setting_width.IsEnabled = false;
+                setting_angle.IsEnabled = false;
+                setting_material.IsEnabled = true;
+                setting_thickness.IsEnabled = true;
+                setting_name.Text = activeObject.Name.ToString();
+                setting_thickness.Text = ((Room)activeObject).BorderThickness.Left.ToString();
+                ((Room)activeObject).BorderBrush = new SolidColorBrush(Colors.Red);
+            }
+            else
+            {
+                door_button.IsEnabled = false;
+                window_button.IsEnabled = false;
+                setting_height.IsEnabled = true;
+                setting_width.IsEnabled = true;
+                setting_angle.IsEnabled = true;
+                setting_material.IsEnabled = false;
+                setting_thickness.IsEnabled = false;
+                setting_name.Text = activeObject.Name.ToString();
+                setting_width.Text = activeObject.Width.ToString();
+                setting_height.Text = activeObject.Height.ToString();
+                activeObject.BorderThickness = new Thickness(3);
+                activeObject.BorderBrush = new SolidColorBrush(Colors.Red);
             }
 
-            if (in_chk[0] ^ in_chk[1] || in_chk[2] ^ in_chk[3] || in_chk[1] ^ in_chk[2])
+            if (paintingObject is RoomCheckObject)
             {
-                return true;
+                paintingObject = new NullBasicObject();
             }
-            return false;
         }
 
-        private void history_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        
+
+        
+
+        private void Refresh_Status(Point position)
         {
-            jsonStay = history.SelectedIndex+1;
-            Undo_Click(null, e);
+            point_position.Content = position.ToString();
+            if (activeObject != null)
+                object_type.Content = activeObject.ToString();
+            undo_times.Content = jsonStay.ToString();
         }
 
         

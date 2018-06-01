@@ -15,12 +15,22 @@ namespace selfInteriorSimulation
     public partial class MainWindow : Window
     {
         public JArray Jsons = new JArray();
+        int jsonStay = -1;
 
 
         private void Changed(string command,string name)
         {
+            for (int i = Jsons.Count - 1; i > jsonStay; i--)
+            {
+                Jsons.RemoveAt(i);
+                history.Items.RemoveAt(i);
+            }
+
+
+            jsonStay++;
             history.Items.Add(new { Command = command, Name = name });
-            Jsons.Add(saveStatusToJson());
+            Jsons.Add(SaveStatusToJson());
+            history.SelectedIndex = jsonStay;
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -31,8 +41,8 @@ namespace selfInteriorSimulation
 
             //saveFile.InitialDirectory = @"C:";
             saveFile.Title = "파일 저장";
-            saveFile.FileName = "마이다스 인테리어";
-            saveFile.DefaultExt = "txt";
+            saveFile.FileName = "interior";
+            saveFile.DefaultExt = "intr";
             Nullable<bool> result = saveFile.ShowDialog();
 
             if (result == true)
@@ -85,56 +95,96 @@ namespace selfInteriorSimulation
             if (fileContent != null && fileContent != "")
             {
                 canvas.Children.Clear();
+                History_Clear();
+
+                
                 Jsons = JArray.Parse(fileContent);
-                printUIfromJson(Jsons.Last);
+                PrintUIfromJson(Jsons.Last);
+                foreach (var records in Jsons)
+                {
+                    foreach (var jeach in records)
+                    {
+                        try
+                        {
+                            string type = jeach["History"].ToString();
+                            var record = JsonConvert.DeserializeObject<Object>(jeach["History"].ToString());
+
+                            history.Items.Add(record);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                }
             }
         }
 
+        
+        
 
+        private void History_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (jsonStay != history.SelectedIndex)
+            {
+                jsonStay = history.SelectedIndex;
+                PrintUIfromJson(Jsons[jsonStay]);
+            }
+        }
 
-        int jsonStay = 0;
-        List<BasicObject> redocollection = new List<BasicObject>();
+        private void History_Clear()
+        {
+            jsonStay = -1;
+            history.SelectedIndex = -1;
+            history.Items.Clear();
+            Jsons.Clear();
+        }
+
         private void Undo_Click(object sender, RoutedEventArgs e)
         {
-            if (0 < jsonStay - 1)
+            if (0 < jsonStay)
             {
                 canvas.Children.Clear();
+
                 jsonStay--;
-                printUIfromJson(Jsons[jsonStay - 1]);
+                PrintUIfromJson(Jsons[jsonStay]);
+
+                history.SelectedIndex--;
             }
         }
         
         private void Redo_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            if (redocollection.Count > 0)
-            {
-                canvas.Children.Add(redocollection[redocollection.Count - 1]);
-                redocollection.RemoveAt(redocollection.Count - 1);
-            }
-            */
-            if (jsonStay < Jsons.Count && 0 < jsonStay)
+            if (jsonStay < Jsons.Count-1)
             {
                 canvas.Children.Clear();
-                printUIfromJson(Jsons[jsonStay]);
+
                 jsonStay++;
+                PrintUIfromJson(Jsons[jsonStay]);
+
+                history.SelectedIndex++;
             }
         }
 
-        private JArray saveStatusToJson()
-        {
-            jsonStay++;
-            var jdata = new JArray();
+        
 
-            foreach (BasicObject obj in canvas.Children)
+
+
+        private JArray SaveStatusToJson()
+        {
+            var jdata = new JArray();
+            JObject jeach;
+            
+            foreach (var element in canvas.Children)
             {
-                if (obj.isType == BasicObject.IsType.Room)
+                var obj = element as BaseObject;
+
+                if (obj is Room)
                 {
-                    var jeach = new JObject();
+                    jeach = new JObject();
                     jeach.Add("Type", obj.GetType().Name);
 
                     var jpoints = new JArray();
-                    foreach (Point point in ((Room)obj).points)
+                    foreach (Point point in ((Room)obj).Points)
                     {
                         jpoints.Add(JsonConvert.SerializeObject(point));
                     }
@@ -142,33 +192,34 @@ namespace selfInteriorSimulation
                     jeach.Add("Points", jpoints);
                     jdata.Add(jeach);
                 }
-                else if (obj.isType == BasicObject.IsType.Chair ||
-                    obj.isType == BasicObject.IsType.Refrigerator ||
-                    obj.isType == BasicObject.IsType.Sofa ||
-                    obj.isType == BasicObject.IsType.Table ||
-                    obj.isType == BasicObject.IsType.Tv ||
-                    obj.isType == BasicObject.IsType.Washer ||
-                    obj.isType == BasicObject.IsType.door ||
-                    obj.isType == BasicObject.IsType.window)
+
+                else if (obj is InteriorObject)
                 {
-                    var jeach = JObject.FromObject(
+                    InteriorObject iobj = obj as InteriorObject;
+                    jeach = JObject.FromObject(
                         new
                         {
                             Type = obj.GetType().Name,
                             Name = obj.Name,
-                            Width = ((InteriorObject)obj).Width,
-                            Height = ((InteriorObject)obj).Height,
-                            Border = ((InteriorObject)obj).BorderThickness.Left,
-                            Rotate = ((InteriorObject)obj).rotate,
-                            Point = JsonConvert.SerializeObject(((InteriorObject)obj).Point)
+                            Width = iobj.Width,
+                            Height = iobj.Height,
+                            Border = iobj.BorderThickness.Left,
+                            Rotate = iobj.Rotate,
+                            Point = JsonConvert.SerializeObject(iobj.Center)
                         });
                     jdata.Add(jeach);
                 }
             }
+
+            jdata.Add(JObject.FromObject(
+                new {
+                    History = JsonConvert.SerializeObject(history.Items[jsonStay])
+                }));
+
             return jdata;
         }
 
-        private void printUIfromJson(JToken fileContent)
+        private void PrintUIfromJson(JToken fileContent)
         {
             canvas.Children.Clear();
 
@@ -186,7 +237,8 @@ namespace selfInteriorSimulation
                             points.Add(JsonConvert.DeserializeObject<Point>(jpoint.ToString()));
                         }
 
-                        new Room(points);
+                        Room room = new Room(points);
+                        canvas.Children.Add(room);
                     }
                     else
                     {
@@ -209,28 +261,21 @@ namespace selfInteriorSimulation
                             case "Tv":
                                 obj = new Tv();
                                 break;
-                            case "Washer":
-                                obj = new Washer();
-                                break;
-                            case "Door":
-                                obj = new Door();
-                                break;
-                            case "WindowObject":
-                                obj = new WindowObject();
-                                break;
                         }
 
                         obj.Name = jeach["Name"].ToString();
                         obj.Height = JsonConvert.DeserializeObject<int>(jeach["Height"].ToString());
                         obj.Width = JsonConvert.DeserializeObject<int>(jeach["Width"].ToString());
                         obj.BorderThickness = new Thickness(JsonConvert.DeserializeObject<double>(jeach["Border"].ToString()));
-                        obj.rotate = JsonConvert.DeserializeObject<double>(jeach["Rotate"].ToString());
-                        obj.Point = JsonConvert.DeserializeObject<Point>(jeach["Point"].ToString());
+                        obj.Rotate = JsonConvert.DeserializeObject<double>(jeach["Rotate"].ToString());
+                        obj.Center = JsonConvert.DeserializeObject<Point>(jeach["Point"].ToString());
+                        obj.Build();
+                        canvas.Children.Add(obj);
                     }
                 }
-                catch (Exception exc)
+                catch (Exception)
                 {
-                    MessageBox.Show("There is some problem with the file contents" + exc);
+                    //MessageBox.Show("There is some problem with the file contents" + exc);
                 }
             }
         }

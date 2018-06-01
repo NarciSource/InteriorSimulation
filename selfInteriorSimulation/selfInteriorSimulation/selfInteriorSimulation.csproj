@@ -60,7 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="alret.xaml">
+    <Page Include="Alret.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -68,34 +68,35 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="alret.xaml.cs">
-      <DependentUpon>alret.xaml</DependentUpon>
+    <Compile Include="Algorithm.cs" />
+    <Compile Include="Alret.xaml.cs">
+      <DependentUpon>Alret.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ClosureExamination.cs" />
     <Compile Include="DataManagement.cs" />
     <Compile Include="Gui.cs" />
-    <Compile Include="Objects\AttachObject.cs" />
-    <Compile Include="Objects\BasicObject.cs" />
+    <Compile Include="Objects\BaseObject.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Objects\Chair.cs" />
-    <Compile Include="Objects\CustomObject.cs" />
-    <Compile Include="Objects\Door.cs" />
-    <Compile Include="Objects\InteriorObject.cs" />
-    <Compile Include="Objects\Refrigerator.cs" />
-    <Compile Include="Objects\Sofa.cs" />
-    <Compile Include="Objects\Table.cs" />
-    <Compile Include="Objects\Tv.cs" />
-    <Compile Include="Objects\Room.cs" />
-    <Compile Include="Objects\Washer.cs" />
-    <Compile Include="Objects\WindowObject.cs" />
+    <Compile Include="Objects\Interior\Chair.cs" />
+    <Compile Include="Objects\Interior\CustomObject.cs" />
+    <Compile Include="Objects\Room\Door.cs" />
+    <Compile Include="Objects\Interior\InteriorObject.cs" />
+    <Compile Include="Objects\Interior\Refrigerator.cs" />
+    <Compile Include="Objects\Interior\Sofa.cs" />
+    <Compile Include="Objects\Interior\Table.cs" />
+    <Compile Include="Objects\Interior\Tv.cs" />
+    <Compile Include="Objects\Room\Gate.cs" />
+    <Compile Include="Objects\Room\Room.cs" />
+    <Compile Include="Objects\Room\WindowObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -122,12 +123,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="image\washer.PNG" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="image\ground1.PNG" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="image\refrigerator.jpg" />
   </ItemGroup>
   <ItemGroup>
@@ -143,25 +138,12 @@
     <Resource Include="image\sofa.PNG" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="image\chair2.PNG" />
     <Resource Include="image\chair2_dan.PNG" />
     <Resource Include="image\chair_dan.PNG" />
     <Resource Include="image\desk.PNG" />
     <Resource Include="image\desk_dan.PNG" />
     <Resource Include="image\sofa_dan.PNG" />
     <Resource Include="image\tv_dan.PNG" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="image\about.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="image\clear.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="image\save.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="image\save.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\undo.png" />
@@ -171,9 +153,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\tile.PNG" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="image\background.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\door.PNG" />
@@ -189,16 +168,35 @@
     <Resource Include="image\window.PNG" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="image\window2.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="image\nothing.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="image\custom.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="image\door2.jpg" />
+    <Resource Include="image\room.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\redo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\fail.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\scope.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\success.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\background.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\background2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\background1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\background3.jpg" />
+    <Resource Include="image\background4.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

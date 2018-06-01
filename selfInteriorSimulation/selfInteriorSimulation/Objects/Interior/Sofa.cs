@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace selfInteriorSimulation
 {
@@ -7,8 +8,7 @@ namespace selfInteriorSimulation
     {
         public Sofa() : base()
         {
-            isType = IsType.Sofa;
-            setImg("sofa_dan.PNG");
+            Image.Source = new BitmapImage(new Uri(@"image\sofa_dan.PNG", UriKind.Relative));
             
         }
     }

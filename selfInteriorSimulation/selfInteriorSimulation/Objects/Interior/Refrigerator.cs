@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace selfInteriorSimulation
 {
@@ -8,9 +9,7 @@ namespace selfInteriorSimulation
       
         public Refrigerator() : base()
         {
-            isType = IsType.Refrigerator;
-            setImg("refrigerator_dan.PNG");
-            
+            Image.Source = new BitmapImage(new Uri(@"image\refrigerator_dan.PNG", UriKind.Relative));
         }
     }
 }

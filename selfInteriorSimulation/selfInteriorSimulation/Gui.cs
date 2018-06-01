@@ -15,39 +15,12 @@ namespace selfInteriorSimulation
         private void New_Click(object sender, RoutedEventArgs e)
         {
             canvas.Children.Clear();
-
-            const double first_width = 700;
-            const double first_height = 500;
-
-            const double canvas_width = 1000;
-            const double canvas_height = 700;
-
-            double center_x1 = canvas_width / 2 - first_width / 2;
-            double center_y1 = canvas_height / 2 - first_height / 2;
-            double center_x2 = canvas_width / 2 + first_width / 2;
-            double center_y2 = canvas_height / 2 + first_height / 2;
-
-            Point point1 = new Point(center_x1, center_y1);
-            Point point2 = new Point(center_x1, center_y2);
-            Point point3 = new Point(center_x2, center_y2);
-            Point point4 = new Point(center_x2, center_y1);
-
-
-            BasicObject.canvas = canvas;
-            PointCollection points = new PointCollection();
-            points.Add(point1);
-            points.Add(point2);
-            points.Add(point3);
-            points.Add(point4);
-            new Room(points);
-            new Door() { Name = "Door", Width = 100, Height = 100, Point=point1 };
-
-            Changed("New"," ");
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
         {
             canvas.Children.Clear();
+            History_Clear();
         }
 
         private void Save_Image_Click(object sender, RoutedEventArgs e)
@@ -132,7 +105,7 @@ namespace selfInteriorSimulation
             double num = 0;
             if (double.TryParse(((TextBox)sender).Text, out num))
             {
-                ((InteriorObject)activeObject).rotate = num;
+                ((InteriorObject)activeObject).Rotate = num;
             }
         }
 
@@ -143,13 +116,13 @@ namespace selfInteriorSimulation
                 switch (((ComboBox)sender).SelectedValue.ToString())
                 {
                     case "Marble":
-                        ((Room)activeObject).setImg(new Uri(@"pack://application:,,,/image/marble.jpg"));
+                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"pack://application:,,,/image/marble.jpg")));
                         break;
                     case "Wood":
-                        ((Room)activeObject).setImg(new Uri(@"pack://application:,,,/image/wood.jpg"));
+                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"pack://application:,,,/image/wood.jpg")));
                         break;
                     case "Oak":
-                        ((Room)activeObject).setImg(new Uri(@"pack://application:,,,/image/oak.jpg"));
+                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"pack://application:,,,/image/oak.jpg")));
                         break;
                 }
             }
@@ -158,6 +131,31 @@ namespace selfInteriorSimulation
         private void setting_Button_Click(object sender, RoutedEventArgs e)
         {
             Changed("Property changed", activeObject.Name);
+        }
+
+
+
+        private void coordinate_click(object sender, RoutedEventArgs e)
+        {
+            Algorithm.std_coordinate_size = Convert.ToInt32(((MenuItem)sender).Header);
+        }
+
+
+
+
+
+        System.Windows.Forms.Timer notice_timer = new System.Windows.Forms.Timer() { Interval = 10 * 2000 };
+
+        private void Timer_elapsed(object sender, EventArgs e)
+        {
+            help_notice.Visibility = Visibility.Hidden;
+            notice_timer.Stop();
+        }
+
+        private void Notice_Click(object sender, RoutedEventArgs e)
+        {
+            help_notice.Visibility = Visibility.Visible;
+            notice_timer.Start();
         }
     }
 }

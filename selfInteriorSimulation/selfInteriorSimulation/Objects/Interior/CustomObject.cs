@@ -6,12 +6,10 @@ using System.Windows;
 
 namespace selfInteriorSimulation
 {
-    class WindowObject : AttachObject
+    class CustomObject : InteriorObject
     {
-        public WindowObject() : base()
+        public CustomObject() : base()
         {
-            isType = IsType.window;
-            setImg("window2.jpg");
             
         }
     }
