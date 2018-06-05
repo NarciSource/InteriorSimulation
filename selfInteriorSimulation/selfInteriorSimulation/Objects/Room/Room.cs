@@ -110,14 +110,34 @@ namespace selfInteriorSimulation
             Door door = new Door(this);
             Canvas.SetZIndex(door, 2);
             doors.Add(door);
+            floor.Children.Add(door);
             return door;
+        }
+        public void AddDoor(Point from, Point to)
+        {
+            Door door = AddDoor();
+            door.Line.X1 = from.X;
+            door.Line.Y1 = from.Y;
+            door.Line.X2 = to.X;
+            door.Line.Y2 = to.Y;
+            door.Fixed = true;
         }
         public WindowObject AddWindow()
         {
             WindowObject window = new WindowObject(this);
             Canvas.SetZIndex(window, 5);
             windows.Add(window);
+            floor.Children.Add(window);
             return window;
+        }
+        public void AddWindow(Point from, Point to)
+        {
+            WindowObject window = AddWindow();
+            window.Line.X1 = from.X;
+            window.Line.Y1 = from.Y;
+            window.Line.X2 = to.X;
+            window.Line.Y2 = to.Y;
+            window.Fixed = true;
         }
 
         private PointCollection getSquarePoints(Point point)

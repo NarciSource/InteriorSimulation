@@ -78,7 +78,7 @@
     </Compile>
     <Compile Include="ClosureExamination.cs" />
     <Compile Include="DataManagement.cs" />
-    <Compile Include="Gui.cs" />
+    <Compile Include="DrawingManagement.cs" />
     <Compile Include="Objects\BaseObject.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

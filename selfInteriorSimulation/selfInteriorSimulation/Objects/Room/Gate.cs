@@ -16,6 +16,7 @@ namespace selfInteriorSimulation
         {
             Room parent_room;
             bool isFixed;
+            public bool Fixed { get { return isFixed; } set { isFixed = value; } }
 
             protected double length =20;            
             protected Line line = new Line();
@@ -27,9 +28,16 @@ namespace selfInteriorSimulation
                 parent_room = room;
                 border.Child = line;
 
-                isFixed = false;
+                this.Fixed = false;
 
-                parent_room.MouseDown += (o, e) => { isFixed = true; };
+                parent_room.MouseDown += (o, e) =>
+                {
+                    if (this.Fixed == false)
+                    {
+                        change_notify("Made", this.GetType().Name.ToString());
+                        this.Fixed = true;
+                    }
+                };
                 parent_room.MouseMove += Mouse_Move;
             }
 

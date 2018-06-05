@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace selfInteriorSimulation
 {
@@ -33,7 +34,7 @@ namespace selfInteriorSimulation
             history.SelectedIndex = jsonStay;
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private void Save()
         {
             string fileName = "";
 
@@ -63,7 +64,7 @@ namespace selfInteriorSimulation
             }
         }
 
-        private void Open_Click(object sender, RoutedEventArgs e)
+        private void Open()
         {
             String fileContent = "";
             String fileName = "";
@@ -171,52 +172,77 @@ namespace selfInteriorSimulation
 
         private JArray SaveStatusToJson()
         {
-            var jdata = new JArray();
-            JObject jeach;
+            var json_lv1 = new JArray();
+            JObject json_lv2;
             
             foreach (var element in canvas.Children)
             {
-                var obj = element as BaseObject;
+                if (!(element is BaseObject)) continue;
 
-                if (obj is Room)
+                json_lv2 = new JObject();
+
+                if (element is Room)
                 {
-                    jeach = new JObject();
-                    jeach.Add("Type", obj.GetType().Name);
+                    var room = element as Room;
+                    
+                    json_lv2.Add("Type", room.GetType().Name);
+
 
                     var jpoints = new JArray();
-                    foreach (Point point in ((Room)obj).Points)
+                    foreach (Point point in room.Points)
                     {
                         jpoints.Add(JsonConvert.SerializeObject(point));
                     }
+                    json_lv2.Add("Points", jpoints);
 
-                    jeach.Add("Points", jpoints);
-                    jdata.Add(jeach);
+
+
+                    var json_lv3 = new JArray();
+                    foreach (var door in room.Doors)
+                    {
+                        var json_lv4 = new JArray();
+                        json_lv4.Add(JsonConvert.SerializeObject(new Point(door.Line.X1, door.Line.Y1)));
+                        json_lv4.Add(JsonConvert.SerializeObject(new Point(door.Line.X2, door.Line.Y2)));
+                        json_lv3.Add(json_lv4);
+                    }
+                    json_lv2.Add("Doors", json_lv3);
+
+                    json_lv3 = new JArray();
+                    foreach (var window in room.Windows)
+                    {
+                        var json_lv4 = new JArray();
+                        json_lv4.Add(JsonConvert.SerializeObject(new Point(window.Line.X1, window.Line.Y1)));
+                        json_lv4.Add(JsonConvert.SerializeObject(new Point(window.Line.X2, window.Line.Y2)));
+                        json_lv3.Add(json_lv4);
+                    }
+                    json_lv2.Add("Windows", json_lv3);
                 }
 
-                else if (obj is InteriorObject)
+                else if (element is InteriorObject)
                 {
-                    InteriorObject iobj = obj as InteriorObject;
-                    jeach = JObject.FromObject(
+                    var iobj = element as InteriorObject;
+                    json_lv2 = JObject.FromObject(
                         new
                         {
-                            Type = obj.GetType().Name,
-                            Name = obj.Name,
+                            Type = iobj.GetType().Name,
+                            Name = iobj.Name,
                             Width = iobj.Width,
                             Height = iobj.Height,
                             Border = iobj.BorderThickness.Left,
                             Rotate = iobj.Rotate,
                             Point = JsonConvert.SerializeObject(iobj.Center)
                         });
-                    jdata.Add(jeach);
                 }
+
+
+                json_lv1.Add(json_lv2);
             }
 
-            jdata.Add(JObject.FromObject(
-                new {
-                    History = JsonConvert.SerializeObject(history.Items[jsonStay])
-                }));
+            json_lv1.Add(JObject.FromObject(
+                new { History = JsonConvert.SerializeObject(history.Items[jsonStay]) }
+            ));
 
-            return jdata;
+            return json_lv1;
         }
 
         private void PrintUIfromJson(JToken fileContent)
@@ -238,6 +264,24 @@ namespace selfInteriorSimulation
                         }
 
                         Room room = new Room(points);
+
+
+
+                        foreach (JArray gates in jeach["Doors"])
+                        {
+                            Point p1= JsonConvert.DeserializeObject<Point>(gates[0].ToString());
+                            Point p2 = JsonConvert.DeserializeObject<Point>(gates[1].ToString());
+
+                            room.AddDoor(p1, p2);
+                        }
+                        foreach (JArray gates in jeach["Windows"])
+                        {
+                            Point p1 = JsonConvert.DeserializeObject<Point>(gates[0].ToString());
+                            Point p2 = JsonConvert.DeserializeObject<Point>(gates[1].ToString());
+
+                            room.AddWindow(p1, p2);
+                        }
+
                         canvas.Children.Add(room);
                     }
                     else
@@ -279,6 +323,36 @@ namespace selfInteriorSimulation
                 }
             }
         }
-        
+
+
+
+
+        private void Save_as_Image()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Png Image|*.png";
+            saveFileDialog.Title = "Save an Image File";
+            saveFileDialog.ShowDialog();
+
+            if (saveFileDialog.FileName == "")
+                saveFileDialog.FileName = "image.png";
+
+            RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap(
+                (int)canvas.RenderSize.Width,
+                (int)canvas.RenderSize.Height,
+                96d, 96d, System.Windows.Media.PixelFormats.Default);
+
+            renderTargetBitmap.Render(canvas);
+
+            BitmapEncoder pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+
+            using (var fs = System.IO.File.OpenWrite(saveFileDialog.FileName))
+            {
+                pngEncoder.Save(fs);
+            }
+        }
+
     }
 }

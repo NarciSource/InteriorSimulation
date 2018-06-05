@@ -10,14 +10,14 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Menu">
-                <MenuItem Header="New" Click="New_Click"/>
-                <MenuItem Header="Save" Click="Save_Click"/>
-                <MenuItem Header="Open" Click="Open_Click"/>
+                <MenuItem Header="New" Click="MenuItem_Click"/>
+                <MenuItem Header="Save" Click="MenuItem_Click"/>
+                <MenuItem Header="Open" Click="MenuItem_Click"/>
                 <Separator/>
-                <MenuItem Header="Save as Image" Click="Save_Image_Click"/>
-                <MenuItem Header="Clear" Click="Clear_Click"/>
+                <MenuItem Header="Save as Image" Click="MenuItem_Click"/>
+                <MenuItem Header="Clear" Click="MenuItem_Click"/>
                 <Separator/>
-                <MenuItem Header="Exit" Click="Exit_Click"/>
+                <MenuItem Header="Exit" Click="MenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="Tools">
                 <MenuItem Header="Undo" Click="Undo_Click"/>
@@ -25,15 +25,15 @@
             </MenuItem>
             <MenuItem Header="View">
                 <MenuItem Header="Coordinate size">
-                    <MenuItem Header="4" Click="coordinate_click"/>
-                    <MenuItem Header="8" Click="coordinate_click"/>
-                    <MenuItem Header="16" Click="coordinate_click"/>
-                    <MenuItem Header="32" Click="coordinate_click"/>
+                    <MenuItem Header="4" Click="Coordinate_click"/>
+                    <MenuItem Header="8" Click="Coordinate_click"/>
+                    <MenuItem Header="16" Click="Coordinate_click"/>
+                    <MenuItem Header="32" Click="Coordinate_click"/>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="Notice" Click="Notice_Click"/>
-                <MenuItem Header="About" Click="About_Click"/>
+                <MenuItem Header="About" Click="MenuItem_Click"/>
             </MenuItem>
         </Menu>
 
@@ -131,19 +131,19 @@
                         <TextBlock Text="Material" Height="20" VerticalAlignment="Center" Margin="0,5,0,0"/>
                     </StackPanel>
                     <StackPanel Orientation="Vertical" Width="100">
-                        <TextBox x:Name="setting_name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_name_TextChanged"/>
-                        <TextBox x:Name="setting_thickness" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_thickness_TextChanged"/>
-                        <TextBox x:Name="setting_angle" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_angle_TextChanged"/>
-                        <TextBox x:Name="setting_width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_width_TextChanged"/>
-                        <TextBox x:Name="setting_height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="setting_height_TextChanged"/>
-                        <ComboBox x:Name="setting_material" SelectedValuePath="Content" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" SelectionChanged="setting_matrial_SelectionChanged">
+                        <TextBox x:Name="setting_name" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="Setting_Changed"/>
+                        <TextBox x:Name="setting_thickness" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="Setting_Changed"/>
+                        <TextBox x:Name="setting_angle" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="Setting_Changed"/>
+                        <TextBox x:Name="setting_width" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="Setting_Changed"/>
+                        <TextBox x:Name="setting_height" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" TextChanged="Setting_Changed"/>
+                        <ComboBox x:Name="setting_material" SelectedValuePath="Content" Height="20" VerticalAlignment="Center" Margin="0,5,0,0" SelectionChanged="Setting_matrial_SelectionChanged">
                             <ComboBoxItem Content="Marble"/>
                             <ComboBoxItem Content="Wood"/>
                             <ComboBoxItem Content="Oak"/>
                         </ComboBox>
                     </StackPanel>
                 </StackPanel>
-                <Button Content="Save" HorizontalAlignment="Right" Width="50" Margin="0,10,10,0" Click="setting_Button_Click"/>
+                <Button Content="Save" HorizontalAlignment="Right" Width="50" Margin="0,10,10,0" Click="Setting_Button_Click"/>
                 <StackPanel Orientation="Vertical" Margin="0,30,0,0">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Height="90">
                         <StackPanel Margin="5,5,15,5" Orientation="Vertical">
