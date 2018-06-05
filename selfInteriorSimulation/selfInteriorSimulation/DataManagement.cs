@@ -180,7 +180,6 @@ namespace selfInteriorSimulation
                 if (!(element is BaseObject)) continue;
 
                 json_lv2 = new JObject();
-
                 if (element is Room)
                 {
                     var room = element as Room;
@@ -196,26 +195,47 @@ namespace selfInteriorSimulation
                     json_lv2.Add("Points", jpoints);
 
 
+                    json_lv2.Add("Interior", new JArray());
+                    json_lv2.Add("Doors", new JArray());
+                    json_lv2.Add("Windows", new JArray());
 
-                    var json_lv3 = new JArray();
-                    foreach (var door in room.Doors)
+                    foreach (var each in room.Children)
                     {
-                        var json_lv4 = new JArray();
-                        json_lv4.Add(JsonConvert.SerializeObject(new Point(door.Line.X1, door.Line.Y1)));
-                        json_lv4.Add(JsonConvert.SerializeObject(new Point(door.Line.X2, door.Line.Y2)));
-                        json_lv3.Add(json_lv4);
-                    }
-                    json_lv2.Add("Doors", json_lv3);
+                        if (each is InteriorObject)
+                        {
+                            var iobj = each as InteriorObject;
+                            ((JArray)json_lv2["Interior"]).Add(
+                                JObject.FromObject(new
+                                {
+                                    Type = iobj.GetType().Name,
+                                    Name = iobj.Name,
+                                    Width = iobj.Width,
+                                    Height = iobj.Height,
+                                    Border = iobj.BorderThickness.Left,
+                                    Rotate = iobj.Rotate,
+                                    Point = JsonConvert.SerializeObject(iobj.Center)
+                                })
+                            );
+                        }
+                        else if (each is Room.Gate)
+                        {
+                            var gate = each as Room.Gate;
 
-                    json_lv3 = new JArray();
-                    foreach (var window in room.Windows)
-                    {
-                        var json_lv4 = new JArray();
-                        json_lv4.Add(JsonConvert.SerializeObject(new Point(window.Line.X1, window.Line.Y1)));
-                        json_lv4.Add(JsonConvert.SerializeObject(new Point(window.Line.X2, window.Line.Y2)));
-                        json_lv3.Add(json_lv4);
+                            JArray json_lv4 = new JArray();
+                            json_lv4.Add(
+                                JsonConvert.SerializeObject(new Point(gate.Line.X1, gate.Line.Y1))
+                            );
+                            json_lv4.Add(
+                                JsonConvert.SerializeObject(new Point(gate.Line.X2, gate.Line.Y2))
+                            );
+
+                            if(each is Room.Door)
+                                ((JArray)json_lv2["Doors"]).Add(json_lv4);
+                            else if(each is Room.WindowObject)
+                                ((JArray)json_lv2["Windows"]).Add(json_lv4);
+                        }
                     }
-                    json_lv2.Add("Windows", json_lv3);
+                    
                 }
 
                 else if (element is InteriorObject)
@@ -233,7 +253,6 @@ namespace selfInteriorSimulation
                             Point = JsonConvert.SerializeObject(iobj.Center)
                         });
                 }
-
 
                 json_lv1.Add(json_lv2);
             }
@@ -262,59 +281,38 @@ namespace selfInteriorSimulation
                         {
                             points.Add(JsonConvert.DeserializeObject<Point>(jpoint.ToString()));
                         }
-
                         Room room = new Room(points);
 
 
-
-                        foreach (JArray gates in jeach["Doors"])
+                        foreach (JObject jinterior in jeach["Interior"])
                         {
-                            Point p1= JsonConvert.DeserializeObject<Point>(gates[0].ToString());
-                            Point p2 = JsonConvert.DeserializeObject<Point>(gates[1].ToString());
+                            room.Children.Add(
+                                MakeInteriorObject(jinterior["Type"].ToString(), jinterior));
+                        }
+
+                        foreach (JArray jgates in jeach["Doors"])
+                        {
+                            Point p1= JsonConvert.DeserializeObject<Point>(jgates[0].ToString());
+                            Point p2 = JsonConvert.DeserializeObject<Point>(jgates[1].ToString());
 
                             room.AddDoor(p1, p2);
                         }
-                        foreach (JArray gates in jeach["Windows"])
+
+                        foreach (JArray jgates in jeach["Windows"])
                         {
-                            Point p1 = JsonConvert.DeserializeObject<Point>(gates[0].ToString());
-                            Point p2 = JsonConvert.DeserializeObject<Point>(gates[1].ToString());
+                            Point p1 = JsonConvert.DeserializeObject<Point>(jgates[0].ToString());
+                            Point p2 = JsonConvert.DeserializeObject<Point>(jgates[1].ToString());
 
                             room.AddWindow(p1, p2);
                         }
+                       
 
                         canvas.Children.Add(room);
                     }
                     else
                     {
-                        // interior Obj 생성
-                        InteriorObject obj = null;
-                        switch (type)
-                        {
-                            case "Chair":
-                                obj = new Chair();
-                                break;
-                            case "Refrigerator":
-                                obj = new Refrigerator();
-                                break;
-                            case "Sofa":
-                                obj = new Sofa();
-                                break;
-                            case "Table":
-                                obj = new Table();
-                                break;
-                            case "Tv":
-                                obj = new Tv();
-                                break;
-                        }
-
-                        obj.Name = jeach["Name"].ToString();
-                        obj.Height = JsonConvert.DeserializeObject<int>(jeach["Height"].ToString());
-                        obj.Width = JsonConvert.DeserializeObject<int>(jeach["Width"].ToString());
-                        obj.BorderThickness = new Thickness(JsonConvert.DeserializeObject<double>(jeach["Border"].ToString()));
-                        obj.Rotate = JsonConvert.DeserializeObject<double>(jeach["Rotate"].ToString());
-                        obj.Center = JsonConvert.DeserializeObject<Point>(jeach["Point"].ToString());
-                        obj.Build();
-                        canvas.Children.Add(obj);
+                        canvas.Children.Add(
+                            MakeInteriorObject(jeach["Type"].ToString(), jeach));
                     }
                 }
                 catch (Exception)
@@ -322,6 +320,37 @@ namespace selfInteriorSimulation
                     //MessageBox.Show("There is some problem with the file contents" + exc);
                 }
             }
+        }
+        private InteriorObject MakeInteriorObject(String type, JToken jdata)
+        {
+            InteriorObject obj = new InteriorObject();
+            switch (type)
+            {
+                case "Chair":
+                    obj = new Chair();
+                    break;
+                case "Refrigerator":
+                    obj = new Refrigerator();
+                    break;
+                case "Sofa":
+                    obj = new Sofa();
+                    break;
+                case "Table":
+                    obj = new Table();
+                    break;
+                case "Tv":
+                    obj = new Tv();
+                    break;
+            }
+
+            obj.Name = jdata["Name"].ToString();
+            obj.Height = JsonConvert.DeserializeObject<int>(jdata["Height"].ToString());
+            obj.Width = JsonConvert.DeserializeObject<int>(jdata["Width"].ToString());
+            obj.BorderThickness = new Thickness(JsonConvert.DeserializeObject<double>(jdata["Border"].ToString()));
+            obj.Rotate = JsonConvert.DeserializeObject<double>(jdata["Rotate"].ToString());
+            obj.Center = JsonConvert.DeserializeObject<Point>(jdata["Point"].ToString());
+
+            return obj;
         }
 
 

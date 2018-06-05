@@ -30,6 +30,8 @@ namespace selfInteriorSimulation
                 isActiveClosure = false;
 
                 Undisplay();
+
+                Ungrouping();
             }
         }
 
@@ -38,7 +40,7 @@ namespace selfInteriorSimulation
 
         private void Grouping()
         {
-            foreach (var room in rooms)
+            foreach (var room in gRooms)
             {
                 var pivot_group = Which_group_of(room);
 
@@ -46,7 +48,7 @@ namespace selfInteriorSimulation
                 {
                     Point point = In_front_of(room, door);
 
-                    foreach (var other_room in rooms)
+                    foreach (var other_room in gRooms)
                     {
                         if (room == other_room) continue;
                         if (Algorithm.Is_inside(other_room, point))
@@ -63,6 +65,11 @@ namespace selfInteriorSimulation
                 }
 
             }
+        }
+
+        private void Ungrouping()
+        {
+            groups.Clear();
         }
 
 
@@ -169,7 +176,7 @@ namespace selfInteriorSimulation
                     bool is_connected_outside = true;
                     Point point = In_front_of(room, door);
 
-                    foreach (var other_room in rooms)
+                    foreach (var other_room in gRooms)
                     {
                         if (room == other_room) continue;
                         if (Algorithm.Is_inside(other_room, point))

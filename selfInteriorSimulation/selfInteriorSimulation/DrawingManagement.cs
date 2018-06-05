@@ -58,18 +58,32 @@ namespace selfInteriorSimulation
         {
             if (paintingObject is InteriorObject)
             {
-                foreach (var room in BaseObject.rooms)
-                    if (Algorithm.Is_collesion(room, (InteriorObject)paintingObject) == true)
-                    {
-                        canvas.Children.Remove(paintingObject);
-                        paintingObject = null;
-                        return;
-                    }
+                InteriorObject realObject = paintingObject.Clone() as InteriorObject;
+                
 
-                ((InteriorObject)paintingObject).Build();
 
-                Changed("Made", paintingObject.Name);
+                canvas.Children.Remove(paintingObject);
                 paintingObject = null;
+
+                foreach (var room in BaseObject.gRooms)
+                {
+                    switch (Algorithm.Which_relation(room, realObject))
+                    {
+                        case Algorithm.Relation.Inner:
+
+                            room.Children.Add(realObject);
+                            Changed("Made", realObject.Name);
+                            return;
+
+
+                        case Algorithm.Relation.Collesion:
+                            
+                            return;
+                    }
+                }
+
+                canvas.Children.Add(realObject);
+                Changed("Made", realObject.Name);
             }
 
             else if (paintingObject is RoomCheckObject)
@@ -99,19 +113,19 @@ namespace selfInteriorSimulation
             switch (((Button)sender).Name.ToString())
             {
                 case "refre_button":
-                    paintingObject = new Refrigerator() { Name = "냉장고", Width = 96, Height = 64 };
+                    paintingObject = InteriorObject.Temporary(new Refrigerator() { Name = "냉장고", Width = 96, Height = 64 });
                     break;
                 case "sofa_button":
-                    paintingObject = new Sofa() { Name = "소파", Width = 160, Height = 64 };
+                    paintingObject = InteriorObject.Temporary(new Sofa() { Name = "소파", Width = 160, Height = 64 });
                     break;
                 case "chair_button":
-                    paintingObject = new Chair() { Name = "의자", Width = 48, Height = 48 };
+                    paintingObject = InteriorObject.Temporary(new Chair() { Name = "의자", Width = 48, Height = 48 });
                     break;
                 case "table_button":
-                    paintingObject = new Table() { Name = "책상", Width = 128, Height = 64 };
+                    paintingObject = InteriorObject.Temporary(new Table() { Name = "책상", Width = 128, Height = 64 });
                     break;
                 case "tv_button":
-                    paintingObject = new Tv() { Name = "TV", Width = 192, Height = 32 };
+                    paintingObject = InteriorObject.Temporary(new Tv() { Name = "TV", Width = 192, Height = 32 });
                     break;
 
 
@@ -125,8 +139,7 @@ namespace selfInteriorSimulation
                     ((Room)activeObject).AddWindow();
                     return;
             }
-
-
+            
             canvas.Children.Add(paintingObject);
         }
 
@@ -240,19 +253,20 @@ namespace selfInteriorSimulation
                         break;
 
                     case Key.LeftCtrl: // Copy
-                        if (activeObject is Room) break;
+                        if (activeObject is InteriorObject)
+                        {
+                            /*
+                            Type type = activeObject.GetType();
+                            paintingObject = Activator.CreateInstance(type) as BaseObject;
 
-                        Type type = activeObject.GetType();
-                        paintingObject = Activator.CreateInstance(type) as BaseObject;
+                            paintingObject.Name = ((InteriorObject)activeObject).Name;
+                            paintingObject.Width = ((InteriorObject)activeObject).Width;
+                            paintingObject.Height = ((InteriorObject)activeObject).Height;
+                            */
+                            canvas.Children.Add((paintingObject as InteriorObject).Clone() as InteriorObject);
 
-                        paintingObject.Name = ((InteriorObject)activeObject).Name;
-                        paintingObject.Width = ((InteriorObject)activeObject).Width;
-                        paintingObject.Height = ((InteriorObject)activeObject).Height;
-                        ((InteriorObject)paintingObject).Build();
-
-                        canvas.Children.Add(paintingObject);
-
-                        Changed("Copy", activeObject.Name);
+                            Changed("Copy", activeObject.Name);
+                        }
                         break;
                 }
             }

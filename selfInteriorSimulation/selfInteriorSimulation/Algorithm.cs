@@ -43,6 +43,25 @@ namespace selfInteriorSimulation
             else return false;
         }
 
+        public enum Relation { Collesion, Inner, Outer};
+        static public Relation Which_relation(Room room, InteriorObject interiorObject)
+        {
+            bool[] in_chk = new bool[4];
+
+            in_chk[0] = Is_inside(room,
+                new Point(interiorObject.Center.X - interiorObject.Width / 2, interiorObject.Center.Y - interiorObject.Height / 2));
+            in_chk[1] = Is_inside(room,
+                new Point(interiorObject.Center.X - interiorObject.Width / 2, interiorObject.Center.Y + interiorObject.Height / 2));
+            in_chk[2] = Is_inside(room,
+                new Point(interiorObject.Center.X + interiorObject.Width / 2, interiorObject.Center.Y + interiorObject.Height / 2));
+            in_chk[3] = Is_inside(room,
+                new Point(interiorObject.Center.X + interiorObject.Width / 2, interiorObject.Center.Y + interiorObject.Height / 2));
+
+            if (in_chk[0] & in_chk[1] & in_chk[2] & in_chk[3]) return Relation.Inner;
+            else if (!in_chk[0] & !in_chk[1] & !in_chk[2] & !in_chk[3]) return Relation.Outer;
+            else return Relation.Collesion;
+        }
+
         static public Point Away_point_to(Point startPoint, double gradient, double length)
         {
             Point result = new Point();

@@ -101,7 +101,7 @@ namespace selfInteriorSimulation
             }
 
 
-            BaseObject.rooms.Add(this);
+            gRooms.Add(this);
         }
 
 

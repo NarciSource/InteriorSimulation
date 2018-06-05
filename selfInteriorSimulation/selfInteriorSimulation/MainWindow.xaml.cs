@@ -33,6 +33,8 @@ namespace selfInteriorSimulation
             {
                 case "New":
                     canvas.Children.Clear();
+                    History_Clear();
+                    BaseObject.gRooms.Clear();
                     break;
                 case "Save":
                     Save();
@@ -46,6 +48,7 @@ namespace selfInteriorSimulation
                 case "Clear":
                     canvas.Children.Clear();
                     History_Clear();
+                    BaseObject.gRooms.Clear();
                     break;
                 case "Exit":
                     Application.Current.Shutdown();

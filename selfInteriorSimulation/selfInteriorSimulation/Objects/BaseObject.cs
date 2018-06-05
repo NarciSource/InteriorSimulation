@@ -11,13 +11,13 @@ namespace selfInteriorSimulation
     public delegate void del(object sender);
     public delegate void del2(string command, string name);
 
-    abstract class BaseObject : DockPanel
+    abstract class BaseObject : DockPanel, ICloneable
     {
         static public del active_notify;
         static public del2 change_notify;
 
         /* global */
-        public static List<Room> rooms = new List<Room>();
+        public static List<Room> gRooms = new List<Room>();
         public static Canvas canvas { get; set; }
 
 
@@ -42,6 +42,11 @@ namespace selfInteriorSimulation
 
             DockPanel.SetDock(name, Dock.Bottom);
             this.Children.Add(name);
+        }
+
+        public virtual object Clone()
+        {
+            throw new NotImplementedException();
         }
     }
 
