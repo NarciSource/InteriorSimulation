@@ -8,10 +8,26 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>selfInteriorSimulation</RootNamespace>
     <AssemblyName>selfInteriorSimulation</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -22,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,8 +48,18 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>selfInteriorSimulation.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HelixToolkit, Version=2.1.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HelixToolkit.2.1.0\lib\netstandard1.1\HelixToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="HelixToolkit.Wpf, Version=2.1.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
+      <HintPath>..\packages\HelixToolkit.Wpf.2.1.0\lib\net45\HelixToolkit.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="Json, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c6752e45808247c2, processorArchitecture=MSIL">
       <HintPath>..\packages\JSON.1.0.1\lib\net40\Json.dll</HintPath>
     </Reference>
@@ -79,6 +106,7 @@
     <Compile Include="ClosureExamination.cs" />
     <Compile Include="DataManagement.cs" />
     <Compile Include="DrawingManagement.cs" />
+    <Compile Include="Ed.cs" />
     <Compile Include="Objects\BaseObject.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -114,6 +142,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="models\chair\chair.obj" />
+    <None Include="models\desk\Desk.obj" />
+    <None Include="models\ledtv\led_tv.obj" />
+    <None Include="models\refriger\refriger.obj" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -121,6 +154,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="models\sofa\ready.obj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\refrigerator.jpg" />
@@ -143,16 +177,12 @@
     <Resource Include="image\desk.PNG" />
     <Resource Include="image\desk_dan.PNG" />
     <Resource Include="image\sofa_dan.PNG" />
-    <Resource Include="image\tv_dan.PNG" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\undo.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\refrigerator_dan.PNG" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="image\tile.PNG" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\door.PNG" />
@@ -197,6 +227,42 @@
   <ItemGroup>
     <Resource Include="image\background3.jpg" />
     <Resource Include="image\background4.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\3d.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\wallpaper.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\wallpaper2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\wallpaper4.jpg" />
+    <Resource Include="image\wallpaper5.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\tv_dan.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1%28x86 및 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\tile.PNG">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\wallpaper3.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

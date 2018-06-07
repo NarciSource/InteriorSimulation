@@ -255,14 +255,6 @@ namespace selfInteriorSimulation
                     case Key.LeftCtrl: // Copy
                         if (activeObject is InteriorObject)
                         {
-                            /*
-                            Type type = activeObject.GetType();
-                            paintingObject = Activator.CreateInstance(type) as BaseObject;
-
-                            paintingObject.Name = ((InteriorObject)activeObject).Name;
-                            paintingObject.Width = ((InteriorObject)activeObject).Width;
-                            paintingObject.Height = ((InteriorObject)activeObject).Height;
-                            */
                             canvas.Children.Add((paintingObject as InteriorObject).Clone() as InteriorObject);
 
                             Changed("Copy", activeObject.Name);

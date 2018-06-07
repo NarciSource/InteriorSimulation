@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,7 +12,7 @@ namespace selfInteriorSimulation
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        Ed ed;
         public MainWindow()
         {
             InitializeComponent();
@@ -19,6 +20,12 @@ namespace selfInteriorSimulation
             BaseObject.active_notify += Active;
             BaseObject.change_notify += Changed;
             BaseObject.canvas = canvas;
+
+            ed = new Ed()
+            {
+                Height = screen.ActualHeight,
+                Width = screen.ActualWidth,
+            };
 
             Changed("New", "");
             
@@ -153,6 +160,50 @@ namespace selfInteriorSimulation
         {
             help_notice.Visibility = Visibility.Visible;
             notice_timer.Start();
+        }
+
+
+        
+        bool is3D = false;
+        private void Ed_Chk_Click(object sender, RoutedEventArgs e)
+        {
+            if (!is3D)
+            {
+                progressbar.IsIndeterminate = true;
+                ed.Width = screen.ActualWidth;
+                ed.Height = screen.ActualHeight;
+
+                ed.Build(canvas);
+                screen.Child = ed;
+
+                ed.CameraChanged += (o, ev) =>
+                  {
+                      camera_position.Content = ed.Camera.Position.ToString();
+                      camera_up.Content = ed.Camera.UpDirection.ToString();
+                      camera_look.Content = ed.Camera.LookDirection.ToString();
+                  };
+
+
+
+
+
+
+
+                is3D = true;
+
+
+                statusbar_2d.Visibility = Visibility.Hidden;
+                statusbar_3d.Visibility = Visibility.Visible;
+            }
+            else
+            {
+
+                statusbar_2d.Visibility = Visibility.Visible;
+                statusbar_3d.Visibility = Visibility.Hidden;
+
+                screen.Child = canvas;
+                is3D = false;
+            }
         }
     }
 }

@@ -62,8 +62,8 @@ namespace selfInteriorSimulation
                 StrokeThickness = 4,
                 Stroke = (SolidColorBrush)(new BrushConverter().ConvertFrom("#5f6975")),
 
-                Fill = new ImageBrush(new BitmapImage(new Uri(@"pack://application:,,,/image/tile.PNG")))
-            };
+                Fill = new ImageBrush(new BitmapImage(new Uri(@"image\tile.PNG", UriKind.Relative)))
+        };
             polygon.MouseDown += (o, e) => {
                 active_notify(this);
             };

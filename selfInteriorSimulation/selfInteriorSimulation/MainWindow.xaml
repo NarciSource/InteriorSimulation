@@ -47,6 +47,14 @@
                     </Border>
                     <TextBlock HorizontalAlignment="Center" Text="Closure Checking"/>
                 </StackPanel>
+                <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Margin="0,0,0,10">
+                    <Border DockPanel.Dock="Top" Height="100" Margin="0,0,0,0">
+                        <Button x:Name="Ed_button" Grid.Row="1" Click="Ed_Chk_Click" Background="Snow">
+                            <Image Margin="10,10,10,10" Source="image/3d.png"/>
+                        </Button>
+                    </Border>
+                    <TextBlock HorizontalAlignment="Center" Text="Closure Checking"/>
+                </StackPanel>
                 <TabControl Background="LightGoldenrodYellow">
                     <TabItem Header="Room">
                         <StackPanel Orientation="Vertical">
@@ -178,17 +186,33 @@
 
         <Border DockPanel.Dock="Bottom">
             <StatusBar>
-                <Label Content="Point Position = "/>
-                <Label x:Name="point_position" Content="000,000"/>
-                <Label Content="Object Type = "/>
-                <Label x:Name="object_type" Content=""/>
-                <Label Content="Undo Times = "/>
-                <Label x:Name="undo_times" Content="0"/>
+                <StackPanel x:Name="statusbar_2d" Orientation="Horizontal" Visibility="Visible">
+                    <Label Content="Point Position = "/>
+                    <Label x:Name="point_position" Content="000,000"/>
+                    <Label Content="Object Type = "/>
+                    <Label x:Name="object_type" Content=""/>
+                    <Label Content="Undo Times = "/>
+                    <Label x:Name="undo_times" Content="0"/>
+                </StackPanel>
+                <StackPanel x:Name="statusbar_3d" Orientation="Horizontal" Visibility="Hidden">
+                    <Label Content="Camera Position = "/>
+                    <Label x:Name="camera_position" x:FieldModifier="public" Content="0,0,0"/>
+                    <Label Content="Up vector = "/>
+                    <Label x:Name="camera_up" Content="0,0,0"/>
+                    <Label Content="Look Direction = "/>
+                    <Label x:Name="camera_look" Content="0,0,0"/>
+
+
+                </StackPanel>
+                
+                
+                
+                <ProgressBar x:Name="progressbar" Height="20" Width="200"/>
             </StatusBar>
         </Border>
 
 
-        <Border DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="-1">
+        <Border x:Name="screen" DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="-1">
             <Canvas x:Name="canvas" MouseLeftButtonDown="Mouse_Left_Down" MouseLeftButtonUp="Mouse_Left_Up" MouseMove="Mouse_Move" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="2560" MinHeight="1600">
                 <Canvas.Background>
                     <ImageBrush ImageSource="image/background3.jpg" Stretch="None"/>
@@ -211,8 +235,6 @@
 
             </Canvas>
         </Border>
-
-
 
     </DockPanel>
 </Window>
