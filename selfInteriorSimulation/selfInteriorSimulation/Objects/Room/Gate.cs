@@ -21,6 +21,7 @@ namespace selfInteriorSimulation
             protected double length =20;            
             protected Line line = new Line();
             public Line Line { get { return line; } }
+            public Point Center { get { return new Point((line.X1 + line.X2) / 2, (line.Y1 + line.Y2) / 2); } }
             
 
             public Gate(Room room)

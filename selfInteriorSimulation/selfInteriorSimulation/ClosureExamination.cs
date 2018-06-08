@@ -110,7 +110,7 @@ namespace selfInteriorSimulation
             if (all_clear)
             {
                 chk_button.Source = new BitmapImage(new Uri(@"image\success.png", UriKind.Relative));
-                closure_button.Background = new SolidColorBrush(Colors.AliceBlue);
+                closure_button.Background = new SolidColorBrush(Colors.MediumSpringGreen);
             }
             else
             {

@@ -12,7 +12,7 @@ namespace selfInteriorSimulation
     /// </summary>
     public partial class MainWindow : Window
     {
-        Ed ed;
+        Viewport3D viewport3D;
         public MainWindow()
         {
             InitializeComponent();
@@ -21,14 +21,24 @@ namespace selfInteriorSimulation
             BaseObject.change_notify += Changed;
             BaseObject.canvas = canvas;
 
-            ed = new Ed()
+            Changed("New", "");
+
+
+
+            viewport3D = new Viewport3D()
             {
                 Height = screen.ActualHeight,
                 Width = screen.ActualWidth,
             };
+            viewport3D.CameraChanged += (o, ev) =>
+            {
+                camera_position.Content = viewport3D.Camera.Position.ToString();
+                camera_up.Content = viewport3D.Camera.UpDirection.ToString();
+                camera_look.Content = viewport3D.Camera.LookDirection.ToString();
+            };
 
-            Changed("New", "");
-            
+
+
             notice_timer.Tick += new EventHandler(Timer_elapsed);
             notice_timer.Start();
         }
@@ -120,13 +130,13 @@ namespace selfInteriorSimulation
                 switch (((ComboBox)sender).SelectedValue.ToString())
                 {
                     case "Marble":
-                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"pack://application:,,,/image/marble.jpg")));
+                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"image/marble.jpg",UriKind.Relative)));
                         break;
                     case "Wood":
-                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"pack://application:,,,/image/wood.jpg")));
+                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"image/wood.jpg",UriKind.Relative)));
                         break;
                     case "Oak":
-                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"pack://application:,,,/image/oak.jpg")));
+                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"image/oak.jpg",UriKind.Relative)));
                         break;
                 }
             }
@@ -169,37 +179,40 @@ namespace selfInteriorSimulation
         {
             if (!is3D)
             {
-                progressbar.IsIndeterminate = true;
-                ed.Width = screen.ActualWidth;
-                ed.Height = screen.ActualHeight;
+                statusbar_2d.Visibility = Visibility.Hidden;
+                statusbar_2d.MaxWidth = 0;
+                statusbar_3d.Visibility = Visibility.Visible;
+                statusbar_3d.MaxWidth = int.MaxValue;
 
-                ed.Build(canvas);
-                screen.Child = ed;
-
-                ed.CameraChanged += (o, ev) =>
-                  {
-                      camera_position.Content = ed.Camera.Position.ToString();
-                      camera_up.Content = ed.Camera.UpDirection.ToString();
-                      camera_look.Content = ed.Camera.LookDirection.ToString();
-                  };
+                Ed_button.Background = new SolidColorBrush(Colors.LightSkyBlue);
+                closure_button.IsEnabled = false;
+                SettingDock.Visibility = Visibility.Hidden;
+                SettingDock.MaxWidth = 0;
+                objectAddControl.Visibility = Visibility.Hidden;
 
 
+                viewport3D.Width = screen.ActualWidth;
+                viewport3D.Height = screen.ActualHeight;
 
+                viewport3D.Build(canvas);
+                screen.Child = viewport3D;
 
-
-
+                //progressbar.IsIndeterminate = true;
 
                 is3D = true;
-
-
-                statusbar_2d.Visibility = Visibility.Hidden;
-                statusbar_3d.Visibility = Visibility.Visible;
             }
             else
             {
-
                 statusbar_2d.Visibility = Visibility.Visible;
+                statusbar_2d.MaxWidth = int.MaxValue;
                 statusbar_3d.Visibility = Visibility.Hidden;
+                statusbar_3d.MaxWidth = 0;
+
+                Ed_button.Background = new SolidColorBrush(Colors.Snow);
+                closure_button.IsEnabled = true;
+                SettingDock.Visibility = Visibility.Visible;
+                SettingDock.MaxWidth = int.MaxValue;
+                objectAddControl.Visibility = Visibility.Visible;
 
                 screen.Child = canvas;
                 is3D = false;

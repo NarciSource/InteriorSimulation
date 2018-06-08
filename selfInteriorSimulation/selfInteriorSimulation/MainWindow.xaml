@@ -41,21 +41,21 @@
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Margin="0,0,0,10">
                     <Border DockPanel.Dock="Top" Height="100" Margin="0,20,0,0">
-                        <Button x:Name="closure_button" Grid.Row="1" Click="Closure_Chk_Click" Background="Snow">
-                            <Image x:Name ="chk_button" Margin="10,10,10,10" Source="image/scope.png"/>
-                        </Button>
-                    </Border>
-                    <TextBlock HorizontalAlignment="Center" Text="Closure Checking"/>
-                </StackPanel>
-                <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Margin="0,0,0,10">
-                    <Border DockPanel.Dock="Top" Height="100" Margin="0,0,0,0">
                         <Button x:Name="Ed_button" Grid.Row="1" Click="Ed_Chk_Click" Background="Snow">
                             <Image Margin="10,10,10,10" Source="image/3d.png"/>
                         </Button>
                     </Border>
                     <TextBlock HorizontalAlignment="Center" Text="Closure Checking"/>
                 </StackPanel>
-                <TabControl Background="LightGoldenrodYellow">
+                <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Margin="0,0,0,10">
+                    <Border DockPanel.Dock="Top" Height="100" Margin="0,0,0,0">
+                        <Button x:Name="closure_button" Grid.Row="1" Click="Closure_Chk_Click" Background="Snow">
+                            <Image x:Name ="chk_button" Margin="10,10,10,10" Source="image/scope.png"/>
+                        </Button>
+                    </Border>
+                    <TextBlock HorizontalAlignment="Center" Text="Closure Checking"/>
+                </StackPanel>
+                <TabControl x:Name="objectAddControl" Background="LightGoldenrodYellow">
                     <TabItem Header="Room">
                         <StackPanel Orientation="Vertical">
                             <Button x:Name="room_button" DockPanel.Dock="Left" Margin="0,0,0,0" Width="70" Height="80" Click="Object_Click">
@@ -185,8 +185,8 @@
 
 
         <Border DockPanel.Dock="Bottom">
-            <StatusBar>
-                <StackPanel x:Name="statusbar_2d" Orientation="Horizontal" Visibility="Visible">
+            <StatusBar x:Name="statusbar">
+                <StackPanel x:Name="statusbar_2d" Orientation="Horizontal" Visibility="Visible" IsEnabled="False">
                     <Label Content="Point Position = "/>
                     <Label x:Name="point_position" Content="000,000"/>
                     <Label Content="Object Type = "/>
@@ -201,13 +201,9 @@
                     <Label x:Name="camera_up" Content="0,0,0"/>
                     <Label Content="Look Direction = "/>
                     <Label x:Name="camera_look" Content="0,0,0"/>
-
-
                 </StackPanel>
                 
-                
-                
-                <ProgressBar x:Name="progressbar" Height="20" Width="200"/>
+                <ProgressBar x:Name="progressbar" Height="20" Width="200" Visibility="Hidden"/>
             </StatusBar>
         </Border>
 
@@ -217,7 +213,7 @@
                 <Canvas.Background>
                     <ImageBrush ImageSource="image/background3.jpg" Stretch="None"/>
                 </Canvas.Background>
-                <TextBlock Padding="10" TextWrapping="Wrap" Background="Snow" DockPanel.Dock="Left" x:Name="help_notice" Width="390" Height="229" Opacity="0.5" Canvas.Left="10" Canvas.Top="10">
+                <TextBlock Padding="10" TextWrapping="Wrap" Background="Snow" DockPanel.Dock="Left" x:Name="help_notice" Width="390" Height="243" Opacity="0.5" Canvas.Left="10" Canvas.Top="10">
                     &gt;&gt; Notice <LineBreak/>
                     <Italic>
                     1. Build a room and display objects.<LineBreak/>
@@ -229,7 +225,8 @@
                     7. You can adjust a grid size to Menu bar-View-Coordinate size.<LineBreak/>
                     8. You can retrieve any previous record by selecting an item ih history besides undo and redo.<LineBreak/>
                     9. It aslo saves history as well as objects.<LineBreak/>
-                    10. You can save as image.
+                    10. You can save as image.<LineBreak/>
+                    11. You can see in 3D.
                     </Italic>
                 </TextBlock>
 

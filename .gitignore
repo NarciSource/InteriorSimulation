@@ -259,3 +259,27 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/selfInteriorSimulation/selfInteriorSimulation/models/sofa/textures/N.png
+/selfInteriorSimulation/selfInteriorSimulation/models/sofa/textures/M.png
+/selfInteriorSimulation/selfInteriorSimulation/models/sofa/textures/Ambient_Occlusion_Map_from_Mesh_default.png
+/selfInteriorSimulation/selfInteriorSimulation/models/sofa/textures/A.png
+/selfInteriorSimulation/selfInteriorSimulation/models/refriger/textures/Frigo.jpg
+/selfInteriorSimulation/selfInteriorSimulation/models/refriger/refriger.mtl
+/selfInteriorSimulation/selfInteriorSimulation/models/refriger/refriger.blend
+/selfInteriorSimulation/selfInteriorSimulation/models/ledtv/Textures/phong1_Roughness.jpg
+/selfInteriorSimulation/selfInteriorSimulation/models/ledtv/Textures/phong1_Normal_DirectX.jpg
+/selfInteriorSimulation/selfInteriorSimulation/models/ledtv/Textures/phong1_Mixed_AO.jpg
+/selfInteriorSimulation/selfInteriorSimulation/models/ledtv/Textures/phong1_Metallic.jpg
+/selfInteriorSimulation/selfInteriorSimulation/models/ledtv/Textures/phong1_Height.jpg
+/selfInteriorSimulation/selfInteriorSimulation/models/ledtv/Textures/phong1_Base_Color.jpg
+/selfInteriorSimulation/selfInteriorSimulation/models/ledtv/led_tv.mtl
+/selfInteriorSimulation/selfInteriorSimulation/models/ledtv/led_tv.fbx
+/selfInteriorSimulation/selfInteriorSimulation/models/desk/Desk.mtl
+/selfInteriorSimulation/selfInteriorSimulation/models/desk/Desk.fbx
+/selfInteriorSimulation/selfInteriorSimulation/models/desk/DefaultMaterial_Roughness.png
+/selfInteriorSimulation/selfInteriorSimulation/models/desk/DefaultMaterial_Normal_DirectX.png
+/selfInteriorSimulation/selfInteriorSimulation/models/desk/DefaultMaterial_Base_Color.png
+/selfInteriorSimulation/selfInteriorSimulation/models/desk/Ambient Occlusion Map from Mesh DefaultMaterial.png
+/selfInteriorSimulation/selfInteriorSimulation/models/chair/chair.mtl
+/selfInteriorSimulation/selfInteriorSimulation/models/chair/chair.fbx
+/selfInteriorSimulation/selfInteriorSimulation/models/sofa/ready.mtl
