@@ -187,23 +187,25 @@
         <Border DockPanel.Dock="Bottom">
             <StatusBar x:Name="statusbar">
                 <StackPanel x:Name="statusbar_2d" Orientation="Horizontal" Visibility="Visible" IsEnabled="False">
-                    <Label Content="Point Position = "/>
+                    <Label Content="Point Position ="/>
                     <Label x:Name="point_position" Content="000,000"/>
-                    <Label Content="Object Type = "/>
+                    <Label Content="Object Type ="/>
                     <Label x:Name="object_type" Content=""/>
-                    <Label Content="Undo Times = "/>
+                    <Label Content="Undo Times ="/>
                     <Label x:Name="undo_times" Content="0"/>
                 </StackPanel>
                 <StackPanel x:Name="statusbar_3d" Orientation="Horizontal" Visibility="Hidden">
-                    <Label Content="Camera Position = "/>
+                    <Label Content="Camera Position ="/>
                     <Label x:Name="camera_position" x:FieldModifier="public" Content="0,0,0"/>
-                    <Label Content="Up vector = "/>
+                    <Label Content="Up vector ="/>
                     <Label x:Name="camera_up" Content="0,0,0"/>
-                    <Label Content="Look Direction = "/>
+                    <Label Content="Look Direction ="/>
                     <Label x:Name="camera_look" Content="0,0,0"/>
+                    <Label Content="Num of 3D objects ="/>
+                    <Label x:Name="numof3dobjects" Content="0/0"/>
                 </StackPanel>
                 
-                <ProgressBar x:Name="progressbar" Height="20" Width="200" Visibility="Hidden"/>
+                <ProgressBar x:Name="progressbar" Height="20" Width="200" Visibility="Visible"/>
             </StatusBar>
         </Border>
 

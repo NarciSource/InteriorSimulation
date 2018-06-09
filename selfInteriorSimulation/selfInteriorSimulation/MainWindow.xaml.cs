@@ -29,12 +29,20 @@ namespace selfInteriorSimulation
             {
                 Height = screen.ActualHeight,
                 Width = screen.ActualWidth,
+                Progress = progressbar,
+                ProgressLabel = numof3dobjects
             };
             viewport3D.CameraChanged += (o, ev) =>
             {
-                camera_position.Content = viewport3D.Camera.Position.ToString();
-                camera_up.Content = viewport3D.Camera.UpDirection.ToString();
-                camera_look.Content = viewport3D.Camera.LookDirection.ToString();
+                camera_position.Content = viewport3D.Camera.Position.X.ToString(".##") + ","
+                                        + viewport3D.Camera.Position.Y.ToString(".##") + ","
+                                        + viewport3D.Camera.Position.X.ToString(".##");
+                camera_up.Content = viewport3D.Camera.UpDirection.X.ToString("0.##") + ","
+                                        + viewport3D.Camera.UpDirection.Y.ToString("0.##") + ","
+                                        + viewport3D.Camera.UpDirection.X.ToString("0.##");
+                camera_look.Content = viewport3D.Camera.LookDirection.X.ToString(".##") + ","
+                                        + viewport3D.Camera.LookDirection.Y.ToString(".##") + ","
+                                        + viewport3D.Camera.LookDirection.X.ToString(".##");
             };
 
 

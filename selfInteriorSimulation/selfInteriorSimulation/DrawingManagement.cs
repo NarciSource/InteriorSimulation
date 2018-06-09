@@ -90,10 +90,11 @@ namespace selfInteriorSimulation
             {
                 Point point = e.GetPosition(canvas);
                 PointCollection points = new PointCollection();
-                points.Add(new Point(dragonpoint.X, dragonpoint.Y));
-                points.Add(new Point(dragonpoint.X, point.Y));
-                points.Add(new Point(point.X, point.Y));
-                points.Add(new Point(point.X, dragonpoint.Y));
+                
+                points.Add(new Point(Math.Min(dragonpoint.X, point.X), Math.Min(dragonpoint.Y, point.Y)));
+                points.Add(new Point(Math.Min(dragonpoint.X, point.X), Math.Max(dragonpoint.Y, point.Y)));
+                points.Add(new Point(Math.Max(dragonpoint.X, point.X), Math.Max(dragonpoint.Y, point.Y)));
+                points.Add(new Point(Math.Max(dragonpoint.X, point.X), Math.Min(dragonpoint.Y, point.Y)));
 
                 Room room = new Room(points);
                 canvas.Children.Add(room);
