@@ -16,20 +16,29 @@ namespace selfInteriorSimulation
             get { return new Point(Margin.Left + Width / 2, Margin.Top + Height / 2); }
             set { Margin = new Thickness(value.X - Width / 2, value.Y - Height / 2, 0, 0); }
         }
-        public Image Image { get { return border.Child as Image; } set { border.Child = value; } }
-        public double Rotate {
-            get {
+        public Image Image
+        {
+            get { return border.Child as Image; }
+            set { border.Child = value; }
+        }
+        public double Rotate
+        {
+            get
+            {
                 var rotate = this.Image.RenderTransform as RotateTransform;
-                return rotate.Angle; }
-            set { this.Image.RenderTransform = new RotateTransform(value); }
+                return rotate.Angle;
+            }
+            set
+            {
+                const double magic_num = 3;
+                this.Image.RenderTransform = new RotateTransform(value, Width / 2 - magic_num, Height / 2 - magic_num);
+            }
         }
         
 
         public InteriorObject()
         {
             this.Image = new Image() { Stretch = System.Windows.Media.Stretch.Fill };
-            Rotate = 0;
-
 
             this.MouseDown += Mouse_Down;
             this.MouseMove += Mouse_Move;

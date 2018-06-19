@@ -125,6 +125,7 @@ namespace selfInteriorSimulation
             String type = source.GetType().Name;
             Vector3D position = new Vector3D(source.Center.Y, source.Center.X, 0);
             Vector3D scale = new Vector3D(1, 1, 1);
+            double rotate = source.Rotate;
             
             Progress.Maximum++;
             BackgroundWorker worker = new BackgroundWorker();
@@ -133,23 +134,23 @@ namespace selfInteriorSimulation
                 switch (type)
                 {
                     case "Sofa":
-                        Convert3D(position, 0, scale, @"models\sofa\ready.obj");
+                        Convert3D(position, rotate, scale, @"models\sofa\ready.obj");
                         break;
 
                     case "Chair":
-                        Convert3D(position, 0, scale, @"models\chair\chair.obj");
+                        Convert3D(position, rotate, scale, @"models\chair\chair.obj");
                         break;
 
                     case "Refrigerator":
-                        Convert3D(position, 0, scale, @"models\refriger\refriger.obj");
+                        Convert3D(position, rotate, scale, @"models\refriger\refriger.obj");
                         break;
 
                     case "Table":
-                        Convert3D(position, 0, scale, @"models\desk\Desk.obj");
+                        Convert3D(position, rotate, scale, @"models\desk\Desk.obj");
                         break;
 
                     case "Tv":
-                        Convert3D(position, 0, scale, @"models\ledtv\led_tv.obj");
+                        Convert3D(position, rotate, scale, @"models\ledtv\led_tv.obj");
                         break;
                 }
             };
