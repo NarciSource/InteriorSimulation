@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace selfInteriorSimulation
 {
-    class CustomObject : InteriorObject
+    class CustomObject : Furniture
     {
         public CustomObject() : base()
         {

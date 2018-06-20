@@ -10,19 +10,23 @@ using System.Windows.Shapes;
 
 namespace selfInteriorSimulation
 {
-    partial class Room : BaseObject
+    partial class Room : Base
     {
-        public class Gate : BaseObject
+        public class Gate : Base
         {
             Room parent_room;
+            Line line = new Line();
+
             bool isFixed;
             public bool Fixed { get { return isFixed; } set { isFixed = value; } }
 
-            protected double length =20;            
-            protected Line line = new Line();
+            public double Length { get; set; }
+            public Double Thickness { get { return line.StrokeThickness; } set { line.StrokeThickness = value; } }
+            public SolidColorBrush Color { get { return line.Stroke as SolidColorBrush; } set { line.Stroke = value; } }
             public Line Line { get { return line; } }
             public Point Center { get { return new Point((line.X1 + line.X2) / 2, (line.Y1 + line.Y2) / 2); } }
-            
+            public String ModelSource { get; set; }
+
 
             public Gate(Room room)
             {
@@ -69,11 +73,11 @@ namespace selfInteriorSimulation
                     middle.X = (middle.Y - closed_line.Y2) / gradient + closed_line.X2;
                 }
 
-                var p = Algorithm.Away_point_to(middle, gradient, length);
+                var p = Algorithm.Away_point_to(middle, gradient, Length);
                 this.line.X1 = p.X;
                 this.line.Y1 = p.Y;
 
-                p = Algorithm.Away_point_to(middle, gradient, -length);
+                p = Algorithm.Away_point_to(middle, gradient, -Length);
                 this.line.X2 = p.X;
                 this.line.Y2 = p.Y;
             }

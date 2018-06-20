@@ -9,7 +9,7 @@ namespace selfInteriorSimulation
 {
     
 
-    class InteriorObject : BaseObject
+    class Furniture : Base
     {
         public Point Center
         {
@@ -20,6 +20,10 @@ namespace selfInteriorSimulation
         {
             get { return border.Child as Image; }
             set { border.Child = value; }
+        }
+        public ImageSource ImageSource
+        {
+            set { (border.Child as Image).Source = value; }
         }
         public double Rotate
         {
@@ -34,9 +38,10 @@ namespace selfInteriorSimulation
                 this.Image.RenderTransform = new RotateTransform(value, Width / 2 - magic_num, Height / 2 - magic_num);
             }
         }
+        public String ModelSource { get; set; }
         
 
-        public InteriorObject()
+        public Furniture()
         {
             this.Image = new Image() { Stretch = System.Windows.Media.Stretch.Fill };
 
@@ -67,7 +72,7 @@ namespace selfInteriorSimulation
         {
             if (this.IsMouseCaptured)
             {
-                foreach (var each in gRooms)
+                foreach (var each in allRooms)
                 {
                     if (Algorithm.Is_collesion(each, this) == true) return;
                 }
@@ -79,13 +84,15 @@ namespace selfInteriorSimulation
 
         public override object Clone()
         {
-            var copy = Activator.CreateInstance(this.GetType()) as InteriorObject;
-            
+            var copy = Activator.CreateInstance(this.GetType()) as Furniture;
+
+            copy.Type = this.Type;
             copy.Name = this.Name;
             copy.Width = this.Width;
             copy.Height = this.Height;
             copy.Center = this.Center;
             copy.Image = new Image() { Source = this.Image.Source.Clone(), Stretch = this.Image.Stretch };
+            copy.ModelSource = this.ModelSource;
             copy.Rotate = 0;
 
             return copy;
@@ -94,7 +101,7 @@ namespace selfInteriorSimulation
 
 
 
-        static public InteriorObject Temporary(InteriorObject interiorObject)
+        static public Furniture Temporary(Furniture interiorObject)
         {
             interiorObject.MouseDown -= interiorObject.Mouse_Down;
             interiorObject.MouseMove -= interiorObject.Mouse_Move;

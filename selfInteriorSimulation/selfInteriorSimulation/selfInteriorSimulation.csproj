@@ -87,18 +87,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Alret.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Algorithm.cs" />
-    <Compile Include="Alret.xaml.cs">
-      <DependentUpon>Alret.xaml</DependentUpon>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -114,17 +107,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Objects\Interior\Chair.cs" />
-    <Compile Include="Objects\Interior\CustomObject.cs" />
-    <Compile Include="Objects\Room\Door.cs" />
-    <Compile Include="Objects\Interior\InteriorObject.cs" />
-    <Compile Include="Objects\Interior\Refrigerator.cs" />
-    <Compile Include="Objects\Interior\Sofa.cs" />
-    <Compile Include="Objects\Interior\Table.cs" />
-    <Compile Include="Objects\Interior\Tv.cs" />
+    <Compile Include="Objects\Interior\Furniture.cs" />
     <Compile Include="Objects\Room\Gate.cs" />
     <Compile Include="Objects\Room\Room.cs" />
-    <Compile Include="Objects\Room\WindowObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -144,6 +129,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="meta.json" />
     <None Include="models\gate\Door.obj" />
     <None Include="models\chair\chair.obj" />
     <None Include="models\desk\Desk.obj" />

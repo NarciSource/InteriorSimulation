@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,7 +14,7 @@ namespace selfInteriorSimulation
     {
         Shape shape = null;
         Point dragonpoint;
-        BaseObject paintingObject = new NullBasicObject();
+        Base paintingObject = new NullBasicObject();
 
 
 
@@ -37,9 +38,9 @@ namespace selfInteriorSimulation
             Refresh_Status(point);
             point = Algorithm.Adjust_to_fit_std(point);
 
-            if (paintingObject is InteriorObject)
+            if (paintingObject is Furniture)
             {
-                ((InteriorObject)paintingObject).Center = point;
+                ((Furniture)paintingObject).Center = point;
             }
 
             else if (paintingObject is RoomCheckObject)
@@ -56,16 +57,16 @@ namespace selfInteriorSimulation
 
         private void Mouse_Left_Up(object sender, MouseButtonEventArgs e)
         {
-            if (paintingObject is InteriorObject)
+            if (paintingObject is Furniture)
             {
-                InteriorObject realObject = paintingObject.Clone() as InteriorObject;
+                Furniture realObject = paintingObject.Clone() as Furniture;
                 
 
 
                 canvas.Children.Remove(paintingObject);
                 paintingObject = null;
 
-                foreach (var room in BaseObject.gRooms)
+                foreach (var room in Base.allRooms)
                 {
                     switch (Algorithm.Which_relation(room, realObject))
                     {
@@ -109,27 +110,10 @@ namespace selfInteriorSimulation
 
 
 
-        private void Object_Click(object sender, RoutedEventArgs e)
-        {
+        private void Room_Click(object sender, RoutedEventArgs e)
+        { 
             switch (((Button)sender).Name.ToString())
             {
-                case "refre_button":
-                    paintingObject = InteriorObject.Temporary(new Refrigerator() { Name = "냉장고", Width = 96, Height = 64 });
-                    break;
-                case "sofa_button":
-                    paintingObject = InteriorObject.Temporary(new Sofa() { Name = "소파", Width = 160, Height = 64 });
-                    break;
-                case "chair_button":
-                    paintingObject = InteriorObject.Temporary(new Chair() { Name = "의자", Width = 48, Height = 48 });
-                    break;
-                case "table_button":
-                    paintingObject = InteriorObject.Temporary(new Table() { Name = "책상", Width = 128, Height = 64 });
-                    break;
-                case "tv_button":
-                    paintingObject = InteriorObject.Temporary(new Tv() { Name = "TV", Width = 192, Height = 32 });
-                    break;
-
-
                 case "room_button":
                     paintingObject = new RoomCheckObject();
                     return;
@@ -145,41 +129,10 @@ namespace selfInteriorSimulation
         }
 
 
-        private void Custom_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Png Image|*.png";
-            openFileDialog.Title = "Open an Image File";
-
-            Nullable<bool> result = openFileDialog.ShowDialog();
-
-            try
-            {
-                Uri uri = new Uri(openFileDialog.FileName);
-                Alret alret = new Alret();
-                if (alret.ShowDialog() == true)
-                {
-                    paintingObject = new CustomObject()
-                    {
-                        Name = alret.cName,
-                        Width = alret.cWidth,
-                        Height = alret.cHeight,
-                        Image = new Image() { Source = new BitmapImage(uri) }
-                    };
-                    canvas.Children.Add(paintingObject);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("파일을 열 수 없습니다. " + ex.Message);
-            }
-        }
 
 
 
-
-
-        private BaseObject activeObject = null;
+        private Base activeObject = null;
         private void Active(object sender)
         {
 
@@ -196,7 +149,7 @@ namespace selfInteriorSimulation
                 }
             }
 
-            activeObject = (BaseObject)sender;
+            activeObject = (Base)sender;
 
             if (sender is Room)
             {
@@ -254,9 +207,9 @@ namespace selfInteriorSimulation
                         break;
 
                     case Key.LeftCtrl: // Copy
-                        if (activeObject is InteriorObject)
+                        if (activeObject is Furniture)
                         {
-                            canvas.Children.Add((paintingObject as InteriorObject).Clone() as InteriorObject);
+                            canvas.Children.Add((paintingObject as Furniture).Clone() as Furniture);
 
                             Changed("Copy", activeObject.Name);
                         }
@@ -275,7 +228,7 @@ namespace selfInteriorSimulation
             point_position.Content = position.ToString();
             if (activeObject != null)
                 object_type.Content = activeObject.ToString();
-            undo_times.Content = jsonStay.ToString();
+            undo_times.Content = recordStay.ToString();
         }
 
     }

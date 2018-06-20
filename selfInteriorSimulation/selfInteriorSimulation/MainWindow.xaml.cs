@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,13 +15,15 @@ namespace selfInteriorSimulation
     public partial class MainWindow : Window
     {
         Viewport3D viewport3D;
+
         public MainWindow()
         {
             InitializeComponent();
+            InitializeObjects();
 
-            BaseObject.active_notify += Active;
-            BaseObject.change_notify += Changed;
-            BaseObject.canvas = canvas;
+            Base.active_notify += Active;
+            Base.change_notify += Changed;
+            Base.canvas = canvas;
 
             Changed("New", "");
 
@@ -51,6 +55,26 @@ namespace selfInteriorSimulation
             notice_timer.Start();
         }
 
+        
+        private void InitializeObjects()
+        {
+            try
+            {
+                const string fileName = "meta.json";
+                string fileContent = "";
+
+                StreamReader sr = new StreamReader(fileName);
+                fileContent = sr.ReadToEnd();
+                ReadMetaData(fileContent);
+                sr.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Don't open the file." + e.Message);
+                return;
+            }
+        }
+
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
@@ -59,7 +83,7 @@ namespace selfInteriorSimulation
                 case "New":
                     canvas.Children.Clear();
                     History_Clear();
-                    BaseObject.gRooms.Clear();
+                    Base.allRooms.Clear();
                     break;
                 case "Save":
                     Save();
@@ -73,7 +97,7 @@ namespace selfInteriorSimulation
                 case "Clear":
                     canvas.Children.Clear();
                     History_Clear();
-                    BaseObject.gRooms.Clear();
+                    Base.allRooms.Clear();
                     break;
                 case "Exit":
                     Application.Current.Shutdown();
@@ -111,21 +135,21 @@ namespace selfInteriorSimulation
                 case "setting_angle":
                     if (double.TryParse(textbox.Text, out dnum))
                     {
-                        ((InteriorObject)activeObject).Rotate = dnum;
+                        ((Furniture)activeObject).Rotate = dnum;
                     }
                     break;
 
                 case "setting_width":
                     if (int.TryParse(textbox.Text, out inum))
                     {
-                        ((InteriorObject)activeObject).Width = inum;
+                        ((Furniture)activeObject).Width = inum;
                     }
                     break;
 
                 case "setting_height":
                     if (int.TryParse(textbox.Text, out inum))
                     {
-                        ((InteriorObject)activeObject).Height = inum;
+                        ((Furniture)activeObject).Height = inum;
                     }
                     break;
             }

@@ -55,7 +55,7 @@ namespace selfInteriorSimulation
             foreach (var element in uIElements)
             {
                 bool chkfirst = true;
-                if (element is BaseObject == false) continue;
+                if (element is Base == false) continue;
 
                 else if (element is Room)
                 {
@@ -75,9 +75,9 @@ namespace selfInteriorSimulation
                             chkfirst = false;
                         }
 
-                        else if (each is InteriorObject)
+                        else if (each is Furniture)
                         {
-                            MakeObject(each as InteriorObject);
+                            MakeObject(each as Furniture);
                         }
 
                         else if (each is Room.Gate)
@@ -87,9 +87,9 @@ namespace selfInteriorSimulation
                     }
                 }
 
-                else if (element is InteriorObject)
+                else if (element is Furniture)
                 {
-                    MakeObject(element as InteriorObject);
+                    MakeObject(element as Furniture);
                 }
 
             }
@@ -99,60 +99,42 @@ namespace selfInteriorSimulation
 
         private void MakeGate(Room.Gate source)
         {
-            String type = source.GetType().Name;
+            String type = source.Type;
+            String datasrc = source.ModelSource;
             Vector3D position;
             Vector3D scale;
-            double angle = Math.Atan2(source.Line.X2 - source.Line.X1, source.Line.Y2 - source.Line.Y1) * (180 / Math.PI);
+            Double angle = Math.Atan2(source.Line.X2 - source.Line.X1, source.Line.Y2 - source.Line.Y1) * (180 / Math.PI);
 
             switch (type)
             {
                 case "Door":
                     position = new Vector3D((source.Line.Y1 + source.Line.Y2) / 2, (source.Line.X1 + source.Line.X2) / 2, 0);
                     scale = new Vector3D(1, 1, 1);
-                    Convert3D(position, angle, scale, @"models\gate\Door.obj");
+                    Convert3D(position, angle, scale, datasrc);
                     break;
 
-                case "WindowObject":
+                case "Window":
                     position = new Vector3D((source.Line.Y1 + source.Line.Y2) / 2, (source.Line.X1 + source.Line.X2) / 2, 70);
                     scale = new Vector3D(0.7, 0.7, 0.7);
-                    Convert3D(position, angle, scale, @"models\gate\window.obj");
+                    Convert3D(position, angle, scale, datasrc);
                     break;
             }
         }
         
-        private void MakeObject(InteriorObject source)
+        private void MakeObject(Furniture source)
         {
-            String type = source.GetType().Name;
+            String type = source.Type;
+            String datasrc = source.ModelSource;
             Vector3D position = new Vector3D(source.Center.Y, source.Center.X, 0);
             Vector3D scale = new Vector3D(1, 1, 1);
-            double rotate = source.Rotate;
+            Double angle = source.Rotate;
             
             Progress.Maximum++;
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += (o, e) =>
             {
-                switch (type)
-                {
-                    case "Sofa":
-                        Convert3D(position, rotate, scale, @"models\sofa\ready.obj");
-                        break;
-
-                    case "Chair":
-                        Convert3D(position, rotate, scale, @"models\chair\chair.obj");
-                        break;
-
-                    case "Refrigerator":
-                        Convert3D(position, rotate, scale, @"models\refriger\refriger.obj");
-                        break;
-
-                    case "Table":
-                        Convert3D(position, rotate, scale, @"models\desk\Desk.obj");
-                        break;
-
-                    case "Tv":
-                        Convert3D(position, rotate, scale, @"models\ledtv\led_tv.obj");
-                        break;
-                }
+                Convert3D(position, angle, scale, datasrc);
+                
             };
             worker.RunWorkerCompleted += (o, e) =>
             {

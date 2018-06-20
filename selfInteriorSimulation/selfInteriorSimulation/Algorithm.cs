@@ -26,7 +26,7 @@ namespace selfInteriorSimulation
             return crosses % 2 > 0;
         }
 
-        static public bool Is_collesion(Room room, InteriorObject interiorObject)
+        static public bool Is_collesion(Room room, Furniture interiorObject)
         {
             bool[] in_chk = new bool[4];
 
@@ -44,7 +44,7 @@ namespace selfInteriorSimulation
         }
 
         public enum Relation { Collesion, Inner, Outer};
-        static public Relation Which_relation(Room room, InteriorObject interiorObject)
+        static public Relation Which_relation(Room room, Furniture interiorObject)
         {
             bool[] in_chk = new bool[4];
 

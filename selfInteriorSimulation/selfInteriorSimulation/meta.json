@@ -1,0 +1,42 @@
+[
+    {
+        "Type": "Chair",
+        "TabImgSrc":   "image\\chair.png",
+        "ViewImgSrc":    "image\\chair2_dan.PNG",
+        "ViewImgW":    48,
+        "ViewImgH":    48,
+        "MdSrc":  "models\\chair\\chair.obj"        
+    },
+    {
+        "Type": "Refrigerator",
+        "TabImgSrc":   "image\\refrigerator.jpg",
+        "ViewImgSrc":    "image\\refrigerator_dan.PNG",
+        "ViewImgW":    96,
+        "ViewImgH":    64,
+        "MdSrc":  "models\\refriger\\refriger.obj"        
+    },
+    {
+        "Type": "Sofa",
+        "TabImgSrc":   "image\\sofa.png",
+        "ViewImgSrc":    "image\\sofa_dan.PNG",
+        "ViewImgW":    160,
+        "ViewImgH":    64,
+        "MdSrc":  "models\\sofa\\ready.obj"        
+    },
+    {
+        "Type": "Desk",
+        "TabImgSrc":   "image\\desk.png",
+        "ViewImgSrc":    "image\\desk_dan.PNG",
+        "ViewImgW":    128,
+        "ViewImgH":    64,
+        "MdSrc":  "models\\desk\\Desk.obj"        
+    },
+    {
+        "Type": "Tv",
+        "TabImgSrc":   "image\\tv.png",
+        "ViewImgSrc":    "image\\tv_dan.PNG",
+        "ViewImgW":    192,
+        "ViewImgH":    32,
+        "MdSrc":  "models\\ledtv\\led_tv.obj"        
+    }
+]

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using static selfInteriorSimulation.BaseObject;
+using static selfInteriorSimulation.Base;
 
 namespace selfInteriorSimulation
 {
@@ -40,15 +41,15 @@ namespace selfInteriorSimulation
 
         private void Grouping()
         {
-            foreach (var room in gRooms)
+            foreach (var room in allRooms)
             {
                 var pivot_group = Which_group_of(room);
 
-                foreach (var door in room.Doors)
+                foreach (var door in (from gate in room.Gates where gate.Type=="Door" select gate))
                 {
                     Point point = In_front_of(room, door);
 
-                    foreach (var other_room in gRooms)
+                    foreach (var other_room in allRooms)
                     {
                         if (room == other_room) continue;
                         if (Algorithm.Is_inside(other_room, point))
@@ -139,13 +140,12 @@ namespace selfInteriorSimulation
         private Group Which_group_of(Room room)
         {
             Group result = null;
-            foreach (var each in groups)
-                if (each.Contains(room))
-                {
-                    result = each;
-                    break;
-                }
-            if (result == null)
+
+            try
+            {
+                result = groups.Where((each) => { return each.Contains(room); }).Single();
+            }
+            catch(Exception)
             {
                 result = new Group();
                 result.Add(room);
@@ -155,7 +155,7 @@ namespace selfInteriorSimulation
             return result;
         }
 
-        private Point In_front_of(Room room, Room.Door door)
+        private Point In_front_of(Room room, Room.Gate door)
         {
             Point middle = new Point() { X = (door.Line.X1 + door.Line.X2) / 2, Y = (door.Line.Y1 + door.Line.Y2) / 2 };
             double gradient = -(door.Line.X1 - door.Line.X2) / (door.Line.Y1 - door.Line.Y2);
@@ -171,12 +171,12 @@ namespace selfInteriorSimulation
         {
             foreach (var room in group)
             {
-                foreach (var door in room.Doors)
+                foreach (var door in (from gate in room.Gates where gate.Type=="Door" select gate))
                 {
                     bool is_connected_outside = true;
                     Point point = In_front_of(room, door);
 
-                    foreach (var other_room in gRooms)
+                    foreach (var other_room in allRooms)
                     {
                         if (room == other_room) continue;
                         if (Algorithm.Is_inside(other_room, point))

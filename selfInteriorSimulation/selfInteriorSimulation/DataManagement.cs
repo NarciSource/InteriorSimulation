@@ -2,10 +2,8 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -15,32 +13,93 @@ namespace selfInteriorSimulation
 {
     public partial class MainWindow : Window
     {
-        public JArray Jsons = new JArray();
-        int jsonStay = -1;
+        JArray metaData;
+        private void ReadMetaData(string content)
+        {
+            metaData = JArray.Parse(content);
+
+
+            foreach (var metaObject in metaData)
+            {
+                Button button = new Button()
+                {
+                    Margin = new Thickness(0, 0, 0, 0),
+                    Width = 70,
+                };
+                {
+                    StackPanel stackPanel = new StackPanel()
+                    {
+                        Orientation = Orientation.Vertical,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                    };
+                    {
+                        stackPanel.Children.Add(new Image()
+                        {
+                            Height = 50,
+                            Source = new BitmapImage(new Uri(metaObject["TabImgSrc"].ToString(), UriKind.Relative))
+                        });
+                        stackPanel.Children.Add(new TextBlock()
+                        {
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            Text = metaObject["Type"].ToString()
+                        });
+                    }
+
+
+                    button.Click += (o, e) =>
+                    {
+                        paintingObject = Furniture.Temporary(new Furniture()
+                        {
+                            Type = metaObject["Type"].ToString(),
+                            Name = metaObject["Type"].ToString(),
+                            Width = Convert.ToDouble(metaObject["ViewImgW"]),
+                            Height = Convert.ToDouble(metaObject["ViewImgH"]),
+                            ImageSource = new BitmapImage(new Uri(metaObject["ViewImgSrc"].ToString(), UriKind.Relative)),
+                            ModelSource = metaObject["MdSrc"].ToString()
+                        });
+
+                        canvas.Children.Add(paintingObject);
+                    };
+
+
+                    button.Content = stackPanel;
+                }
+                tab_objects.Children.Add(button);
+            }
+        }
+
+
+
+
+
+
+        public JArray Records = new JArray();
+        int recordStay = -1;
 
 
         private void Changed(string command,string name)
         {
-            for (int i = Jsons.Count - 1; i > jsonStay; i--)
+            for (int i = Records.Count - 1; i > recordStay; i--)
             {
-                Jsons.RemoveAt(i);
+                Records.RemoveAt(i);
                 history.Items.RemoveAt(i);
             }
 
 
-            jsonStay++;
+            recordStay++;
             history.Items.Add(new { Command = command, Name = name });
-            Jsons.Add(SaveStatusToJson());
-            history.SelectedIndex = jsonStay;
+            Records.Add(SaveStatusToJson());
+            history.SelectedIndex = recordStay;
         }
+
+
 
         private void Save()
         {
             string fileName = "";
 
             SaveFileDialog saveFile = new SaveFileDialog();
-
-            //saveFile.InitialDirectory = @"C:";
+            
             saveFile.Title = "파일 저장";
             saveFile.FileName = "interior";
             saveFile.DefaultExt = "intr";
@@ -55,7 +114,7 @@ namespace selfInteriorSimulation
             try
             {
                 StreamWriter sw = new StreamWriter(fileName);
-                sw.WriteLine(Jsons.ToString());
+                sw.WriteLine(Records.ToString());
                 sw.Close();
             }
             catch (Exception ez)
@@ -70,7 +129,6 @@ namespace selfInteriorSimulation
             String fileName = "";
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            //openFileDialog.InitialDirectory = @"C:\\";
             openFileDialog.Title = "파일 선택";
             Nullable<bool> result = openFileDialog.ShowDialog();
 
@@ -99,9 +157,9 @@ namespace selfInteriorSimulation
                 History_Clear();
 
                 
-                Jsons = JArray.Parse(fileContent);
-                PrintUIfromJson(Jsons.Last);
-                foreach (var records in Jsons)
+                Records = JArray.Parse(fileContent);
+                PrintUIfromJson(Records.Last);
+                foreach (var records in Records)
                 {
                     foreach (var jeach in records)
                     {
@@ -125,29 +183,29 @@ namespace selfInteriorSimulation
 
         private void History_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (jsonStay != history.SelectedIndex)
+            if (recordStay != history.SelectedIndex)
             {
-                jsonStay = history.SelectedIndex;
-                PrintUIfromJson(Jsons[jsonStay]);
+                recordStay = history.SelectedIndex;
+                PrintUIfromJson(Records[recordStay]);
             }
         }
 
         private void History_Clear()
         {
-            jsonStay = -1;
+            recordStay = -1;
             history.SelectedIndex = -1;
             history.Items.Clear();
-            Jsons.Clear();
+            Records.Clear();
         }
 
         private void Undo_Click(object sender, RoutedEventArgs e)
         {
-            if (0 < jsonStay)
+            if (0 < recordStay)
             {
                 canvas.Children.Clear();
 
-                jsonStay--;
-                PrintUIfromJson(Jsons[jsonStay]);
+                recordStay--;
+                PrintUIfromJson(Records[recordStay]);
 
                 history.SelectedIndex--;
             }
@@ -155,12 +213,12 @@ namespace selfInteriorSimulation
         
         private void Redo_Click(object sender, RoutedEventArgs e)
         {
-            if (jsonStay < Jsons.Count-1)
+            if (recordStay < Records.Count-1)
             {
                 canvas.Children.Clear();
 
-                jsonStay++;
-                PrintUIfromJson(Jsons[jsonStay]);
+                recordStay++;
+                PrintUIfromJson(Records[recordStay]);
 
                 history.SelectedIndex++;
             }
@@ -172,96 +230,92 @@ namespace selfInteriorSimulation
 
         private JArray SaveStatusToJson()
         {
-            var json_lv1 = new JArray();
-            JObject json_lv2;
+            var jdata = new JArray();
             
-            foreach (var element in canvas.Children)
-            {
-                if (!(element is BaseObject)) continue;
 
-                json_lv2 = new JObject();
-                if (element is Room)
+            jdata = JArray.FromObject(
+                canvas.Children.OfType<Room>().Select((room) =>
                 {
-                    var room = element as Room;
-                    
-                    json_lv2.Add("Type", room.GetType().Name);
-
-
-                    var jpoints = new JArray();
-                    foreach (Point point in room.Points)
+                    return JObject.FromObject(new
                     {
-                        jpoints.Add(JsonConvert.SerializeObject(point));
-                    }
-                    json_lv2.Add("Points", jpoints);
+                        Type = room.GetType().Name,
 
+                        Points = JArray.FromObject(
+                            room.Points.Select((point) => { return JsonConvert.SerializeObject(point); }
+                        )),
 
-                    json_lv2.Add("Interior", new JArray());
-                    json_lv2.Add("Doors", new JArray());
-                    json_lv2.Add("Windows", new JArray());
-
-                    foreach (var each in room.Children)
-                    {
-                        if (each is InteriorObject)
-                        {
-                            var iobj = each as InteriorObject;
-                            ((JArray)json_lv2["Interior"]).Add(
-                                JObject.FromObject(new
+                        Interior = JArray.FromObject(
+                            room.Children.OfType<Furniture>().Select((furniture) =>
+                            {
+                                return JObject.FromObject(new
                                 {
-                                    Type = iobj.GetType().Name,
-                                    Name = iobj.Name,
-                                    Width = iobj.Width,
-                                    Height = iobj.Height,
-                                    Border = iobj.BorderThickness.Left,
-                                    Rotate = iobj.Rotate,
-                                    Point = JsonConvert.SerializeObject(iobj.Center)
-                                })
-                            );
-                        }
-                        else if (each is Room.Gate)
-                        {
-                            var gate = each as Room.Gate;
+                                    Type = furniture.Type,
+                                    Name = furniture.Name,
+                                    Width = furniture.Width,
+                                    Height = furniture.Height,
+                                    Border = furniture.BorderThickness.Left,
+                                    Rotate = furniture.Rotate,
+                                    Point = JsonConvert.SerializeObject(furniture.Center)
+                                });
+                            })
+                        ),
 
-                            JArray json_lv4 = new JArray();
-                            json_lv4.Add(
-                                JsonConvert.SerializeObject(new Point(gate.Line.X1, gate.Line.Y1))
-                            );
-                            json_lv4.Add(
-                                JsonConvert.SerializeObject(new Point(gate.Line.X2, gate.Line.Y2))
-                            );
+                        Doors = JArray.FromObject(
+                            room.Children.OfType<Room.Gate>()
+                            .Where((gate) =>
+                            {
+                                return gate.Type == "Door";
+                            })
+                            .Select((gate) =>
+                            {
+                                JArray json_lv4 = new JArray();
+                                json_lv4.Add(JsonConvert.SerializeObject(new Point(gate.Line.X1, gate.Line.Y1)));
+                                json_lv4.Add(JsonConvert.SerializeObject(new Point(gate.Line.X2, gate.Line.Y2)));
+                                return json_lv4;
+                            })
+                        ),
 
-                            if(each is Room.Door)
-                                ((JArray)json_lv2["Doors"]).Add(json_lv4);
-                            else if(each is Room.WindowObject)
-                                ((JArray)json_lv2["Windows"]).Add(json_lv4);
-                        }
-                    }
-                    
+                        Windows = JArray.FromObject(
+                            room.Children.OfType<Room.Gate>()
+                            .Where((gate) =>
+                            {
+                                return gate.Type == "Window";
+                            })
+                            .Select((gate) =>
+                            {
+                                JArray jpoints = new JArray();
+                                jpoints.Add(JsonConvert.SerializeObject(new Point(gate.Line.X1, gate.Line.Y1)));
+                                jpoints.Add(JsonConvert.SerializeObject(new Point(gate.Line.X2, gate.Line.Y2)));
+                                return jpoints;
+                            })
+                        )
+
+
+                    });
                 }
-
-                else if (element is InteriorObject)
-                {
-                    var iobj = element as InteriorObject;
-                    json_lv2 = JObject.FromObject(
-                        new
-                        {
-                            Type = iobj.GetType().Name,
-                            Name = iobj.Name,
-                            Width = iobj.Width,
-                            Height = iobj.Height,
-                            Border = iobj.BorderThickness.Left,
-                            Rotate = iobj.Rotate,
-                            Point = JsonConvert.SerializeObject(iobj.Center)
-                        });
-                }
-
-                json_lv1.Add(json_lv2);
-            }
-
-            json_lv1.Add(JObject.FromObject(
-                new { History = JsonConvert.SerializeObject(history.Items[jsonStay]) }
             ));
 
-            return json_lv1;
+            jdata.Merge(JArray.FromObject(
+                canvas.Children.OfType<Furniture>().Select((furniture) =>
+                {
+                    return JObject.FromObject(new
+                    {
+                        Type = furniture.Type,
+                        Name = furniture.Name,
+                        Width = furniture.Width,
+                        Height = furniture.Height,
+                        Border = furniture.BorderThickness.Left,
+                        Rotate = furniture.Rotate,
+                        Point = JsonConvert.SerializeObject(furniture.Center)
+                    });
+                })
+            ));
+            
+            jdata.Add(JObject.FromObject(
+                new { History = JsonConvert.SerializeObject(history.Items[recordStay]) }
+            ));
+
+            return jdata;
         }
 
         private void PrintUIfromJson(JToken fileContent)
@@ -276,18 +330,15 @@ namespace selfInteriorSimulation
 
                     if (type == "Room")
                     {
-                        PointCollection points = new PointCollection();
-                        foreach (var jpoint in jeach["Points"])
+                        Room room = new Room(new PointCollection(jeach["Points"].Select((jpoint) =>
                         {
-                            points.Add(JsonConvert.DeserializeObject<Point>(jpoint.ToString()));
-                        }
-                        Room room = new Room(points);
-
+                            return JsonConvert.DeserializeObject<Point>(jpoint.ToString());
+                        })));
 
                         foreach (JObject jinterior in jeach["Interior"])
                         {
                             room.Children.Add(
-                                MakeInteriorObject(jinterior["Type"].ToString(), jinterior));
+                                MakeFurniture(jinterior["Type"].ToString(), jinterior));
                         }
 
                         foreach (JArray jgates in jeach["Doors"])
@@ -312,45 +363,37 @@ namespace selfInteriorSimulation
                     else
                     {
                         canvas.Children.Add(
-                            MakeInteriorObject(jeach["Type"].ToString(), jeach));
+                            MakeFurniture(jeach["Type"].ToString(), jeach));
                     }
                 }
                 catch (Exception)
                 {
-                    //MessageBox.Show("There is some problem with the file contents" + exc);
                 }
             }
         }
-        private InteriorObject MakeInteriorObject(String type, JToken jdata)
+
+        private Furniture MakeFurniture(String type, JToken jdata)
         {
-            InteriorObject obj = new InteriorObject();
-            switch (type)
+            Furniture furniture = new Furniture();
+
+            foreach (var metaObject in metaData)
             {
-                case "Chair":
-                    obj = new Chair();
+                if (metaObject["Type"].ToString() == type)
+                {
+                    furniture.Type = metaObject["Type"].ToString();
+                    furniture.ImageSource = new BitmapImage(new Uri(metaObject["ViewImgSrc"].ToString(), UriKind.Relative));
+                    furniture.ModelSource = metaObject["MdSrc"].ToString();
                     break;
-                case "Refrigerator":
-                    obj = new Refrigerator();
-                    break;
-                case "Sofa":
-                    obj = new Sofa();
-                    break;
-                case "Table":
-                    obj = new Table();
-                    break;
-                case "Tv":
-                    obj = new Tv();
-                    break;
+                }
             }
+            furniture.Name = jdata["Name"].ToString();
+            furniture.Height = JsonConvert.DeserializeObject<int>(jdata["Height"].ToString());
+            furniture.Width = JsonConvert.DeserializeObject<int>(jdata["Width"].ToString());
+            furniture.BorderThickness = new Thickness(JsonConvert.DeserializeObject<double>(jdata["Border"].ToString()));
+            furniture.Rotate = JsonConvert.DeserializeObject<double>(jdata["Rotate"].ToString());
+            furniture.Center = JsonConvert.DeserializeObject<Point>(jdata["Point"].ToString());
 
-            obj.Name = jdata["Name"].ToString();
-            obj.Height = JsonConvert.DeserializeObject<int>(jdata["Height"].ToString());
-            obj.Width = JsonConvert.DeserializeObject<int>(jdata["Width"].ToString());
-            obj.BorderThickness = new Thickness(JsonConvert.DeserializeObject<double>(jdata["Border"].ToString()));
-            obj.Rotate = JsonConvert.DeserializeObject<double>(jdata["Rotate"].ToString());
-            obj.Center = JsonConvert.DeserializeObject<Point>(jdata["Point"].ToString());
-
-            return obj;
+            return furniture;
         }
 
 

@@ -11,13 +11,13 @@ namespace selfInteriorSimulation
     public delegate void del(object sender);
     public delegate void del2(string command, string name);
 
-    abstract class BaseObject : DockPanel, ICloneable
+    abstract class Base : DockPanel, ICloneable
     {
         static public del active_notify;
         static public del2 change_notify;
 
         /* global */
-        public static List<Room> gRooms = new List<Room>();
+        public static List<Room> allRooms = new List<Room>();
         public static Canvas canvas { get; set; }
 
 
@@ -28,6 +28,7 @@ namespace selfInteriorSimulation
             HorizontalAlignment = HorizontalAlignment.Center
         };
 
+        public String Type { get; set; }
         public new string Name { get { return name.Text; } set { name.Text = value;} }
         public Thickness BorderThickness { get { return border.BorderThickness; } set { border.BorderThickness = value; } }
         public Brush BorderBrush { get { return border.BorderBrush; } set { border.BorderBrush = value; } }
@@ -36,7 +37,7 @@ namespace selfInteriorSimulation
                 
 
         
-        public BaseObject(){
+        public Base(){
             DockPanel.SetDock(border, Dock.Top);
             this.Children.Add(border);
 
@@ -50,5 +51,5 @@ namespace selfInteriorSimulation
         }
     }
 
-    class NullBasicObject : BaseObject { }
+    class NullBasicObject : Base { }
 }
