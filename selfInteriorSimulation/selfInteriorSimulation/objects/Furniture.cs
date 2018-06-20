@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -7,14 +6,21 @@ using System.Windows.Media;
 
 namespace selfInteriorSimulation
 {
-    
+
 
     class Furniture : Base
     {
         public Point Center
         {
-            get { return new Point(Margin.Left + Width / 2, Margin.Top + Height / 2); }
-            set { Margin = new Thickness(value.X - Width / 2, value.Y - Height / 2, 0, 0); }
+            get
+            {
+                return new Point(Canvas.GetLeft(this) + Width / 2, Canvas.GetTop(this) + Height / 2);
+            }
+            set
+            {
+                Canvas.SetLeft(this, value.X - Width / 2);
+                Canvas.SetTop(this, value.Y - Height / 2);
+            }
         }
         public Image Image
         {
@@ -56,10 +62,8 @@ namespace selfInteriorSimulation
         {
             if (this.IsMouseCaptured)
             {
-                Point clickPoint = e.GetPosition(canvas);
-                clickPoint = Algorithm.Adjust_to_fit_std(clickPoint);
-
-                this.Center = new Point(clickPoint.X, clickPoint.Y);
+                Point clickPoint = e.GetPosition(MetaData.GetInstance.Canvas);
+                this.Center = Algorithm.Adjust_to_fit_std(clickPoint);
             }
         }
 
@@ -72,7 +76,7 @@ namespace selfInteriorSimulation
         {
             if (this.IsMouseCaptured)
             {
-                foreach (var each in allRooms)
+                foreach (var each in MetaData.GetInstance.AllRooms)
                 {
                     if (Algorithm.Is_collesion(each, this) == true) return;
                 }

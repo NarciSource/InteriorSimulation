@@ -1,5 +1,13 @@
 [
     {
+        "Type": "Desk",
+        "TabImgSrc":   "image\\desk.png",
+        "ViewImgSrc":    "image\\desk_dan.PNG",
+        "ViewImgW":    128,
+        "ViewImgH":    64,
+        "MdSrc":  "models\\desk\\Desk.obj"        
+    },
+    {
         "Type": "Chair",
         "TabImgSrc":   "image\\chair.png",
         "ViewImgSrc":    "image\\chair2_dan.PNG",
@@ -24,19 +32,31 @@
         "MdSrc":  "models\\sofa\\ready.obj"        
     },
     {
-        "Type": "Desk",
-        "TabImgSrc":   "image\\desk.png",
-        "ViewImgSrc":    "image\\desk_dan.PNG",
-        "ViewImgW":    128,
-        "ViewImgH":    64,
-        "MdSrc":  "models\\desk\\Desk.obj"        
-    },
-    {
         "Type": "Tv",
         "TabImgSrc":   "image\\tv.png",
         "ViewImgSrc":    "image\\tv_dan.PNG",
         "ViewImgW":    192,
         "ViewImgH":    32,
         "MdSrc":  "models\\ledtv\\led_tv.obj"        
+    },
+
+
+
+
+    {
+        "Type": "Door",
+        "TabImgSrc":   "",
+        "ViewImgSrc":    "",
+        "ViewImgW":    0,
+        "ViewImgH":    0,
+        "MdSrc":  "models\\gate\\Door.obj"
+    },
+    {
+        "Type": "Window",
+        "TabImgSrc":   "",
+        "ViewImgSrc":    "",
+        "ViewImgW":    0,
+        "ViewImgH":    0,
+        "MdSrc":  "models\\gate\\window.obj"
     }
 ]

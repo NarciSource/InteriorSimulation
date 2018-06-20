@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -14,29 +11,38 @@ namespace selfInteriorSimulation
     /// </summary>
     public partial class MainWindow : Window
     {
-        Viewport3D viewport3D;
-
         public MainWindow()
         {
             InitializeComponent();
-            InitializeObjects();
 
+            InitializeCanvas();
+
+            Initialize3DView();
+
+            InitializeClosureExamination();
+
+            InitializeMetadata();
+        }
+
+
+        private void InitializeCanvas()
+        {
             Base.active_notify += Active;
             Base.change_notify += Changed;
-            Base.canvas = canvas;
 
             Changed("New", "");
 
+            notice_timer.Tick += new EventHandler(Timer_elapsed);
+            notice_timer.Start();
+        }
 
 
-            viewport3D = new Viewport3D()
-            {
-                Height = screen.ActualHeight,
-                Width = screen.ActualWidth,
-                Progress = progressbar,
-                ProgressLabel = numof3dobjects
-            };
-            viewport3D.CameraChanged += (o, ev) =>
+        Viewport3D viewport3D;
+
+        private void Initialize3DView()
+        {
+            
+            Action cameraStatue = delegate
             {
                 camera_position.Content = viewport3D.Camera.Position.X.ToString(".##") + ","
                                         + viewport3D.Camera.Position.Y.ToString(".##") + ","
@@ -49,206 +55,72 @@ namespace selfInteriorSimulation
                                         + viewport3D.Camera.LookDirection.X.ToString(".##");
             };
 
-
-
-            notice_timer.Tick += new EventHandler(Timer_elapsed);
-            notice_timer.Start();
-        }
-
-        
-        private void InitializeObjects()
-        {
-            try
+            viewport3D = new Viewport3D()
             {
-                const string fileName = "meta.json";
-                string fileContent = "";
-
-                StreamReader sr = new StreamReader(fileName);
-                fileContent = sr.ReadToEnd();
-                ReadMetaData(fileContent);
-                sr.Close();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("Don't open the file." + e.Message);
-                return;
-            }
+                Height = screen.ActualHeight,
+                Width = screen.ActualWidth,
+                CameraStatue = cameraStatue
+            };
         }
 
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        ClosureExamination closureExamination;
+
+        private void InitializeClosureExamination()
         {
-            switch ((sender as MenuItem).Header.ToString())
+            closureExamination = new ClosureExamination()
             {
-                case "New":
-                    canvas.Children.Clear();
-                    History_Clear();
-                    Base.allRooms.Clear();
-                    break;
-                case "Save":
-                    Save();
-                    break;
-                case "Open":
-                    Open();
-                    break;
-                case "Save as Image":
-                    Save_as_Image();
-                    break;
-                case "Clear":
-                    canvas.Children.Clear();
-                    History_Clear();
-                    Base.allRooms.Clear();
-                    break;
-                case "Exit":
-                    Application.Current.Shutdown();
-                    break;
-                case "About":
-                    System.Windows.MessageBox.Show("Midas Challenge Application 1 Team\r\r  금준호\r  유한결\r  정원철", "About.");
-                    break;
-            }
-        }
-
-
-
-        private void Setting_Changed(Object sender, TextChangedEventArgs e)
-        {
-            int inum = 0;
-            double dnum = 0;
-
-            var textbox = sender as TextBox;
-            switch (textbox.Name.ToString())
-            {
-                case "setting_name":
-                    if (activeObject.Name != textbox.Text)
-                    {
-                        activeObject.Name = textbox.Text;
-                    }
-                    break;
-
-                case "setting_thickness":
-                    if (double.TryParse(textbox.Text, out dnum))
-                    {
-                        ((Room)activeObject).BorderThickness = new Thickness(dnum);
-                    }
-                    break;
-
-                case "setting_angle":
-                    if (double.TryParse(textbox.Text, out dnum))
-                    {
-                        ((Furniture)activeObject).Rotate = dnum;
-                    }
-                    break;
-
-                case "setting_width":
-                    if (int.TryParse(textbox.Text, out inum))
-                    {
-                        ((Furniture)activeObject).Width = inum;
-                    }
-                    break;
-
-                case "setting_height":
-                    if (int.TryParse(textbox.Text, out inum))
-                    {
-                        ((Furniture)activeObject).Height = inum;
-                    }
-                    break;
-            }
-        }
-
-        private void Setting_matrial_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (activeObject is Room)
-            {
-                switch (((ComboBox)sender).SelectedValue.ToString())
+                Success_layout = () =>
                 {
-                    case "Marble":
-                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"image/marble.jpg",UriKind.Relative)));
-                        break;
-                    case "Wood":
-                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"image/wood.jpg",UriKind.Relative)));
-                        break;
-                    case "Oak":
-                        ((Room)activeObject).Background = new ImageBrush(new BitmapImage(new Uri(@"image/oak.jpg",UriKind.Relative)));
-                        break;
+                    chk_button.Source = new BitmapImage(new Uri(@"image\success.png", UriKind.Relative));
+                    closure_button.Background = new SolidColorBrush(Colors.MediumSpringGreen);
+                },
+                Fail_layout = () =>
+                {
+                    chk_button.Source = new BitmapImage(new Uri(@"image\fail.png", UriKind.Relative));
+                    closure_button.Background = new SolidColorBrush(Colors.LightPink);
+                },
+                Init_layout = () =>
+                {
+                    chk_button.Source = new BitmapImage(new Uri(@"image\scope.png", UriKind.Relative));
+                    closure_button.Background = new SolidColorBrush(Colors.Snow);
                 }
-            }
+            };
         }
 
-        private void Setting_Button_Click(object sender, RoutedEventArgs e)
+        
+        private void InitializeMetadata()
         {
-            Changed("Property changed", activeObject.Name);
-        }
+            const string fileName = "meta.json";
+            string fileContent = "";
+
+            StreamReader sr = new StreamReader(fileName);
+            fileContent = sr.ReadToEnd();
 
 
 
-        private void Coordinate_click(object sender, RoutedEventArgs e)
-        {
-            Algorithm.std_coordinate_size = Convert.ToInt32(((MenuItem)sender).Header);
-        }
+            Action progressControlValueUp = delegate
+            {
+                progressbar.Value++;
+                if (progressbar.Value == progressbar.Maximum)
+                {
+                    progressbar.Visibility = Visibility.Hidden;
+                    Ed_button.IsEnabled = true;
+                    txt_closure_checking.Visibility = Visibility.Visible;
+                }
+            };
 
+            MetaData.GetInstance.ProgressStatueMaximumUp = () => { progressbar.Maximum++; };
+            MetaData.GetInstance.ProgressStatueValueUp = progressControlValueUp;
+            MetaData.GetInstance.AddItem = AddItemToObecjtTab;
+            MetaData.GetInstance.Canvas = canvas;
 
-
-
-
-        System.Windows.Forms.Timer notice_timer = new System.Windows.Forms.Timer() { Interval = 10 * 2000 };
-
-        private void Timer_elapsed(object sender, EventArgs e)
-        {
-            help_notice.Visibility = Visibility.Hidden;
-            notice_timer.Stop();
-        }
-
-        private void Notice_Click(object sender, RoutedEventArgs e)
-        {
-            help_notice.Visibility = Visibility.Visible;
-            notice_timer.Start();
+            MetaData.GetInstance.ReadMetaData(fileContent);
+            
+            sr.Close();
         }
 
 
         
-        bool is3D = false;
-        private void Ed_Chk_Click(object sender, RoutedEventArgs e)
-        {
-            if (!is3D)
-            {
-                statusbar_2d.Visibility = Visibility.Hidden;
-                statusbar_2d.MaxWidth = 0;
-                statusbar_3d.Visibility = Visibility.Visible;
-                statusbar_3d.MaxWidth = int.MaxValue;
-
-                Ed_button.Background = new SolidColorBrush(Colors.LightSkyBlue);
-                closure_button.IsEnabled = false;
-                SettingDock.Visibility = Visibility.Hidden;
-                SettingDock.MaxWidth = 0;
-                objectAddControl.Visibility = Visibility.Hidden;
-
-
-                viewport3D.Width = screen.ActualWidth;
-                viewport3D.Height = screen.ActualHeight;
-
-                viewport3D.Build(canvas);
-                screen.Child = viewport3D;
-
-                //progressbar.IsIndeterminate = true;
-
-                is3D = true;
-            }
-            else
-            {
-                statusbar_2d.Visibility = Visibility.Visible;
-                statusbar_2d.MaxWidth = int.MaxValue;
-                statusbar_3d.Visibility = Visibility.Hidden;
-                statusbar_3d.MaxWidth = 0;
-
-                Ed_button.Background = new SolidColorBrush(Colors.Snow);
-                closure_button.IsEnabled = true;
-                SettingDock.Visibility = Visibility.Visible;
-                SettingDock.MaxWidth = int.MaxValue;
-                objectAddControl.Visibility = Visibility.Visible;
-
-                screen.Child = canvas;
-                is3D = false;
-            }
-        }
     }
 }

@@ -7,90 +7,13 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace selfInteriorSimulation
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        JArray metaData;
-        private void ReadMetaData(string content)
-        {
-            metaData = JArray.Parse(content);
-
-
-            foreach (var metaObject in metaData)
-            {
-                Button button = new Button()
-                {
-                    Margin = new Thickness(0, 0, 0, 0),
-                    Width = 70,
-                };
-                {
-                    StackPanel stackPanel = new StackPanel()
-                    {
-                        Orientation = Orientation.Vertical,
-                        HorizontalAlignment = HorizontalAlignment.Left,
-                    };
-                    {
-                        stackPanel.Children.Add(new Image()
-                        {
-                            Height = 50,
-                            Source = new BitmapImage(new Uri(metaObject["TabImgSrc"].ToString(), UriKind.Relative))
-                        });
-                        stackPanel.Children.Add(new TextBlock()
-                        {
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            Text = metaObject["Type"].ToString()
-                        });
-                    }
-
-
-                    button.Click += (o, e) =>
-                    {
-                        paintingObject = Furniture.Temporary(new Furniture()
-                        {
-                            Type = metaObject["Type"].ToString(),
-                            Name = metaObject["Type"].ToString(),
-                            Width = Convert.ToDouble(metaObject["ViewImgW"]),
-                            Height = Convert.ToDouble(metaObject["ViewImgH"]),
-                            ImageSource = new BitmapImage(new Uri(metaObject["ViewImgSrc"].ToString(), UriKind.Relative)),
-                            ModelSource = metaObject["MdSrc"].ToString()
-                        });
-
-                        canvas.Children.Add(paintingObject);
-                    };
-
-
-                    button.Content = stackPanel;
-                }
-                tab_objects.Children.Add(button);
-            }
-        }
-
-
-
-
-
-
         public JArray Records = new JArray();
         int recordStay = -1;
-
-
-        private void Changed(string command,string name)
-        {
-            for (int i = Records.Count - 1; i > recordStay; i--)
-            {
-                Records.RemoveAt(i);
-                history.Items.RemoveAt(i);
-            }
-
-
-            recordStay++;
-            history.Items.Add(new { Command = command, Name = name });
-            Records.Add(SaveStatusToJson());
-            history.SelectedIndex = recordStay;
-        }
 
 
 
@@ -178,8 +101,25 @@ namespace selfInteriorSimulation
             }
         }
 
-        
-        
+
+
+
+
+        private void Changed(string command, string name)
+        {
+            for (int i = Records.Count - 1; i > recordStay; i--)
+            {
+                Records.RemoveAt(i);
+                history.Items.RemoveAt(i);
+            }
+
+
+            recordStay++;
+            history.Items.Add(new { Command = command, Name = name });
+            Records.Add(SaveStatusToJson());
+            history.SelectedIndex = recordStay;
+        }
+
 
         private void History_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -326,6 +266,7 @@ namespace selfInteriorSimulation
             {
                 try
                 {
+                    if (jeach["Type"] == null) continue;
                     string type = jeach["Type"].ToString();
 
                     if (type == "Room")
@@ -366,8 +307,9 @@ namespace selfInteriorSimulation
                             MakeFurniture(jeach["Type"].ToString(), jeach));
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    MessageBox.Show(e.ToString());
                 }
             }
         }
@@ -376,55 +318,25 @@ namespace selfInteriorSimulation
         {
             Furniture furniture = new Furniture();
 
-            foreach (var metaObject in metaData)
-            {
-                if (metaObject["Type"].ToString() == type)
-                {
-                    furniture.Type = metaObject["Type"].ToString();
-                    furniture.ImageSource = new BitmapImage(new Uri(metaObject["ViewImgSrc"].ToString(), UriKind.Relative));
-                    furniture.ModelSource = metaObject["MdSrc"].ToString();
-                    break;
-                }
-            }
+            var data = MetaData.GetInstance.GetObjectData(type);
+            furniture.Type = data.Type;
+            furniture.ImageSource = data.ViewImgSrc;
+            furniture.ModelSource = data.MdSrc;
+
+
             furniture.Name = jdata["Name"].ToString();
             furniture.Height = JsonConvert.DeserializeObject<int>(jdata["Height"].ToString());
             furniture.Width = JsonConvert.DeserializeObject<int>(jdata["Width"].ToString());
             furniture.BorderThickness = new Thickness(JsonConvert.DeserializeObject<double>(jdata["Border"].ToString()));
             furniture.Rotate = JsonConvert.DeserializeObject<double>(jdata["Rotate"].ToString());
             furniture.Center = JsonConvert.DeserializeObject<Point>(jdata["Point"].ToString());
-
+            
             return furniture;
         }
 
 
 
 
-        private void Save_as_Image()
-        {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Png Image|*.png";
-            saveFileDialog.Title = "Save an Image File";
-            saveFileDialog.ShowDialog();
-
-            if (saveFileDialog.FileName == "")
-                saveFileDialog.FileName = "image.png";
-
-            RenderTargetBitmap renderTargetBitmap = new RenderTargetBitmap(
-                (int)canvas.RenderSize.Width,
-                (int)canvas.RenderSize.Height,
-                96d, 96d, System.Windows.Media.PixelFormats.Default);
-
-            renderTargetBitmap.Render(canvas);
-
-            BitmapEncoder pngEncoder = new PngBitmapEncoder();
-            pngEncoder.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
-
-
-            using (var fs = System.IO.File.OpenWrite(saveFileDialog.FileName))
-            {
-                pngEncoder.Save(fs);
-            }
-        }
 
     }
 }

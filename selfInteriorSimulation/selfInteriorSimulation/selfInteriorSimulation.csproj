@@ -69,6 +69,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -97,19 +98,21 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ClosureExamination.cs" />
-    <Compile Include="DataManagement.cs" />
-    <Compile Include="DrawingManagement.cs" />
+    <Compile Include="MainWindow.Record.cs" />
+    <Compile Include="MainWindow.Drawing.cs" />
+    <Compile Include="MainWindow.Controller.cs" />
+    <Compile Include="MedaData.cs" />
     <Compile Include="Viewport3D.cs" />
-    <Compile Include="Objects\BaseObject.cs" />
+    <Compile Include="objects\BaseObject.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Objects\Interior\Furniture.cs" />
-    <Compile Include="Objects\Room\Gate.cs" />
-    <Compile Include="Objects\Room\Room.cs" />
+    <Compile Include="objects\Furniture.cs" />
+    <Compile Include="objects\Gate.cs" />
+    <Compile Include="objects\Room.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

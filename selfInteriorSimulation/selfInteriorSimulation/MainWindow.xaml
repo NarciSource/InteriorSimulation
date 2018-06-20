@@ -41,11 +41,12 @@
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Margin="0,0,0,10">
                     <Border DockPanel.Dock="Top" Height="100" Margin="0,20,0,0">
-                        <Button x:Name="Ed_button" Grid.Row="1" Click="Ed_Chk_Click" Background="Snow">
+                        <Button x:Name="Ed_button" Grid.Row="1" Click="Ed_Click" Background="Snow" IsEnabled="False">
                             <Image Margin="10,10,10,10" Source="image/3d.png"/>
                         </Button>
                     </Border>
-                    <TextBlock HorizontalAlignment="Center" Text="Closure Checking"/>
+                    <ProgressBar x:Name="progressbar" Height="10" Value="0" Maximum="0"/>
+                    <TextBlock x:Name="txt_closure_checking" HorizontalAlignment="Center" Text="Closure Checking" Visibility="Hidden"/>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Top" Orientation="Vertical" Margin="0,0,0,10">
                     <Border DockPanel.Dock="Top" Height="100" Margin="0,0,0,0">
@@ -165,11 +166,7 @@
                     <Label x:Name="camera_up" Content="0,0,0"/>
                     <Label Content="Look Direction ="/>
                     <Label x:Name="camera_look" Content="0,0,0"/>
-                    <Label Content="Num of 3D objects ="/>
-                    <Label x:Name="numof3dobjects" Content="0/0"/>
                 </StackPanel>
-                
-                <ProgressBar x:Name="progressbar" Height="20" Width="200" Visibility="Visible"/>
             </StatusBar>
         </Border>
 

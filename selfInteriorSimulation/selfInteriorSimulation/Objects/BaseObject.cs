@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -15,11 +12,6 @@ namespace selfInteriorSimulation
     {
         static public del active_notify;
         static public del2 change_notify;
-
-        /* global */
-        public static List<Room> allRooms = new List<Room>();
-        public static Canvas canvas { get; set; }
-
 
         protected Border border = new Border();
         protected TextBlock name = new TextBlock()

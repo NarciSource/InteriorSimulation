@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -26,6 +23,7 @@ namespace selfInteriorSimulation
 
         List<Polygon> pointSquares = new List<Polygon>();
         
+
         public new UIElementCollection Children { get { return floor.Children; } }
         public new Brush BorderBrush
         {
@@ -81,7 +79,7 @@ namespace selfInteriorSimulation
                 {
                     if (pointSquare.IsMouseCaptured)
                     {
-                        Point position = e.GetPosition(canvas);
+                        Point position = e.GetPosition(MetaData.GetInstance.Canvas);
                         position = Algorithm.Adjust_to_fit_std(position);
                         pointSquare.Points = getSquarePoints(position);
                         polygon.Points[pointSquares.IndexOf(pointSquare)] = position;
@@ -94,9 +92,6 @@ namespace selfInteriorSimulation
                 pointSquares.Add(pointSquare);
                 floor.Children.Add(pointSquare);
             }
-
-
-            allRooms.Add(this);
         }
 
 

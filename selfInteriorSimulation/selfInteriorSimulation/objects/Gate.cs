@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -50,7 +46,7 @@ namespace selfInteriorSimulation
             {
                 if (isFixed) return;
 
-                Point point = e.GetPosition(canvas);
+                Point point = e.GetPosition(MetaData.GetInstance.Canvas);
 
                 Line closed_line = Closed_line(point);
 

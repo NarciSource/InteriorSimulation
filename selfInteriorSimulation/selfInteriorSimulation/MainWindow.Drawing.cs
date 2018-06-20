@@ -1,11 +1,8 @@
-﻿using Microsoft.Win32;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace selfInteriorSimulation
@@ -62,11 +59,10 @@ namespace selfInteriorSimulation
                 Furniture realObject = paintingObject.Clone() as Furniture;
                 
 
-
                 canvas.Children.Remove(paintingObject);
                 paintingObject = null;
 
-                foreach (var room in Base.allRooms)
+                foreach (var room in MetaData.GetInstance.AllRooms)
                 {
                     switch (Algorithm.Which_relation(room, realObject))
                     {
@@ -129,6 +125,42 @@ namespace selfInteriorSimulation
         }
 
 
+
+
+
+        private void AddItemToObecjtTab(dynamic obj)
+        {
+            Button button = new Button()
+            {
+                Margin = new Thickness(0, 0, 0, 0),
+                Width = 70,
+            };
+            {
+                StackPanel stackPanel = new StackPanel()
+                {
+                    Orientation = Orientation.Vertical,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                };
+                {
+                    stackPanel.Children.Add(new Image()
+                    {
+                        Height = 50,
+                        Source = obj.TabImgSrc
+                    });
+                    stackPanel.Children.Add(new TextBlock()
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        Text = obj.Type
+                    });
+                }
+
+                button.Click += (o, e) => { TemporaryObjectMake(obj); };
+
+
+                button.Content = stackPanel;
+            }
+            tab_objects.Children.Add(button);
+        }
 
 
 
@@ -219,16 +251,19 @@ namespace selfInteriorSimulation
         }
 
 
-
-
-
-
-        private void Refresh_Status(Point position)
+        private void TemporaryObjectMake(dynamic data)
         {
-            point_position.Content = position.ToString();
-            if (activeObject != null)
-                object_type.Content = activeObject.ToString();
-            undo_times.Content = recordStay.ToString();
+            paintingObject = Furniture.Temporary(new Furniture()
+            {
+                Type = data.Type,
+                Name = data.Name,
+                Width = data.ViewImgW,
+                Height = data.ViewImgH,
+                ImageSource = data.ViewImgSrc,
+                ModelSource = data.MdSrc
+            });
+
+            canvas.Children.Add(paintingObject);
         }
 
     }

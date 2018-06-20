@@ -4,52 +4,35 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using static selfInteriorSimulation.Base;
 
 namespace selfInteriorSimulation
 {
     using Group = HashSet<Room>;
 
-    public partial class MainWindow : Window
+    class ClosureExamination
     {
         Collection<Group> groups = new Collection<Group>();
+        SolidColorBrush successColor = new SolidColorBrush(Colors.White);
+        SolidColorBrush failColor = new SolidColorBrush(Colors.LightPink);
 
-        bool isActiveClosure = false;
-        private void Closure_Chk_Click(object sender, RoutedEventArgs e)
+        public Action Success_layout { get; set; }
+        public Action Fail_layout { get; set; }
+        public Action Init_layout { get; set; }
+
+        public List<Room> AllRooms { get; set; }
+
+
+        public void Grouping()
         {
-            if (isActiveClosure == false)
-            {
-                isActiveClosure = true;
-
-                Grouping();
-
-                Display();
-            }
-            else
-            {
-                isActiveClosure = false;
-
-                Undisplay();
-
-                Ungrouping();
-            }
-        }
-
-
-
-
-        private void Grouping()
-        {
-            foreach (var room in allRooms)
+            foreach (var room in AllRooms)
             {
                 var pivot_group = Which_group_of(room);
 
-                foreach (var door in (from gate in room.Gates where gate.Type=="Door" select gate))
+                foreach (var door in (from gate in room.Gates where gate.Type == "Door" select gate))
                 {
                     Point point = In_front_of(room, door);
 
-                    foreach (var other_room in allRooms)
+                    foreach (var other_room in AllRooms)
                     {
                         if (room == other_room) continue;
                         if (Algorithm.Is_inside(other_room, point))
@@ -68,7 +51,7 @@ namespace selfInteriorSimulation
             }
         }
 
-        private void Ungrouping()
+        public void Ungrouping()
         {
             groups.Clear();
         }
@@ -77,7 +60,7 @@ namespace selfInteriorSimulation
 
 
         private Collection<RoomCover> roomCovers = new Collection<RoomCover>();
-        private void Display()
+        public void Display()
         {
             Undisplay();
 
@@ -89,10 +72,10 @@ namespace selfInteriorSimulation
                     foreach (var room in group)
                     {
                         var roomCover = new RoomCover(room);
-                        roomCover.Background = new SolidColorBrush(Colors.LightPink);
+                        roomCover.Background = failColor;
 
                         roomCovers.Add(roomCover);
-                        canvas.Children.Add(roomCover);
+                        MetaData.GetInstance.Canvas.Children.Add(roomCover);
                     }
                     all_clear = false;
                 }
@@ -101,36 +84,32 @@ namespace selfInteriorSimulation
                     foreach (var room in group)
                     {
                         var roomCover = new RoomCover(room);
-                        roomCover.Background = new SolidColorBrush(Colors.White);
+                        roomCover.Background = successColor;
 
                         roomCovers.Add(roomCover);
-                        canvas.Children.Add(roomCover);
+                        MetaData.GetInstance.Canvas.Children.Add(roomCover);
                     }
                 }
             }
             if (all_clear)
             {
-                chk_button.Source = new BitmapImage(new Uri(@"image\success.png", UriKind.Relative));
-                closure_button.Background = new SolidColorBrush(Colors.MediumSpringGreen);
+                Success_layout();
             }
             else
             {
-                chk_button.Source = new BitmapImage(new Uri(@"image\fail.png", UriKind.Relative));
-                closure_button.Background = new SolidColorBrush(Colors.LightPink);
+                Fail_layout();
             }
 
         }
 
-        private void Undisplay()
+        public void Undisplay()
         {
-            foreach (var roomCover in roomCovers)
-            {
-                canvas.Children.Remove(roomCover);
-            }
+            roomCovers.ToList().ForEach(
+                roomCover => MetaData.GetInstance.Canvas.Children.Remove(roomCover));
+
             roomCovers.Clear();
 
-            chk_button.Source = new BitmapImage(new Uri(@"image\scope.png", UriKind.Relative));
-            closure_button.Background = new SolidColorBrush(Colors.Snow);
+            Init_layout();
         }
 
 
@@ -145,7 +124,7 @@ namespace selfInteriorSimulation
             {
                 result = groups.Where((each) => { return each.Contains(room); }).Single();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 result = new Group();
                 result.Add(room);
@@ -171,12 +150,12 @@ namespace selfInteriorSimulation
         {
             foreach (var room in group)
             {
-                foreach (var door in (from gate in room.Gates where gate.Type=="Door" select gate))
+                foreach (var door in (from gate in room.Gates where gate.Type == "Door" select gate))
                 {
                     bool is_connected_outside = true;
                     Point point = In_front_of(room, door);
 
-                    foreach (var other_room in allRooms)
+                    foreach (var other_room in AllRooms)
                     {
                         if (room == other_room) continue;
                         if (Algorithm.Is_inside(other_room, point))
@@ -193,6 +172,6 @@ namespace selfInteriorSimulation
             }
             return false;
         }
-    
     }
+    
 }
