@@ -182,7 +182,7 @@ namespace selfInteriorSimulation
                 closure_button.IsEnabled = false;
                 SettingDock.Visibility = Visibility.Hidden;
                 SettingDock.MaxWidth = 0;
-                objectAddControl.Visibility = Visibility.Hidden;
+                ObjectControlpad.Visibility = Visibility.Hidden;
 
 
                 viewport3D.Width = screen.ActualWidth;
@@ -204,7 +204,7 @@ namespace selfInteriorSimulation
                 closure_button.IsEnabled = true;
                 SettingDock.Visibility = Visibility.Visible;
                 SettingDock.MaxWidth = int.MaxValue;
-                objectAddControl.Visibility = Visibility.Visible;
+                ObjectControlpad.Visibility = Visibility.Visible;
 
                 screen.Child = canvas;
                 is3D = false;
